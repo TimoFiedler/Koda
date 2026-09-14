@@ -201,10 +201,6 @@ class TripService : Service(), SensorEventListener, LocationListener {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
-    override fun onLocationChanged(provider: String) {}
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
-    override fun onProviderEnabled(provider: String) {}
-    override fun onProviderDisabled(provider: String) {}
 }
 
 data class TripData(

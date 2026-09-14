@@ -126,15 +126,22 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val data = api.fetchVehicle()
                     if (data != null) {
-                        tvStatus.text = "${data.name} - ${data.lastUpdated}"
-                        tvBattery.text = "Akku: ${data.batteryPercent?.toInt() ?: 0}%"
-                        tvRange.text = "Reichweite: ${data.rangeKm?.toInt() ?: 0} km"
-                        tvOdo.text = "KM: ${data.odometerKm?.toInt() ?: 0} km"
-                        tvLock.text = if (data.doorsLocked == true) "🔒 Verriegelt" else "🔓 Offen"
+                        tvStatus.text = "${data.name} - ${data.lastUpdated}\nDebug: Batt=${data.batteryPercent} Range=${data.rangeKm} Odo=${data.odometerKm} Locked=${data.doorsLocked}"
+                        tvBattery.text = "Akku: ${data.batteryPercent?.let { "${it.toInt()}%" } ?: "n/a (Verbrenner?)"}"
+                        tvRange.text = "Reichweite: ${data.rangeKm?.let { "${it.toInt()} km" } ?: "n/a"}"
+                        tvOdo.text = "KM: ${data.odometerKm?.let { "${it.toInt()} km" } ?: "n/a"}"
+                        tvLock.text = when (data.doorsLocked) {
+                            true -> "🔒 Verriegelt"
+                            false -> "🔓 Offen"
+                            null -> "Verriegelung: n/a"
+                        }
                         tvCharging.text = when (data.chargingState) {
                             "CHARGING" -> "⚡ Lädt ${data.chargingPowerKw?.toInt() ?: 0} kW"
                             "CHARGED" -> "✅ Voll"
-                            else -> "Nicht am Laden"
+                            "READY_FOR_CHARGING" -> "🔌 Bereit"
+                            "CONSERVING" -> "🔋 Erhaltung"
+                            null, "" -> "Laden: n/a (kein E-Auto?) - ${data.rawJson.take(200)}"
+                            else -> "Status: ${data.chargingState}"
                         }
                         // Save for widget
                         getSharedPreferences("widget_data", MODE_PRIVATE).edit().apply {
