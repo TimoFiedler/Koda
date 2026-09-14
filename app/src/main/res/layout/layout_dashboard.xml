@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lade Fahrzeugdaten..."
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:id="@+id/tvBattery" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Akku: --" android:textSize="18sp" />
+            <TextView android:id="@+id/tvRange" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Reichweite: --" android:layout_marginTop="4dp" />
+            <TextView android:id="@+id/tvOdo" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="KM: --" android:layout_marginTop="4dp" />
+            <TextView android:id="@+id/tvLock" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verriegelung: --" android:layout_marginTop="8dp" />
+            <TextView android:id="@+id/tvCharging" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Laden: --" android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🔄 Aktualisieren"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrt Tracking" android:textStyle="bold" android:textSize="16sp" android:layout_marginBottom="8dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="GPS 1Hz + G-Sensor (Beschleunigung/Bremsen) wird aufgezeichnet" android:textSize="12sp" android:layout_marginBottom="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStartTrip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="▶ Fahrt starten" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStopTrip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="⏹ Fahrt beenden"
+                android:layout_marginTop="8dp"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

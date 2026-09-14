@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Widget konfigurieren"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <CheckBox
+        android:id="@+id/cbBattery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Akku % anzeigen"
+        android:checked="true" />
+
+    <CheckBox
+        android:id="@+id/cbRange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reichweite anzeigen"
+        android:checked="true" />
+
+    <CheckBox
+        android:id="@+id/cbLock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verriegelung anzeigen"
+        android:checked="true" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Speichern"
+        android:layout_marginTop="24dp" />
+
+</LinearLayout>

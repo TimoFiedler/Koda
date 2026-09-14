@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/widget_bg"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tvWidgetTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Skoda"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/tvWidgetBattery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Akku: --"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="2dp" />
+
+    <TextView
+        android:id="@+id/tvWidgetRange"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reichweite: --"
+        android:textSize="12sp"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/tvWidgetLock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="12sp"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/tvWidgetCharging"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="11sp"
+        android:textColor="#FFEB3B" />
+
+</LinearLayout>

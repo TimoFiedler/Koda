@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fahrtenbuch"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tvTrips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lade..."
+        android:textSize="13sp"
+        android:lineSpacingExtra="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnClearTrips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alle löschen"
+        android:layout_marginTop="16dp"
+        style="@style/Widget.Material3.Button.OutlinedButton" />
+
+</LinearLayout>
