@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             val key = etApiKey.text.toString().trim()
             val vin = etVin.text.toString().trim().uppercase()
             if (key.length < 10 || vin.length < 10) {
-                Toast.makeText(this, "Bitte gueltigen API-Key und FIN eingeben", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Bitte gueltigen API-Key und FIN eingeben", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val engineType = when (rgEngine.checkedRadioButtonId) {
@@ -235,14 +235,14 @@ class MainActivity : AppCompatActivity() {
             } else {
                 startService(intent)
             }
-            Toast.makeText(this, "Aufzeichnung gestartet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Aufzeichnung gestartet", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
         btnStopTrip.setOnClickListener {
             val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
             startService(intent)
-            Toast.makeText(this, "Aufzeichnung beendet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Aufzeichnung beendet", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
@@ -282,7 +282,7 @@ class MainActivity : AppCompatActivity() {
         btnClear.setOnClickListener {
             TripStorage(this).clearAll()
             loadTrips()
-            Toast.makeText(this, "Verlauf geloescht", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Verlauf geloescht", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -345,7 +345,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 settings.saveEngineType(type)
                 getSharedPreferences("widget_data", MODE_PRIVATE).edit().putString("engine_type", type).apply()
-                Toast.makeText(this, "Antriebsart auf $type gestellt", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Antriebsart auf $type gestellt", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -358,7 +358,7 @@ class MainActivity : AppCompatActivity() {
             }
             lifecycleScope.launch {
                 settings.saveAppTheme(theme)
-                Toast.makeText(this, "Design auf $theme gestellt - Neustart fuer vollen Effekt", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Design auf $theme gestellt - Neustart fuer vollen Effekt", Toast.LENGTH_SHORT).show()
             }
         }
 
