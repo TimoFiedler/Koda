@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/cream_border">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/cream_card">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvTileDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="15.09.2026 14:30"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvTileType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manuell"
+                android:textSize="10sp"
+                android:textColor="@color/text_secondary"
+                android:background="@drawable/card_bg_accent"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvTileDistance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="12.5 km"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:fontFamily="sans-serif-light" />
+
+            <TextView
+                android:id="@+id/tvTileDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25 Min"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvTileScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="85 Punkte"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/brown_primary"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/tvTileEco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Eco 78"
+                android:textSize="11sp"
+                android:textColor="@color/success_green"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/tvTileSpeed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max 120 km/h"
+                android:textSize="11sp"
+                android:textColor="@color/text_hint" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -89,7 +89,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Layout\n- Kompakt, Detailliert, Minimal\n\nInhalte\n- Name, Batterie/Tank, Reichweite, Kilometerstand, Verriegelung, Ladestatus\n\nFarben\n- Hintergrund: Creme, Sand, Mocca, Dunkel, Transparent\n- Akzent: Braun, Gold, Sage, Olive, Graphit\n- Text: Automatisch angepasst\n\nStil\n- Ecken: Klein, Mittel, Gross\n- Schrift: Klein, Mittel, Gross"
+                android:text="Layout\n- Kompakt, Detailliert, Minimal\n\nInhalte\n- Name, Batterie/Tank, Reichweite, Kilometerstand, Verriegelung, Ladestatus\n\nFarben - Frei konfigurierbar\n- Hintergrund: Creme, Sand, Mocca, Dunkel, Transparent + eigene Hex Farbe z.B. #FFF8E7\n- Akzent: Braun, Gold, Sage, Olive, Graphit + eigene Hex z.B. #8B7355\n- Text: Automatisch oder eigene Hex\n\nStil\n- Ecken: Klein, Mittel, Gross\n- Schrift: Klein, Mittel, Gross\n\nFahrten Tracker\n- Jede Fahrt als Kachel mit Distanz, Dauer, Score, Eco, Max Speed\n- Click oeffnet Detail mit Karte, Ereignissen, G-Kraeften"
                 android:textSize="13sp"
                 android:textColor="#FFFEF9"
                 android:lineSpacingExtra="4dp" />

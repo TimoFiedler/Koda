@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Layout, Farben und Inhalte anpassen"
+        android:text="Layout, Farben und Inhalte - frei konfigurierbar"
         android:textSize="13sp"
         android:textColor="@color/text_secondary"
         android:layout_marginBottom="24dp" />
@@ -60,113 +60,57 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrzeugname" android:textSize="14sp" android:textColor="@color/text_primary" />
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Modell oder individueller Name" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbName" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
                     </LinearLayout>
-
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ladezustand / Tank" android:textSize="14sp" android:textColor="@color/text_primary" />
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Akku oder Tank in Prozent" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbBattery" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
-
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Reichweite" android:textSize="14sp" android:textColor="@color/text_primary" />
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verbleibende Kilometer" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbRange" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
-
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Kilometerstand" android:textSize="14sp" android:textColor="@color/text_primary" />
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gesamtlaufleistung" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbOdo" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
-
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verriegelung" android:textSize="14sp" android:textColor="@color/text_primary" />
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ob das Fahrzeug verriegelt ist" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbLock" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
-
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="12dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ladestatus" android:textSize="14sp" android:textColor="@color/text_primary" />
                             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Laden, Bereit, Vollstaendig" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
                         <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbCharging" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Layout"
-                android:textSize="11sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.08"
-                android:textColor="@color/text_hint"
-                android:layout_marginBottom="12dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Layout" android:textSize="11sp" android:textAllCaps="true" android:letterSpacing="0.08" android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -177,86 +121,33 @@
                 app:strokeColor="@color/cream_border"
                 android:layout_marginBottom="20dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Darstellung"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp" />
-
-                    <RadioGroup
-                        android:id="@+id/rgLayoutStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp">
-
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Darstellung" android:textSize="13sp" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
+                    <RadioGroup android:id="@+id/rgLayoutStyle" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="20dp">
                         <RadioButton android:id="@+id/rbLayoutCompact" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Kompakt - Nur wichtigste Infos" android:textSize="14sp" android:checked="true" />
                         <RadioButton android:id="@+id/rbLayoutDetailed" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Detailliert - Alle Infos mit Labels" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbLayoutMinimal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Minimal - Nur Prozent und Status" android:textSize="14sp" />
-
                     </RadioGroup>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ecken"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp" />
-
-                    <RadioGroup
-                        android:id="@+id/rgCornerRadius"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="20dp">
-
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ecken" android:textSize="13sp" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
+                    <RadioGroup android:id="@+id/rgCornerRadius" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp">
                         <RadioButton android:id="@+id/rbCornerSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Klein" android:textSize="13sp" />
                         <RadioButton android:id="@+id/rbCornerMedium" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Mittel" android:checked="true" android:textSize="13sp" />
                         <RadioButton android:id="@+id/rbCornerLarge" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross" android:textSize="13sp" />
-
                     </RadioGroup>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Schriftgroesse"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp" />
-
-                    <RadioGroup
-                        android:id="@+id/rgTextSize"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Schriftgroesse" android:textSize="13sp" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
+                    <RadioGroup android:id="@+id/rgTextSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
                         <RadioButton android:id="@+id/rbTextSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Klein" android:textSize="13sp" />
                         <RadioButton android:id="@+id/rbTextMedium" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Mittel" android:checked="true" android:textSize="13sp" />
                         <RadioButton android:id="@+id/rbTextLarge" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross" android:textSize="13sp" />
-
                     </RadioGroup>
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Farben"
-                android:textSize="11sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.08"
-                android:textColor="@color/text_hint"
-                android:layout_marginBottom="12dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Farben - Frei konfigurierbar" android:textSize="11sp" android:textAllCaps="true" android:letterSpacing="0.08" android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -267,72 +158,45 @@
                 app:strokeColor="@color/cream_border"
                 android:layout_marginBottom="20dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Hintergrund"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp" />
-
-                    <RadioGroup
-                        android:id="@+id/rgBackground"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp">
-
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Hintergrund (Preset)" android:textSize="13sp" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
+                    <RadioGroup android:id="@+id/rgBackground" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
                         <RadioButton android:id="@+id/rbLight" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Creme - Warm und hell" android:textSize="14sp" android:checked="true" />
                         <RadioButton android:id="@+id/rbSand" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sand - Helles Beige" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbMocca" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mocca - Kuehles Beige" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbDark" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Dunkel - Braun" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbTransparent" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Transparent" android:textSize="14sp" />
-
                     </RadioGroup>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Akzentfarbe"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"
-                        android:layout_marginBottom="12dp" />
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Eigene Hintergrundfarbe Hex z.B. #FFF8E7 oder frei" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="16dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCustomBgColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:hint="#FFF8E7" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <RadioGroup
-                        android:id="@+id/rgAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Akzentfarbe (Preset)" android:textSize="13sp" android:textColor="@color/text_primary" android:layout_marginBottom="12dp" />
+                    <RadioGroup android:id="@+id/rgAccent" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
                         <RadioButton android:id="@+id/rbAccentBrown" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Braun - Klassisch" android:checked="true" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbAccentGold" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gold - Warm und elegant" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbAccentSage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sage - Gruen und natuerlich" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbAccentOlive" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Olive - Erdig" android:textSize="14sp" />
                         <RadioButton android:id="@+id/rbAccentGraphite" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Graphit - Modern und minimal" android:textSize="14sp" />
-
                     </RadioGroup>
 
-                </LinearLayout>
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Eigene Akzentfarbe Hex z.B. #8B7355" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="16dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCustomAccentColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:hint="#8B7355" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Textfarbe (optional)" android:textSize="13sp" android:textColor="@color/text_primary" android:layout_marginBottom="8dp" />
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Hex z.B. #3E2723 oder leer fuer auto" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCustomTextColor" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
-
     </ScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="Speichern und anwenden"
-        android:textSize="14sp"
-        app:cornerRadius="12dp"
-        android:backgroundTint="@color/brown_primary"
-        app:elevation="0dp"
-        android:layout_marginTop="16dp" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnSave" android:layout_width="match_parent" android:layout_height="56dp" android:text="Speichern und anwenden" android:textSize="14sp" app:cornerRadius="12dp" android:backgroundTint="@color/brown_primary" app:elevation="0dp" android:layout_marginTop="16dp" />
 
 </LinearLayout>

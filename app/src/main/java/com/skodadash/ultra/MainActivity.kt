@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         settings = SettingsRepository(this)
-        api = SkodaApi(settings)
+        api = SkodaApi(settings, this)
 
         val perms = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         val tvHelp = view.findViewById<android.widget.TextView>(R.id.tvHelp)
         val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineType)
 
-        tvHelp.text = "1. MySkoda App oeffnen (Version 8.16 oder neuer)\n2. Profil -> Einstellungen -> Drittanbieter-Zugriff\n3. Neuen API-Key erstellen und Fahrzeug auswaehlen\n4. API-Key und FIN hier eingeben\n5. Antriebsart waehlen fuer korrekte Anzeige\n\nDer Key ist 6 Monate gueltig und erlaubt 20 Anfragen pro Stunde."
+        tvHelp.text = "1. MySkoda App oeffnen (Version 8.16 oder neuer)\n2. Profil -> Einstellungen -> Drittanbieter-Zugriff\n3. Neuen API-Key erstellen und Fahrzeug auswaehlen\n4. API-Key und FIN hier eingeben\n5. Antriebsart waehlen fuer korrekte Anzeige\n\nDer Key ist 6 Monate gueltig und erlaubt 20 Anfragen pro Stunde. Rate Limit wird automatisch verwaltet."
 
         lifecycleScope.launch {
             etApiKey.setText(settings.getApiKey())
@@ -111,19 +113,20 @@ class MainActivity : AppCompatActivity() {
         val view = layoutInflater.inflate(R.layout.layout_dashboard, binding.content, false)
         binding.content.addView(view)
 
-        val tvStatus = view.findViewById<android.widget.TextView>(R.id.tvStatus)
-        val tvBattery = view.findViewById<android.widget.TextView>(R.id.tvBattery)
-        val tvBatteryLabel = view.findViewById<android.widget.TextView>(R.id.tvBatteryLabel)
-        val tvRange = view.findViewById<android.widget.TextView>(R.id.tvRange)
-        val tvOdo = view.findViewById<android.widget.TextView>(R.id.tvOdo)
-        val tvLock = view.findViewById<android.widget.TextView>(R.id.tvLock)
-        val tvCharging = view.findViewById<android.widget.TextView>(R.id.tvCharging)
-        val tvEngineBadge = view.findViewById<android.widget.TextView>(R.id.tvEngineBadge)
-        val tvAutoStatus = view.findViewById<android.widget.TextView>(R.id.tvAutoStatus)
+        val tvStatus = view.findViewById<TextView>(R.id.tvStatus)
+        val tvBattery = view.findViewById<TextView>(R.id.tvBattery)
+        val tvBatteryLabel = view.findViewById<TextView>(R.id.tvBatteryLabel)
+        val tvRange = view.findViewById<TextView>(R.id.tvRange)
+        val tvOdo = view.findViewById<TextView>(R.id.tvOdo)
+        val tvLock = view.findViewById<TextView>(R.id.tvLock)
+        val tvCharging = view.findViewById<TextView>(R.id.tvCharging)
+        val tvEngineBadge = view.findViewById<TextView>(R.id.tvEngineBadge)
+        val tvAutoStatus = view.findViewById<TextView>(R.id.tvAutoStatus)
         val btnRefresh = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRefresh)
         val btnStartTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStartTrip)
         val btnStopTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStopTrip)
         val swAutoTrip = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.swAutoTrip)
+        val tvRateLimit = view.findViewById<TextView>(R.id.tvRateLimit)
 
         lifecycleScope.launch {
             val engineType = settings.getEngineType()
@@ -139,6 +142,7 @@ class MainActivity : AppCompatActivity() {
             }
             swAutoTrip.isChecked = settings.getAutoTripEnabled()
             tvAutoStatus.text = if (settings.getAutoTripEnabled()) "Auto an" else "Auto aus"
+            tvRateLimit.text = RateLimiter(this@MainActivity).getStatusText()
         }
 
         fun updateTrackingButtons() {
@@ -179,12 +183,19 @@ class MainActivity : AppCompatActivity() {
 
         btnRefresh.setOnClickListener {
             lifecycleScope.launch {
+                val limiter = RateLimiter(this@MainActivity)
+                if (!limiter.canMakeRequest()) {
+                    tvStatus.text = limiter.getStatusText()
+                    Toast.makeText(this@MainActivity, limiter.getStatusText(), Toast.LENGTH_LONG).show()
+                    return@launch
+                }
                 tvStatus.text = "Aktualisiere"
                 try {
                     val data = api.fetchVehicle()
                     if (data != null) {
                         val engineType = settings.getEngineType()
                         tvStatus.text = "${data.name} - ${data.lastUpdated}"
+                        tvRateLimit.text = limiter.getStatusText()
 
                         tvBattery.text = data.batteryPercent?.let { "${it.toInt()}%" } ?: "--"
                         tvRange.text = data.rangeKm?.let { "${it.toInt()} km" } ?: "--"
@@ -210,7 +221,6 @@ class MainActivity : AppCompatActivity() {
                             putInt("range", data.rangeKm?.toInt() ?: -1)
                             putInt("odometer", data.odometerKm?.toInt() ?: -1)
                             putBoolean("locked", data.doorsLocked ?: false)
-                            if (data.doorsLocked != null) putBoolean("hasLock", true) else remove("hasLock")
                             putString("charging", data.chargingState ?: "")
                             putString("name", data.name)
                             putString("engine_type", engineType)
@@ -260,21 +270,50 @@ class MainActivity : AppCompatActivity() {
         binding.content.removeAllViews()
         val view = layoutInflater.inflate(R.layout.layout_trips, binding.content, false)
         binding.content.addView(view)
-        val tvTrips = view.findViewById<android.widget.TextView>(R.id.tvTrips)
+        
+        val container = view.findViewById<LinearLayout>(R.id.containerTrips)
+        val tvEmpty = view.findViewById<TextView>(R.id.tvTripsEmpty)
+        val tvTotalScore = view.findViewById<TextView>(R.id.tvTotalScore)
         val btnClear = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnClearTrips)
 
         fun loadTrips() {
-            val trips = TripStorage(this).getTrips().reversed()
+            container.removeAllViews()
+            val storage = TripStorage(this)
+            val trips = storage.getTrips().reversed()
+            tvTotalScore.text = "${storage.getTotalScore()} Punkte - ${String.format("%.1f km", storage.getTotalDistance()/1000)} gesamt"
+
             if (trips.isEmpty()) {
-                tvTrips.text = "Noch keine Fahrten vorhanden.\n\nManuell:\nIm Dashboard Fahrt manuell starten vor deiner Fahrt.\n\nAutomatisch:\nIn den Einstellungen automatische Erkennung aktivieren. Startet automatisch ab eingestellter Geschwindigkeit und stoppt nach 3 Minuten Stillstand.\n\nErfasst werden:\n- GPS Verlauf mit 1Hz\n- Geschwindigkeit\n- G-Kraefte fuer Beschleunigung, Bremsen und Kurven\n- Distanz, Maximal- und Durchschnittsgeschwindigkeit"
+                tvEmpty.visibility = android.view.View.VISIBLE
+                tvEmpty.text = "Noch keine Fahrten vorhanden.\n\nManuell:\nIm Dashboard Fahrt manuell starten.\n\nAutomatisch:\nIn den Einstellungen automatische Erkennung aktivieren. Startet ab eingestellter Geschwindigkeit und stoppt nach 3 Minuten Stillstand.\n\nPunktesystem:\n- 10 Punkte pro km\n- 1 Punkt pro Minute\n- 20 Punkte fuer sanfte Fahrt (G < 0.3)\n- 25 Punkte fuer gleichmaessiges Fahren\n- 15 Punkte fuer optimale Geschwindigkeit\n\nEco Score: 0-100 fuer sparsames Fahren"
             } else {
-                val sb = StringBuilder()
-                trips.take(30).forEach { trip ->
-                    sb.append("${java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMANY).format(java.util.Date(trip.startTime))}\n")
-                    sb.append("Distanz ${String.format("%.1f km", trip.distanceMeters/1000)}  Dauer ${trip.durationSec/60} Min  Max ${trip.maxSpeedKmh.toInt()} km/h  Schnitt ${trip.avgSpeedKmh.toInt()} km/h\n")
-                    sb.append("Max G ${String.format("%.2f", trip.maxG)}  Beschl ${String.format("%.1f", trip.maxAccel)} m/s2  Bremse ${String.format("%.1f", trip.maxBrake)} m/s2  Punkte ${trip.pointCount}\n\n")
+                tvEmpty.visibility = android.view.View.GONE
+                trips.take(50).forEach { trip ->
+                    val tile = layoutInflater.inflate(R.layout.item_trip_tile, container, false)
+                    val tvDate = tile.findViewById<TextView>(R.id.tvTileDate)
+                    val tvType = tile.findViewById<TextView>(R.id.tvTileType)
+                    val tvDist = tile.findViewById<TextView>(R.id.tvTileDistance)
+                    val tvDur = tile.findViewById<TextView>(R.id.tvTileDuration)
+                    val tvScore = tile.findViewById<TextView>(R.id.tvTileScore)
+                    val tvEco = tile.findViewById<TextView>(R.id.tvTileEco)
+                    val tvSpeed = tile.findViewById<TextView>(R.id.tvTileSpeed)
+
+                    tvDate.text = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMANY).format(java.util.Date(trip.startTime))
+                    tvType.text = if (trip.isAuto) "Auto" else "Manuell"
+                    tvDist.text = "${String.format("%.1f km", trip.distanceMeters/1000)}"
+                    tvDur.text = "${trip.durationSec/60} Min"
+                    tvScore.text = "${trip.score} Punkte"
+                    tvEco.text = "Eco ${trip.ecoScore}"
+                    tvSpeed.text = "Max ${trip.maxSpeedKmh.toInt()} km/h"
+
+                    tile.setOnClickListener {
+                        val intent = Intent(this, TripDetailActivity::class.java).apply {
+                            putExtra("trip_id", trip.id)
+                        }
+                        startActivity(intent)
+                    }
+
+                    container.addView(tile)
                 }
-                tvTrips.text = sb.toString()
             }
         }
 
@@ -297,42 +336,69 @@ class MainActivity : AppCompatActivity() {
         val view = layoutInflater.inflate(R.layout.layout_settings, binding.content, false)
         binding.content.addView(view)
 
-        val tvInfo = view.findViewById<android.widget.TextView>(R.id.tvSettingsInfo)
-        val btnLogout = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogout)
+        val etFin = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etFinSettings)
+        val etApiKey = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etApiKeySettings)
+        val btnSaveProfile = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveProfile)
+        val tvRateStatus = view.findViewById<TextView>(R.id.tvRateStatus)
         val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineSettings)
         val rgTheme = view.findViewById<android.widget.RadioGroup>(R.id.rgAppTheme)
         val swAutoTrip = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.swAutoTripSettings)
         val rgThreshold = view.findViewById<android.widget.RadioGroup>(R.id.rgThreshold)
+        val etCustomBg = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCustomBg)
+        val etCustomAccent = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCustomAccent)
+        val btnSaveColors = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveColors)
+        val btnLogout = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogout)
 
         lifecycleScope.launch {
-            val vin = settings.getVin()
-            val key = settings.getApiKey()
-            val engine = settings.getEngineType()
-            val theme = settings.getAppTheme()
-            val autoEnabled = settings.getAutoTripEnabled()
-            val threshold = settings.getAutoTripThreshold()
+            etFin.setText(settings.getVin())
+            etApiKey.setText(settings.getApiKey())
+            etCustomBg.setText(settings.getAppTheme())
+            etCustomAccent.setText(settings.getWidgetAccent())
+            tvRateStatus.text = RateLimiter(this@MainActivity).getStatusText()
 
-            tvInfo.text = "FIN\n$vin\n\nAPI-Key\n${key.take(12)}...${key.takeLast(6)}\n\nDiese App nutzt die offizielle Skoda Public API. Der Key wird lokal verschluesselt gespeichert."
-
-            when (engine) {
+            when (settings.getEngineType()) {
                 "combustion" -> view.findViewById<android.widget.RadioButton>(R.id.rbCombustionSettings).isChecked = true
                 "hybrid" -> view.findViewById<android.widget.RadioButton>(R.id.rbHybridSettings).isChecked = true
                 else -> view.findViewById<android.widget.RadioButton>(R.id.rbElectricSettings).isChecked = true
             }
 
-            when (theme) {
+            when (settings.getAppTheme()) {
                 "sand" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeSand).isChecked = true
                 "mocca" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeMocca).isChecked = true
                 "graphite" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeGraphite).isChecked = true
                 else -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeCreme).isChecked = true
             }
 
-            swAutoTrip.isChecked = autoEnabled
+            swAutoTrip.isChecked = settings.getAutoTripEnabled()
 
-            when (threshold) {
+            when (settings.getAutoTripThreshold()) {
                 10 -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh10).isChecked = true
                 25 -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh25).isChecked = true
                 else -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh15).isChecked = true
+            }
+        }
+
+        btnSaveProfile.setOnClickListener {
+            val fin = etFin.text.toString().trim().uppercase()
+            val key = etApiKey.text.toString().trim()
+            if (fin.length < 10 || key.length < 10) {
+                Toast.makeText(this@MainActivity, "Bitte gueltige Werte eingeben", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            lifecycleScope.launch {
+                settings.saveVin(fin)
+                settings.saveApiKey(key)
+                Toast.makeText(this@MainActivity, "Profil gespeichert", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        btnSaveColors.setOnClickListener {
+            val bg = etCustomBg.text.toString().trim()
+            val accent = etCustomAccent.text.toString().trim()
+            lifecycleScope.launch {
+                if (bg.isNotEmpty()) settings.saveAppTheme(bg)
+                if (accent.isNotEmpty()) settings.saveWidgetAccent(accent)
+                Toast.makeText(this@MainActivity, "Farben gespeichert: $bg / $accent", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -358,7 +424,8 @@ class MainActivity : AppCompatActivity() {
             }
             lifecycleScope.launch {
                 settings.saveAppTheme(theme)
-                Toast.makeText(this@MainActivity, "Design auf $theme gestellt - Neustart fuer vollen Effekt", Toast.LENGTH_SHORT).show()
+                etCustomBg.setText(theme)
+                Toast.makeText(this@MainActivity, "Design auf $theme gestellt", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -394,6 +461,7 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 settings.clear()
                 getSharedPreferences("widget_data", MODE_PRIVATE).edit().clear().apply()
+                getSharedPreferences("rate_limit", MODE_PRIVATE).edit().clear().apply()
                 TripStorage(this@MainActivity).clearAll()
                 Toast.makeText(this@MainActivity, "Abgemeldet", Toast.LENGTH_SHORT).show()
                 showLogin()

@@ -42,6 +42,8 @@ class TripService : Service(), SensorEventListener, LocationListener {
     private var maxBrake = 0.0
     private var pointCount = 0
     private var startTime = 0L
+    private val tripPoints = mutableListOf<TripPoint>()
+    private val tripEvents = mutableListOf<TripEvent>()
 
     private val GRAVITY_EARTH = 9.81f
 
@@ -77,6 +79,8 @@ class TripService : Service(), SensorEventListener, LocationListener {
         maxBrake = 0.0
         pointCount = 0
         lastLocation = null
+        tripPoints.clear()
+        tripEvents.clear()
 
         val notification = buildNotification(if (auto) "Auto Fahrt erkannt - GPS aktiv" else "Manuelle Fahrt - GPS aktiv")
         startForeground(1, notification)
@@ -90,8 +94,8 @@ class TripService : Service(), SensorEventListener, LocationListener {
             )
             locationManager.requestLocationUpdates(
                 LocationManager.NETWORK_PROVIDER,
-                1000L,
-                1f,
+                2000L,
+                5f,
                 this
             )
         } catch (e: SecurityException) {
@@ -112,7 +116,7 @@ class TripService : Service(), SensorEventListener, LocationListener {
         val endTime = System.currentTimeMillis()
         val durationSec = (endTime - startTime) / 1000
 
-        val trip = TripData(
+        val tempTrip = TripData(
             id = tripId,
             startTime = startTime,
             endTime = endTime,
@@ -124,7 +128,14 @@ class TripService : Service(), SensorEventListener, LocationListener {
             maxAccel = maxAccel,
             maxBrake = maxBrake,
             pointCount = pointCount,
-            isAuto = isAutoStarted
+            isAuto = isAutoStarted,
+            points = tripPoints.toList(),
+            events = tripEvents.toList()
+        )
+
+        val trip = tempTrip.copy(
+            score = tempTrip.calculateScore(),
+            ecoScore = tempTrip.calculateEcoScore()
         )
 
         TripStorage(this).saveTrip(trip)
@@ -146,11 +157,26 @@ class TripService : Service(), SensorEventListener, LocationListener {
         speedCount++
         pointCount++
 
+        val point = TripPoint(
+            lat = location.latitude,
+            lon = location.longitude,
+            speedKmh = speedKmh,
+            time = System.currentTimeMillis(),
+            accuracy = location.accuracy
+        )
+        tripPoints.add(point)
+        if (tripPoints.size > 2000) tripPoints.removeAt(0)
+
         lastLocation?.let { last ->
             val dist = last.distanceTo(location).toDouble()
             if (dist < 1000) distanceMeters += dist
         }
         lastLocation = location
+
+        // Detect harsh events
+        if (speedKmh > 130) {
+            tripEvents.add(TripEvent("SPEED", System.currentTimeMillis(), speedKmh, location.latitude, location.longitude))
+        }
 
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.notify(1, buildNotification("${String.format("%.1f km/h", speedKmh)} - ${String.format("%.1f km", distanceMeters/1000)} ${if (isAutoStarted) "Auto" else "Manuell"}"))
@@ -168,8 +194,22 @@ class TripService : Service(), SensorEventListener, LocationListener {
             if (gForce > maxG) maxG = gForce
 
             val longitudinal = y.toDouble()
-            if (longitudinal > maxAccel) maxAccel = longitudinal
-            if (-longitudinal > maxBrake) maxBrake = -longitudinal
+            if (longitudinal > maxAccel) {
+                maxAccel = longitudinal
+                if (longitudinal > 2.5 && lastLocation != null) {
+                    tripEvents.add(TripEvent("ACCEL", System.currentTimeMillis(), longitudinal, lastLocation!!.latitude, lastLocation!!.longitude))
+                }
+            }
+            if (-longitudinal > maxBrake) {
+                maxBrake = -longitudinal
+                if (-longitudinal > 2.5 && lastLocation != null) {
+                    tripEvents.add(TripEvent("BRAKE", System.currentTimeMillis(), -longitudinal, lastLocation!!.latitude, lastLocation!!.longitude))
+                }
+            }
+            val lateral = x.toDouble()
+            if (kotlin.math.abs(lateral) > 2.5 && lastLocation != null) {
+                tripEvents.add(TripEvent("CORNER", System.currentTimeMillis(), lateral, lastLocation!!.latitude, lastLocation!!.longitude))
+            }
         }
     }
 
@@ -177,7 +217,7 @@ class TripService : Service(), SensorEventListener, LocationListener {
 
     private fun buildNotification(content: String): Notification {
         return NotificationCompat.Builder(this, "trip_channel")
-            .setContentTitle("SkodaDash Fahrt")
+            .setContentTitle("Fahrten Tracker")
             .setContentText(content)
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
             .setOngoing(true)
@@ -198,18 +238,3 @@ class TripService : Service(), SensorEventListener, LocationListener {
 
     override fun onBind(intent: Intent?): IBinder? = null
 }
-
-data class TripData(
-    val id: Long,
-    val startTime: Long,
-    val endTime: Long?,
-    val distanceMeters: Double,
-    val durationSec: Long,
-    val maxSpeedKmh: Double,
-    val avgSpeedKmh: Double,
-    val maxG: Double,
-    val maxAccel: Double,
-    val maxBrake: Double,
-    val pointCount: Int,
-    val isAuto: Boolean = false
-)

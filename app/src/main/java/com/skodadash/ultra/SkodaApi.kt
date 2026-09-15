@@ -1,5 +1,6 @@
 package com.skodadash.ultra
 
+import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -18,13 +19,21 @@ data class VehicleData(
     val rawJson: String
 )
 
-class SkodaApi(private val settings: SettingsRepository) {
+class SkodaApi(private val settings: SettingsRepository, private val context: Context? = null) {
 
     suspend fun fetchVehicle(): VehicleData? = withContext(Dispatchers.IO) {
         try {
             val apiKey = settings.getApiKey()
             val vin = settings.getVin()
             if (apiKey.isEmpty() || vin.isEmpty()) return@withContext null
+
+            // Rate limit check
+            context?.let { ctx ->
+                val limiter = RateLimiter(ctx)
+                if (!limiter.canMakeRequest()) {
+                    throw Exception("Rate Limit erreicht: ${limiter.getRemainingRequests()} übrig. ${limiter.getStatusText()}. Bitte warten.")
+                }
+            }
 
             val url = URL("https://public.api.connect.skoda-auto.cz/api/v1/vehicles/$vin")
             val conn = url.openConnection() as HttpURLConnection
@@ -37,17 +46,20 @@ class SkodaApi(private val settings: SettingsRepository) {
             val code = conn.responseCode
             if (code != 200) {
                 val err = conn.errorStream?.bufferedReader()?.readText() ?: "HTTP $code"
+                if (code == 429) {
+                    throw Exception("Rate Limit 429: Zu viele Anfragen. Max 20 pro Stunde. Bitte warten.")
+                }
                 throw Exception("API Fehler $code: $err - Key abgelaufen? In MySkoda App neuen Key erstellen!")
             }
+
+            context?.let { RateLimiter(it).recordRequest() }
 
             val text = conn.inputStream.bufferedReader().readText()
             val root = JSONObject(text)
             val vehicle = root.optJSONObject("vehicle") ?: root
 
-            // Name
             val name = vehicle.optString("name", vin).ifEmpty { vin }
 
-            // Status - doorsLocked YES/NO/LOCKED/UNLOCKED
             var doorsLocked: Boolean? = null
             vehicle.optJSONObject("status")?.optJSONObject("overall")?.let { overall ->
                 val dl = overall.optString("doorsLocked", "")
@@ -62,13 +74,11 @@ class SkodaApi(private val settings: SettingsRepository) {
                 }
             }
 
-            // Odometer
             var odometerKm: Double? = null
             vehicle.optJSONObject("odometer")?.let { odo ->
                 if (odo.has("mileageInKm")) odometerKm = odo.optDouble("mileageInKm")
             }
 
-            // Charging - battery
             var batteryPercent: Double? = null
             var rangeKm: Double? = null
             var chargingState: String? = null
@@ -85,14 +95,12 @@ class SkodaApi(private val settings: SettingsRepository) {
                 status?.let { s ->
                     if (s.has("state")) chargingState = s.optString("state")
                     if (s.has("chargePowerInKw")) chargingPowerKw = s.optDouble("chargePowerInKw")
-                    // fallback range from charging if not from battery
                     if (rangeKm == null && s.has("remainingCruisingRangeInMeters")) {
                         rangeKm = s.optDouble("remainingCruisingRangeInMeters") / 1000.0
                     }
                 }
             }
 
-            // Fuel status - for combustion/hybrid
             if (rangeKm == null || batteryPercent == null) {
                 vehicle.optJSONObject("fuelStatus")?.let { fuel ->
                     if (fuel.has("totalRangeInKm")) {
@@ -117,12 +125,10 @@ class SkodaApi(private val settings: SettingsRepository) {
                 }
             }
 
-            // If still no range, try charging range again
             if (rangeKm == null) {
                 vehicle.optJSONObject("fuelStatus")?.optDouble("totalRangeInKm")?.let { rangeKm = it }
             }
 
-            // Debug raw for settings screen
             VehicleData(
                 name = name,
                 batteryPercent = batteryPercent,

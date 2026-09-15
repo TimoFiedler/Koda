@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.View
 import android.widget.RemoteViews
 
@@ -17,6 +18,15 @@ class SkodaWidgetProvider : AppWidgetProvider() {
     }
 
     companion object {
+        private fun parseHex(hex: String): Int? {
+            return try {
+                if (hex.isBlank()) null else {
+                    val cleaned = hex.trim()
+                    if (cleaned.startsWith("#")) Color.parseColor(cleaned) else null
+                }
+            } catch (_: Exception) { null }
+        }
+
         fun updateWidget(context: Context, appWidgetManager: AppWidgetManager, widgetId: Int) {
             val views = RemoteViews(context.packageName, R.layout.widget_skoda)
             val dataPrefs = context.getSharedPreferences("widget_data", Context.MODE_PRIVATE)
@@ -41,8 +51,10 @@ class SkodaWidgetProvider : AppWidgetProvider() {
             val accentColor = configPrefs.getString("accent_color", "brown") ?: "brown"
             val layoutStyle = configPrefs.getString("layout_style", "compact") ?: "compact"
             val textSize = configPrefs.getString("text_size", "medium") ?: "medium"
+            val customBgHex = configPrefs.getString("custom_bg_hex", "") ?: ""
+            val customAccentHex = configPrefs.getString("custom_accent_hex", "") ?: ""
+            val customTextHex = configPrefs.getString("custom_text_hex", "") ?: ""
 
-            // Background style
             val bgRes = when (bgStyle) {
                 "sand" -> R.drawable.widget_bg_sand
                 "mocca" -> R.drawable.widget_bg_mocha
@@ -53,10 +65,9 @@ class SkodaWidgetProvider : AppWidgetProvider() {
             views.setInt(R.id.widgetRoot, "setBackgroundResource", bgRes)
 
             val isDark = bgStyle == "dark"
-            val titleColor = if (isDark) 0xFFFFFEF9.toInt() else 0xFF3E2723.toInt()
-            val secondaryColor = if (isDark) 0xFFBCAAA4.toInt() else 0xFF8D6E63.toInt()
-            
-            val accentTextColor = when (accentColor) {
+            var titleColor = if (isDark) 0xFFFFFEF9.toInt() else 0xFF3E2723.toInt()
+            var secondaryColor = if (isDark) 0xFFBCAAA4.toInt() else 0xFF8D6E63.toInt()
+            var accentTextColor = when (accentColor) {
                 "gold" -> if (isDark) 0xFFC5A880.toInt() else 0xFF8B7355.toInt()
                 "sage" -> if (isDark) 0xFF9CAF88.toInt() else 0xFF6B8F71.toInt()
                 "olive" -> if (isDark) 0xFF8B8B6E.toInt() else 0xFF6B6B4F.toInt()
@@ -64,7 +75,9 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 else -> if (isDark) 0xFFD7CCC8.toInt() else 0xFF8B7355.toInt()
             }
 
-            // Text size
+            parseHex(customTextHex)?.let { titleColor = it; secondaryColor = it }
+            parseHex(customAccentHex)?.let { accentTextColor = it }
+
             val batteryTextSize = when (textSize) {
                 "small" -> 18f
                 "large" -> 26f
@@ -76,7 +89,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 else -> 13f
             }
 
-            // Title
             if (showName && layoutStyle != "minimal") {
                 views.setViewVisibility(R.id.tvWidgetTitle, View.VISIBLE)
                 views.setTextViewText(R.id.tvWidgetTitle, name.uppercase())
@@ -85,7 +97,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.tvWidgetTitle, View.GONE)
             }
 
-            // Battery / Fuel - depends on engine type
             if (showBattery && battery >= 0) {
                 views.setViewVisibility(R.id.tvWidgetBattery, View.VISIBLE)
                 val label = when (engineType) {
@@ -100,7 +111,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.tvWidgetBattery, View.GONE)
             }
 
-            // Range
             if (showRange && range >= 0 && layoutStyle != "minimal") {
                 views.setViewVisibility(R.id.tvWidgetRange, View.VISIBLE)
                 views.setTextViewText(R.id.tvWidgetRange, "$range km Reichweite")
@@ -110,7 +120,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.tvWidgetRange, View.GONE)
             }
 
-            // Odometer
             if (showOdo && odo >= 0 && layoutStyle == "detailed") {
                 views.setViewVisibility(R.id.tvWidgetOdo, View.VISIBLE)
                 views.setTextViewText(R.id.tvWidgetOdo, "$odo km")
@@ -118,7 +127,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.tvWidgetOdo, View.GONE)
             }
 
-            // Lock
             if (showLock && hasLockData && layoutStyle != "minimal") {
                 views.setViewVisibility(R.id.tvWidgetLock, View.VISIBLE)
                 views.setTextViewText(R.id.tvWidgetLock, if (locked) "Verriegelt" else "Offen")
@@ -126,7 +134,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.tvWidgetLock, View.GONE)
             }
 
-            // Charging
             val chargingText = when (charging) {
                 "CHARGING" -> "Laden"
                 "CHARGED" -> "Vollstaendig"
@@ -143,7 +150,6 @@ class SkodaWidgetProvider : AppWidgetProvider() {
                 views.setViewVisibility(R.id.tvWidgetCharging, View.GONE)
             }
 
-            // Click opens app
             val intent = Intent(context, MainActivity::class.java)
             val pending = PendingIntent.getActivity(context, widgetId, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
             views.setOnClickPendingIntent(R.id.widgetRoot, pending)

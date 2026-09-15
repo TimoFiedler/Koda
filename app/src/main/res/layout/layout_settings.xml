@@ -19,10 +19,20 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fahrzeug und Konto"
+        android:text="Fahrzeug, Farben und Verhalten"
         android:textSize="13sp"
         android:textColor="@color/text_secondary"
         android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fahrzeug Daten"
+        android:textSize="11sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:textColor="@color/text_hint"
+        android:layout_marginBottom="12dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -39,23 +49,64 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Verbundenes Fahrzeug"
-                android:textSize="11sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.08"
-                android:textColor="@color/text_hint"
-                android:layout_marginBottom="16dp" />
+                android:hint="FIN / VIN"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeColor="@color/cream_border"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etFinSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapCharacters"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="API-Key"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:boxStrokeColor="@color/cream_border"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etApiKeySettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/tvSettingsInfo"
+                android:id="@+id/tvRateStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:textColor="@color/text_primary"
-                android:lineSpacingExtra="5dp" />
+                android:text="Rate Limit: 20/20"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveProfile"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Profil speichern"
+                app:cornerRadius="12dp"
+                android:backgroundTint="@color/brown_primary" />
 
         </LinearLayout>
 
@@ -124,7 +175,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Design"
+        android:text="Design - Farben frei konfigurierbar"
         android:textSize="11sp"
         android:textAllCaps="true"
         android:letterSpacing="0.08"
@@ -149,7 +200,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="App Farbschema"
+                android:text="Vordefinierte Themes"
                 android:textSize="13sp"
                 android:textColor="@color/text_primary"
                 android:layout_marginBottom="12dp" />
@@ -157,38 +208,73 @@
             <RadioGroup
                 android:id="@+id/rgAppTheme"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
 
-                <RadioButton
-                    android:id="@+id/rbThemeCreme"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Creme - Warm und hell"
-                    android:checked="true"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rbThemeSand"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Sand - Helles Beige"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rbThemeMocca"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Mocca - Kuehles Grau-Beige"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rbThemeGraphite"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Graphit - Minimal und modern"
-                    android:textSize="14sp" />
+                <RadioButton android:id="@+id/rbThemeCreme" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Creme - Warm und hell #FFF8E7" android:checked="true" android:textSize="14sp" />
+                <RadioButton android:id="@+id/rbThemeSand" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sand - Helles Beige #FDF6E3" android:textSize="14sp" />
+                <RadioButton android:id="@+id/rbThemeMocca" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mocca - Kuehles Grau-Beige #F5F0EB" android:textSize="14sp" />
+                <RadioButton android:id="@+id/rbThemeGraphite" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Graphit - Minimal #FAFAFA" android:textSize="14sp" />
 
             </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Freie Farbwahl (Hex oder Name)"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Hintergrund: creme, sand, mocca, graphite, #FFF8E7"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                android:layout_marginBottom="12dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCustomBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Akzent: brown, gold, sage, olive, graphite, #8B7355"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                android:layout_marginBottom="16dp"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCustomAccent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSaveColors"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Farben speichern"
+                app:cornerRadius="12dp"
+                android:backgroundTint="@color/cream_card"
+                android:textColor="@color/brown_primary"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/cream_border"
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
         </LinearLayout>
 
@@ -197,7 +283,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fahrtenbuch"
+        android:text="Fahrten Tracker"
         android:textSize="11sp"
         android:textAllCaps="true"
         android:letterSpacing="0.08"
@@ -231,37 +317,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Automatische Erkennung"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Startet Fahrt bei Bewegung"
-                        android:textSize="11sp"
-                        android:textColor="@color/text_secondary" />
-
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Automatische Erkennung" android:textSize="14sp" android:textColor="@color/text_primary" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Startet Fahrt bei Bewegung" android:textSize="11sp" android:textColor="@color/text_secondary" />
                 </LinearLayout>
 
-                <com.google.android.material.materialswitch.MaterialSwitch
-                    android:id="@+id/swAutoTripSettings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/swAutoTripSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Schwelle"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginBottom="8dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Schwelle" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginBottom="8dp" />
 
             <RadioGroup
                 android:id="@+id/rgThreshold"
@@ -269,69 +333,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/rbThresh10"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="10 km/h"
-                    android:textSize="13sp" />
-
-                <RadioButton
-                    android:id="@+id/rbThresh15"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="15 km/h"
-                    android:checked="true"
-                    android:textSize="13sp" />
-
-                <RadioButton
-                    android:id="@+id/rbThresh25"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="25 km/h"
-                    android:textSize="13sp" />
+                <RadioButton android:id="@+id/rbThresh10" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="10 km/h" android:textSize="13sp" />
+                <RadioButton android:id="@+id/rbThresh15" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="15 km/h" android:checked="true" android:textSize="13sp" />
+                <RadioButton android:id="@+id/rbThresh25" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="25 km/h" android:textSize="13sp" />
 
             </RadioGroup>
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="0dp"
-        android:backgroundTint="@color/beige_light"
-        android:layout_marginBottom="20dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Information"
-                android:textSize="11sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.08"
-                android:textColor="@color/brown_dark"
-                android:layout_marginBottom="12dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SkodaDash Ultra\nVersion 2.0 - Premium Creme\n\nOffizielle API: public.api.connect.skoda-auto.cz\nLimit: 20 Anfragen pro Stunde\nWidget: 15 Minuten Intervall\nFahrtenbuch: GPS 1Hz, Auto-Erkennung, linearer Beschleunigungssensor"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:lineSpacingExtra="4dp" />
 
         </LinearLayout>
 

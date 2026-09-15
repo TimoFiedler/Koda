@@ -18,38 +18,55 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <View
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/dot_online"
-                android:layout_marginEnd="10dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/dot_online"
+                    android:layout_marginEnd="10dp" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fahrzeugdaten laden"
+                    android:textSize="13sp"
+                    android:textColor="@color/text_secondary"
+                    android:letterSpacing="0.02" />
+
+                <TextView
+                    android:id="@+id/tvEngineBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ELEKTRO"
+                    android:textSize="10sp"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.08"
+                    android:textColor="@color/brown_primary"
+                    android:background="@drawable/card_bg_accent"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="0dp"
+                android:id="@+id/tvRateLimit"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Fahrzeugdaten laden"
-                android:textSize="13sp"
-                android:textColor="@color/text_secondary"
-                android:letterSpacing="0.02" />
-
-            <TextView
-                android:id="@+id/tvEngineBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ELEKTRO"
+                android:text="Rate Limit: 20/20"
                 android:textSize="10sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.08"
-                android:textColor="@color/brown_primary"
-                android:background="@drawable/card_bg_accent"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="4dp" />
+                android:textColor="@color/text_hint"
+                android:layout_marginTop="8dp"
+                android:letterSpacing="0.03" />
 
         </LinearLayout>
 
@@ -233,7 +250,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Fahrtenbuch"
+                    android:text="Fahrten Tracker"
                     android:textSize="11sp"
                     android:textAllCaps="true"
                     android:letterSpacing="0.08"
@@ -264,7 +281,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Manuell starten oder automatisch bei Fahrtbeginn. GPS 1Hz und G-Sensor für Fahrdynamik"
+                android:text="Manuell starten oder automatisch bei Fahrtbeginn. GPS 1Hz, G-Sensor, Punkte System"
                 android:textSize="13sp"
                 android:textColor="#B3FFFEF9"
                 android:lineSpacingExtra="2dp"

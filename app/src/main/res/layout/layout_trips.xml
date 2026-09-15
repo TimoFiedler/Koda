@@ -6,43 +6,60 @@
     android:orientation="vertical"
     android:background="@color/cream_background">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Fahrtenbuch"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_primary"
-        android:letterSpacing="0.02"
-        android:layout_marginBottom="4dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Automatisch und manuell aufgezeichnet"
-        android:textSize="13sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="20dp" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="16dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="4dp">
 
         <TextView
-            android:id="@+id/tvTrips"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:textSize="13sp"
+            android:layout_weight="1"
+            android:text="Fahrten Tracker"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:textColor="@color/text_primary"
-            android:lineSpacingExtra="4dp" />
+            android:letterSpacing="0.02" />
 
-    </com.google.android.material.card.MaterialCardView>
+        <TextView
+            android:id="@+id/tvTotalScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Punkte"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/brown_primary"
+            android:background="@drawable/card_bg_accent"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Jede Fahrt als Kachel mit Punkten und Eco Score"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:id="@+id/containerTrips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvTripsEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="@color/text_primary"
+        android:lineSpacingExtra="4dp"
+        android:visibility="gone" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearTrips"
