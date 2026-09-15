@@ -3,12 +3,16 @@ package com.skodadash.ultra
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayout
@@ -38,6 +42,11 @@ class MainActivity : AppCompatActivity() {
         settings = SettingsRepository(this)
         api = SkodaApi(settings, this)
 
+        // Farben anwenden
+        lifecycleScope.launch {
+            applyCustomColors()
+        }
+
         val perms = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -52,6 +61,11 @@ class MainActivity : AppCompatActivity() {
                 showLogin()
             } else {
                 showDashboard()
+                // Auto Erkennung automatisch starten wenn aktiviert
+                if (settings.getAutoTripEnabled() && !AutoTripService.isRunning) {
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
+                }
             }
         }
 
@@ -62,8 +76,7 @@ class MainActivity : AppCompatActivity() {
                 when (currentTab) {
                     0 -> showDashboard()
                     1 -> showTrips()
-                    2 -> showWidgetInfo()
-                    3 -> showSettings()
+                    2 -> showSettings()
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -71,9 +84,46 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch { applyCustomColors() }
+    }
+
     override fun onDestroy() {
         trackingJob?.cancel()
         super.onDestroy()
+    }
+
+    private suspend fun applyCustomColors() {
+        try {
+            val customBg = settings.getCustomBgHex()
+            val customAccent = settings.getCustomAccentHex()
+            val appTheme = settings.getAppTheme()
+            val widgetAccent = settings.getWidgetAccent()
+
+            val bgHex = customBg.ifEmpty { appTheme }
+            val accentHex = customAccent.ifEmpty { widgetAccent }
+
+            val bgColor = ColorHelper.parseColor(bgHex)
+            val accentColor = ColorHelper.parseColor(accentHex)
+
+            // Cache für andere Activities
+            getSharedPreferences("theme_cache", MODE_PRIVATE).edit().apply {
+                bgColor?.let { putInt("bg_color", it) }
+                accentColor?.let { putInt("accent_color", it) }
+                putString("bg_hex", bgHex)
+                putString("accent_hex", accentHex)
+                apply()
+            }
+
+            // Anwenden auf Root
+            bgColor?.let {
+                binding.root.setBackgroundColor(it)
+                findViewById<View>(R.id.content)?.let { content ->
+                    // ScrollView background wird über parent gesetzt, aber wir setzen auch content container
+                }
+            }
+        } catch (_: Exception) {}
     }
 
     private fun showLogin() {
@@ -82,10 +132,10 @@ class MainActivity : AppCompatActivity() {
         val etApiKey = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etApiKey)
         val etVin = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etVin)
         val btnLogin = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogin)
-        val tvHelp = view.findViewById<android.widget.TextView>(R.id.tvHelp)
+        val tvHelp = view.findViewById<TextView>(R.id.tvHelp)
         val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineType)
 
-        tvHelp.text = "1. MySkoda App oeffnen (Version 8.16 oder neuer)\n2. Profil -> Einstellungen -> Drittanbieter-Zugriff\n3. Neuen API-Key erstellen und Fahrzeug auswaehlen\n4. API-Key und FIN hier eingeben\n5. Antriebsart waehlen fuer korrekte Anzeige\n\nDer Key ist 6 Monate gueltig und erlaubt 20 Anfragen pro Stunde. Rate Limit wird automatisch verwaltet.\n\nVollversion: Fahrten Tracker mit interaktiver Karte, Sport Score fuer hohe Geschwindigkeit und G-Kraefte."
+        tvHelp.text = "1. MySkoda App oeffnen\n2. Profil -> Drittanbieter-Zugriff\n3. API-Key erstellen\n4. FIN und Key eingeben\n\nMinimal und genau - nur GPS, keine Netzwerk Ortung"
 
         lifecycleScope.launch {
             etApiKey.setText(settings.getApiKey())
@@ -101,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             val key = etApiKey.text.toString().trim()
             val vin = etVin.text.toString().trim().uppercase()
             if (key.length < 10 || vin.length < 10) {
-                Toast.makeText(this@MainActivity, "Bitte gueltigen API-Key und FIN eingeben", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Bitte gueltige Werte", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val engineType = when (rgEngine.checkedRadioButtonId) {
@@ -113,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 settings.saveApiKey(key)
                 settings.saveVin(vin)
                 settings.saveEngineType(engineType)
-                Toast.makeText(this@MainActivity, "Gespeichert - Vollversion aktiv", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Gespeichert", Toast.LENGTH_SHORT).show()
                 showDashboard()
             }
         }
@@ -137,11 +187,11 @@ class MainActivity : AppCompatActivity() {
         val btnRefresh = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRefresh)
         val btnStartTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStartTrip)
         val btnStopTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStopTrip)
-        val swAutoTrip = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.swAutoTrip)
+        val swAutoTrip = view.findViewById<SwitchCompat>(R.id.swAutoTrip)
         val tvRateLimit = view.findViewById<TextView>(R.id.tvRateLimit)
         val tvTrackerStats = view.findViewById<TextView>(R.id.tvTrackerStats)
 
-        var isInitializing = true
+        var initializing = true
         lifecycleScope.launch {
             val engineType = settings.getEngineType()
             tvEngineBadge.text = when (engineType) {
@@ -155,44 +205,45 @@ class MainActivity : AppCompatActivity() {
                 else -> "Ladezustand"
             }
             val storage = TripStorage(this@MainActivity)
-            tvTrackerStats.text = "${storage.getTotalScore()} Punkte - Level ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
+            tvTrackerStats.text = "${storage.getTotalScore()} Punkte - ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
             swAutoTrip.isChecked = settings.getAutoTripEnabled()
             tvAutoStatus.text = if (settings.getAutoTripEnabled()) "Auto an" else "Auto aus"
             tvRateLimit.text = RateLimiter(this@MainActivity).getStatusText()
-            isInitializing = false
+            initializing = false
+            applyCustomColors()
         }
 
         fun updateTrackingButtons() {
-            if (!::binding.isInitialized) return
             try {
                 val running = TripService.isRunning
                 val autoRunning = AutoTripService.isRunning
                 btnStartTrip.isEnabled = !running
                 btnStopTrip.isEnabled = running
-                btnStartTrip.text = if (running) "Aufzeichnung laeuft" else "Fahrt manuell starten"
+                btnStartTrip.text = if (running) "Aufzeichnung laeuft" else "Fahrt starten"
                 tvAutoStatus.text = when {
-                    running && autoRunning -> "Auto erkennt - Fahrt laeuft"
-                    running -> "Manuell - Fahrt laeuft"
-                    autoRunning -> "Auto an - wartet"
+                    running && autoRunning -> "Auto - Fahrt laeuft"
+                    running -> "Manuell - laeuft"
+                    autoRunning -> "Auto wartet"
                     else -> "Bereit"
                 }
                 val storage = TripStorage(this)
-                tvTrackerStats.text = "${storage.getTotalScore()} Punkte - Level ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
+                tvTrackerStats.text = "${storage.getTotalScore()} Punkte - ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
             } catch (_: Exception) {}
         }
 
         swAutoTrip.setOnCheckedChangeListener { _, isChecked ->
-            if (isInitializing) return@setOnCheckedChangeListener
+            if (initializing) return@setOnCheckedChangeListener
             lifecycleScope.launch {
                 settings.saveAutoTripEnabled(isChecked)
+                getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", settings.getAutoTripThreshold()).apply()
                 if (isChecked) {
                     val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-                    Toast.makeText(this@MainActivity, "Automatische Erkennung aktiviert", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Auto Erkennung an - startet ab Schwelle", Toast.LENGTH_SHORT).show()
                 } else {
                     val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_STOP }
                     startService(intent)
-                    Toast.makeText(this@MainActivity, "Automatische Erkennung deaktiviert", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Auto Erkennung aus", Toast.LENGTH_SHORT).show()
                 }
                 updateTrackingButtons()
             }
@@ -213,27 +264,13 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val data = api.fetchVehicle()
                     if (data != null) {
-                        val engineType = settings.getEngineType()
                         tvStatus.text = "${data.name} - ${data.lastUpdated}"
                         tvRateLimit.text = limiter.getStatusText()
                         tvBattery.text = data.batteryPercent?.let { "${it.toInt()}%" } ?: "--"
                         tvRange.text = data.rangeKm?.let { "${it.toInt()} km" } ?: "--"
-                        tvOdo.text = data.odometerKm?.let { "Kilometerstand ${it.toInt()} km" } ?: "Kilometerstand nicht verfuegbar"
-                        tvLock.text = when (data.doorsLocked) {
-                            true -> "Verriegelt"
-                            false -> "Offen"
-                            null -> "Status nicht verfuegbar"
-                        }
-                        tvCharging.text = when (data.chargingState) {
-                            "CHARGING" -> "Laden mit ${data.chargingPowerKw?.let { "${it.toInt()} kW" } ?: ""}".trim()
-                            "CHARGED" -> "Vollstaendig geladen"
-                            "READY_FOR_CHARGING" -> "Bereit zum Laden"
-                            "CONSERVING" -> "Ladeerhaltung aktiv"
-                            "CHARGING_INTERRUPTED" -> "Laden unterbrochen"
-                            "CONNECT_CABLE" -> "Kabel verbinden"
-                            null, "" -> if (engineType == "electric") "Nicht am Laden" else ""
-                            else -> data.chargingState
-                        }
+                        tvOdo.text = data.odometerKm?.let { "${it.toInt()} km" } ?: "--"
+                        tvLock.text = when (data.doorsLocked) { true -> "Verriegelt" else -> "Offen" }
+                        tvCharging.text = data.chargingState ?: ""
                         getSharedPreferences("widget_data", MODE_PRIVATE).edit().apply {
                             putInt("battery", data.batteryPercent?.toInt() ?: -1)
                             putInt("range", data.rangeKm?.toInt() ?: -1)
@@ -241,15 +278,14 @@ class MainActivity : AppCompatActivity() {
                             putBoolean("locked", data.doorsLocked ?: false)
                             putString("charging", data.chargingState ?: "")
                             putString("name", data.name)
-                            putString("engine_type", engineType)
+                            putString("engine_type", settings.getEngineType())
                             apply()
                         }
-                        sendBroadcast(Intent(this@MainActivity, SkodaWidgetProvider::class.java).apply { action = "android.appwidget.action.APPWIDGET_UPDATE" })
                     } else {
-                        tvStatus.text = "Keine Daten erhalten"
+                        tvStatus.text = "Keine Daten"
                     }
                 } catch (e: Exception) {
-                    tvStatus.text = e.message ?: "Fehler beim Laden"
+                    tvStatus.text = e.message ?: "Fehler"
                 } finally {
                     btnRefresh.isEnabled = true
                 }
@@ -259,14 +295,14 @@ class MainActivity : AppCompatActivity() {
         btnStartTrip.setOnClickListener {
             val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_START }
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-            Toast.makeText(this@MainActivity, "Aufzeichnung gestartet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Gestartet - nur GPS", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
         btnStopTrip.setOnClickListener {
             val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
             startService(intent)
-            Toast.makeText(this@MainActivity, "Aufzeichnung beendet", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Beendet", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
@@ -275,7 +311,7 @@ class MainActivity : AppCompatActivity() {
         trackingJob?.cancel()
         trackingJob = lifecycleScope.launch {
             while (isActive && currentTab == 0) {
-                delay(1000)
+                delay(1200)
                 updateTrackingButtons()
             }
         }
@@ -299,15 +335,15 @@ class MainActivity : AppCompatActivity() {
             val trips = storage.getTrips().reversed()
 
             tvTotalScore.text = "${storage.getTotalScore()} Punkte"
-            tvLevel.text = "Level ${storage.getLevel()} - ${storage.getLevelProgress()}% - ${String.format("%.1f km", storage.getTotalDistance()/1000)} gesamt - ${trips.size} Fahrten"
-            tvStatsDetail.text = "Schnitt ${String.format("%.0f km/h", storage.getAverageSpeed())} - Beste Fahrt ${storage.getBestTrip()?.score ?: 0} Punkte - Gesamt ${storage.getTotalDuration()/3600}h ${storage.getTotalDuration()%3600/60}min"
+            tvLevel.text = "${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)} - ${trips.size} Fahrten"
+            tvStatsDetail.text = "Schnitt ${String.format("%.0f km/h", storage.getAverageSpeed())} - Beste ${storage.getBestTrip()?.score ?: 0} Pkt"
 
             if (trips.isEmpty()) {
-                tvEmpty.visibility = android.view.View.VISIBLE
-                tvEmpty.text = "Noch keine Fahrten vorhanden.\n\nManuell:\nIm Dashboard Fahrt manuell starten.\n\nAutomatisch:\nIn den Einstellungen automatische Erkennung aktivieren. Startet ab eingestellter Geschwindigkeit und stoppt nach 3 Minuten Stillstand.\n\nVollversion Punktesystem (Sport Score):\n- 12 Punkte pro km\n- 1.5 Punkte pro Minute\n- Bis 120 Punkte fuer 200 km/h max\n- Bis 100 Punkte fuer 1.3 G\n- 60 Punkte wenn 0x gebremst (wenig bremsen = mehr)\n- 8 Punkte pro Kurve, 12 fuer scharfe\n- 6 Punkte pro Beschleunigung\n- Tipp: Hohe Geschwindigkeit + hohe G + wenig Bremsen = maximal Punkte\n\nKarte:\nJede Fahrt hat interaktive Karte mit farbigen Punkten fuer Bremsen, Gas, Kurven. Tippe auf Punkte fuer Details."
+                tvEmpty.visibility = View.VISIBLE
+                tvEmpty.text = "Noch keine Fahrten.\n\nGenaues Tracking: Nur GPS, Filter fuer Genauigkeit <30m, Distanz nur bei plausiblen Punkten.\n\nAuto: Startet nach 3 Messungen ueber Schwelle, stoppt nach 2 Min Stand.\n\nScore: Wenig Bremsen + viel Speed + hohe G = mehr Punkte"
             } else {
-                tvEmpty.visibility = android.view.View.GONE
-                trips.take(100).forEach { trip ->
+                tvEmpty.visibility = View.GONE
+                trips.take(50).forEach { trip ->
                     val tile = layoutInflater.inflate(R.layout.item_trip_tile, container, false)
                     val tvDate = tile.findViewById<TextView>(R.id.tvTileDate)
                     val tvType = tile.findViewById<TextView>(R.id.tvTileType)
@@ -319,19 +355,22 @@ class MainActivity : AppCompatActivity() {
                     val tvEvents = tile.findViewById<TextView>(R.id.tvTileEvents)
 
                     tvDate.text = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMANY).format(java.util.Date(trip.startTime))
-                    tvType.text = "${if (trip.isAuto) "Auto" else "Manuell"} - ${trip.getLevel()}"
+                    tvType.text = if (trip.isAuto) "Auto" else "Manuell"
                     tvDist.text = "${String.format("%.1f km", trip.distanceMeters/1000)}"
                     tvDur.text = "${trip.durationSec/60} Min"
                     tvScore.text = "${trip.score} Pkt"
-                    tvEco.text = "${trip.getDrivingStyle()}"
-                    tvSpeed.text = "Max ${trip.maxSpeedKmh.toInt()} km/h - ${String.format("%.1f G", trip.maxG)}"
-                    tvEvents.text = "${trip.events.size} Events - ${trip.points.size} GPS - ${trip.efficiencyScore}% Eff"
+                    tvEco.text = trip.getDrivingStyle()
+                    tvSpeed.text = "${trip.maxSpeedKmh.toInt()} km/h max"
+                    tvEvents.text = "${trip.events.size} Events - Tippe fuer Karte"
+
+                    // Farbe anwenden
+                    val accent = getSharedPreferences("theme_cache", MODE_PRIVATE).getInt("accent_color", Color.parseColor("#8B7355"))
+                    tvScore.setTextColor(accent)
 
                     tile.setOnClickListener {
                         val intent = Intent(this, TripDetailActivity::class.java).apply { putExtra("trip_id", trip.id) }
                         startActivity(intent)
                     }
-
                     container.addView(tile)
                 }
             }
@@ -341,14 +380,8 @@ class MainActivity : AppCompatActivity() {
         btnClear.setOnClickListener {
             TripStorage(this).clearAll()
             loadTrips()
-            Toast.makeText(this@MainActivity, "Verlauf geloescht", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "Gelöscht", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun showWidgetInfo() {
-        binding.content.removeAllViews()
-        val view = layoutInflater.inflate(R.layout.layout_widget_info, binding.content, false)
-        binding.content.addView(view)
     }
 
     private fun showSettings() {
@@ -361,20 +394,20 @@ class MainActivity : AppCompatActivity() {
         val btnSaveProfile = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveProfile)
         val tvRateStatus = view.findViewById<TextView>(R.id.tvRateStatus)
         val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineSettings)
-        val rgTheme = view.findViewById<android.widget.RadioGroup>(R.id.rgAppTheme)
-        val swAutoTrip = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.swAutoTripSettings)
+        val swAutoTrip = view.findViewById<SwitchCompat>(R.id.swAutoTripSettings)
         val rgThreshold = view.findViewById<android.widget.RadioGroup>(R.id.rgThreshold)
         val etCustomBg = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCustomBg)
         val etCustomAccent = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCustomAccent)
         val btnSaveColors = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveColors)
+        val viewPreview = view.findViewById<View>(R.id.viewColorPreview)
         val btnLogout = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogout)
 
         var initializing = true
         lifecycleScope.launch {
             etFin.setText(settings.getVin())
             etApiKey.setText(settings.getApiKey())
-            etCustomBg.setText(settings.getAppTheme())
-            etCustomAccent.setText(settings.getWidgetAccent())
+            etCustomBg.setText(settings.getCustomBgHex().ifEmpty { settings.getAppTheme() })
+            etCustomAccent.setText(settings.getCustomAccentHex().ifEmpty { settings.getWidgetAccent() })
             tvRateStatus.text = RateLimiter(this@MainActivity).getStatusText()
 
             when (settings.getEngineType()) {
@@ -382,26 +415,48 @@ class MainActivity : AppCompatActivity() {
                 "hybrid" -> view.findViewById<android.widget.RadioButton>(R.id.rbHybridSettings).isChecked = true
                 else -> view.findViewById<android.widget.RadioButton>(R.id.rbElectricSettings).isChecked = true
             }
-            when (settings.getAppTheme()) {
-                "sand" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeSand).isChecked = true
-                "mocca" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeMocca).isChecked = true
-                "graphite" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeGraphite).isChecked = true
-                else -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeCreme).isChecked = true
-            }
+
             swAutoTrip.isChecked = settings.getAutoTripEnabled()
             when (settings.getAutoTripThreshold()) {
                 10 -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh10).isChecked = true
                 25 -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh25).isChecked = true
                 else -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh15).isChecked = true
             }
+
+            // Preview
+            val bg = ColorHelper.parseColor(etCustomBg.text.toString()) ?: Color.parseColor("#FFF8E7")
+            val accent = ColorHelper.parseColor(etCustomAccent.text.toString()) ?: Color.parseColor("#8B7355")
+            val drawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 24f
+                setColor(bg)
+                setStroke(2, accent)
+            }
+            viewPreview.background = drawable
+
             initializing = false
         }
+
+        fun updatePreview() {
+            val bg = ColorHelper.parseColor(etCustomBg.text.toString()) ?: Color.parseColor("#FFF8E7")
+            val accent = ColorHelper.parseColor(etCustomAccent.text.toString()) ?: Color.parseColor("#8B7355")
+            val drawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 24f
+                setColor(bg)
+                setStroke(4, accent)
+            }
+            viewPreview.background = drawable
+        }
+
+        etCustomBg.setOnFocusChangeListener { _, _ -> updatePreview() }
+        etCustomAccent.setOnFocusChangeListener { _, _ -> updatePreview() }
 
         btnSaveProfile.setOnClickListener {
             val fin = etFin.text.toString().trim().uppercase()
             val key = etApiKey.text.toString().trim()
             if (fin.length < 10 || key.length < 10) {
-                Toast.makeText(this@MainActivity, "Bitte gueltige Werte eingeben", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Bitte gueltige Werte", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             lifecycleScope.launch {
@@ -414,10 +469,27 @@ class MainActivity : AppCompatActivity() {
         btnSaveColors.setOnClickListener {
             val bg = etCustomBg.text.toString().trim()
             val accent = etCustomAccent.text.toString().trim()
+            val bgColor = ColorHelper.parseColor(bg)
+            val accentColor = ColorHelper.parseColor(accent)
+            if (bgColor == null && bg.isNotEmpty() && !bg.matches(Regex("(?i)creme|sand|mocca|graphite|brown|gold|sage|olive"))) {
+                Toast.makeText(this@MainActivity, "Ungültige Hintergrund Farbe: $bg", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (accentColor == null && accent.isNotEmpty() && !accent.matches(Regex("(?i)creme|sand|mocca|graphite|brown|gold|sage|olive"))) {
+                Toast.makeText(this@MainActivity, "Ungültige Akzent Farbe: $accent", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             lifecycleScope.launch {
+                settings.saveCustomBgHex(bg)
+                settings.saveCustomAccentHex(accent)
+                // Auch alte Keys für Kompatibilität
                 if (bg.isNotEmpty()) settings.saveAppTheme(bg)
                 if (accent.isNotEmpty()) settings.saveWidgetAccent(accent)
-                Toast.makeText(this@MainActivity, "Farben gespeichert: $bg / $accent", Toast.LENGTH_SHORT).show()
+                applyCustomColors()
+                updatePreview()
+                Toast.makeText(this@MainActivity, "Farben angewendet", Toast.LENGTH_SHORT).show()
+                // Neu laden für sofortige Anzeige
+                showSettings()
             }
         }
 
@@ -430,23 +502,7 @@ class MainActivity : AppCompatActivity() {
             }
             lifecycleScope.launch {
                 settings.saveEngineType(type)
-                getSharedPreferences("widget_data", MODE_PRIVATE).edit().putString("engine_type", type).apply()
-                Toast.makeText(this@MainActivity, "Antriebsart auf $type gestellt", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        rgTheme.setOnCheckedChangeListener { _, checkedId ->
-            if (initializing) return@setOnCheckedChangeListener
-            val theme = when (checkedId) {
-                R.id.rbThemeSand -> "sand"
-                R.id.rbThemeMocca -> "mocca"
-                R.id.rbThemeGraphite -> "graphite"
-                else -> "creme"
-            }
-            lifecycleScope.launch {
-                settings.saveAppTheme(theme)
-                etCustomBg.setText(theme)
-                Toast.makeText(this@MainActivity, "Design auf $theme gestellt", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Antrieb: $type", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -454,12 +510,15 @@ class MainActivity : AppCompatActivity() {
             if (initializing) return@setOnCheckedChangeListener
             lifecycleScope.launch {
                 settings.saveAutoTripEnabled(isChecked)
+                getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", settings.getAutoTripThreshold()).apply()
                 if (isChecked) {
                     val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
+                    Toast.makeText(this@MainActivity, "Auto an", Toast.LENGTH_SHORT).show()
                 } else {
                     val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_STOP }
                     startService(intent)
+                    Toast.makeText(this@MainActivity, "Auto aus", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -471,7 +530,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.rbThresh25 -> 25
                 else -> 15
             }
-            lifecycleScope.launch { settings.saveAutoTripThreshold(thresh) }
+            lifecycleScope.launch {
+                settings.saveAutoTripThreshold(thresh)
+                getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", thresh).apply()
+                Toast.makeText(this@MainActivity, "Schwelle $thresh km/h", Toast.LENGTH_SHORT).show()
+            }
         }
 
         btnLogout.setOnClickListener {
@@ -479,6 +542,8 @@ class MainActivity : AppCompatActivity() {
                 settings.clear()
                 getSharedPreferences("widget_data", MODE_PRIVATE).edit().clear().apply()
                 getSharedPreferences("rate_limit", MODE_PRIVATE).edit().clear().apply()
+                getSharedPreferences("theme_cache", MODE_PRIVATE).edit().clear().apply()
+                getSharedPreferences("settings_cache", MODE_PRIVATE).edit().clear().apply()
                 TripStorage(this@MainActivity).clearAll()
                 Toast.makeText(this@MainActivity, "Abgemeldet", Toast.LENGTH_SHORT).show()
                 showLogin()

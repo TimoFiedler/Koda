@@ -6,355 +6,71 @@
     android:orientation="vertical"
     android:background="@color/cream_background">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Profil"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_primary"
-        android:letterSpacing="0.02"
-        android:layout_marginBottom="4dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Profil" android:textSize="24sp" android:textStyle="bold" android:textColor="@color/text_primary" android:layout_marginBottom="4dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Minimal - nur das Nötige" android:textSize="13sp" android:textColor="@color/text_secondary" android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fahrzeug, Farben und Verhalten"
-        android:textSize="13sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="24dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrzeug Daten" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="10dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fahrzeug Daten"
-        android:textSize="11sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.08"
-        android:textColor="@color/text_hint"
-        android:layout_marginBottom="12dp" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="FIN / VIN"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxStrokeColor="@color/cream_border"
-                android:layout_marginBottom="16dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etFinSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapCharacters"
-                    android:textSize="14sp" />
-
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" android:layout_marginBottom="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="FIN / VIN" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="12dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etFinSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="API-Key"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                app:boxStrokeColor="@color/cream_border"
-                android:layout_marginBottom="16dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etApiKeySettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:textSize="14sp" />
-
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="API-Key" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="12dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etApiKeySettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tvRateStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Rate Limit: 20/20"
-                android:textSize="11sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginBottom="16dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveProfile"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Profil speichern"
-                app:cornerRadius="12dp"
-                android:backgroundTint="@color/brown_primary" />
-
+            <TextView android:id="@+id/tvRateStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Rate Limit: 20/20" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSaveProfile" android:layout_width="match_parent" android:layout_height="48dp" android:text="Profil speichern" app:cornerRadius="12dp" android:backgroundTint="@color/brown_primary" />
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Antriebsart"
-        android:textSize="11sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.08"
-        android:textColor="@color/text_hint"
-        android:layout_marginBottom="12dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Antrieb" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="10dp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <RadioGroup
-                android:id="@+id/rgEngineSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/rbElectricSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Elektro - Zeigt Akku % und Ladezustand"
-                    android:textSize="14sp"
-                    android:padding="12dp" />
-
-                <RadioButton
-                    android:id="@+id/rbCombustionSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Verbrenner - Zeigt Tank % und Reichweite"
-                    android:textSize="14sp"
-                    android:padding="12dp" />
-
-                <RadioButton
-                    android:id="@+id/rbHybridSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Hybrid / PHEV - Zeigt beides"
-                    android:textSize="14sp"
-                    android:padding="12dp" />
-
-            </RadioGroup>
-
-        </LinearLayout>
-
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" android:layout_marginBottom="16dp">
+        <RadioGroup android:id="@+id/rgEngineSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="12dp">
+            <RadioButton android:id="@+id/rbElectricSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Elektro" android:padding="10dp" />
+            <RadioButton android:id="@+id/rbCombustionSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verbrenner" android:padding="10dp" />
+            <RadioButton android:id="@+id/rbHybridSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Hybrid" android:padding="10dp" />
+        </RadioGroup>
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Design - Farben frei konfigurierbar"
-        android:textSize="11sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.08"
-        android:textColor="@color/text_hint"
-        android:layout_marginBottom="12dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Farben - wird sofort angewendet" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="10dp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Vordefinierte Themes"
-                android:textSize="13sp"
-                android:textColor="@color/text_primary"
-                android:layout_marginBottom="12dp" />
-
-            <RadioGroup
-                android:id="@+id/rgAppTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp">
-
-                <RadioButton android:id="@+id/rbThemeCreme" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Creme - Warm und hell #FFF8E7" android:checked="true" android:textSize="14sp" />
-                <RadioButton android:id="@+id/rbThemeSand" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sand - Helles Beige #FDF6E3" android:textSize="14sp" />
-                <RadioButton android:id="@+id/rbThemeMocca" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mocca - Kuehles Grau-Beige #F5F0EB" android:textSize="14sp" />
-                <RadioButton android:id="@+id/rbThemeGraphite" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Graphit - Minimal #FAFAFA" android:textSize="14sp" />
-
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Freie Farbwahl (Hex oder Name)"
-                android:textSize="13sp"
-                android:textColor="@color/text_primary"
-                android:layout_marginBottom="12dp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Hintergrund: creme, sand, mocca, graphite, #FFF8E7"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                android:layout_marginBottom="12dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCustomBg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp" />
-
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" android:layout_marginBottom="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Hintergrund: creme, sand, #FFF8E7" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginBottom="8dp" />
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="#FFF8E7 oder Name" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="12dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCustomBg" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Akzent: brown, gold, sage, olive, graphite, #8B7355"
-                app:boxCornerRadiusTopStart="12dp"
-                app:boxCornerRadiusTopEnd="12dp"
-                app:boxCornerRadiusBottomStart="12dp"
-                app:boxCornerRadiusBottomEnd="12dp"
-                android:layout_marginBottom="16dp"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etCustomAccent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="13sp" />
-
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Akzent: brown, gold, #8B7355" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginBottom="8dp" />
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="#8B7355 oder Name" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="16dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCustomAccent" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveColors"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Farben speichern"
-                app:cornerRadius="12dp"
-                android:backgroundTint="@color/cream_card"
-                android:textColor="@color/brown_primary"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/cream_border"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
-
+            <View android:id="@+id/viewColorPreview" android:layout_width="match_parent" android:layout_height="48dp" android:background="@drawable/card_bg" android:layout_marginBottom="16dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSaveColors" android:layout_width="match_parent" android:layout_height="48dp" android:text="Farben anwenden" app:cornerRadius="12dp" android:backgroundTint="@color/brown_primary" />
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fahrten Tracker"
-        android:textSize="11sp"
-        android:textAllCaps="true"
-        android:letterSpacing="0.08"
-        android:textColor="@color/text_hint"
-        android:layout_marginBottom="12dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Auto Erkennung" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="10dp" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="20dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Automatische Erkennung" android:textSize="14sp" android:textColor="@color/text_primary" />
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Startet Fahrt bei Bewegung" android:textSize="11sp" android:textColor="@color/text_secondary" />
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="16dp" app:cardElevation="0dp" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" android:layout_marginBottom="20dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Automatisch starten" android:textSize="14sp" android:textColor="@color/text_primary" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Startet ab Schwelle, stoppt nach 2 Min Stand" android:textSize="11sp" android:textColor="@color/text_secondary" />
                 </LinearLayout>
-
-                <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/swAutoTripSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-
+                <androidx.appcompat.widget.SwitchCompat android:id="@+id/swAutoTripSettings" android:layout_width="wrap_content" android:layout_height="wrap_content" app:thumbTint="@color/brown_primary" />
             </LinearLayout>
-
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Schwelle" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginBottom="8dp" />
-
-            <RadioGroup
-                android:id="@+id/rgThreshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton android:id="@+id/rbThresh10" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="10 km/h" android:textSize="13sp" />
-                <RadioButton android:id="@+id/rbThresh15" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="15 km/h" android:checked="true" android:textSize="13sp" />
-                <RadioButton android:id="@+id/rbThresh25" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="25 km/h" android:textSize="13sp" />
-
+            <RadioGroup android:id="@+id/rgThreshold" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                <RadioButton android:id="@+id/rbThresh10" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="10 km/h" />
+                <RadioButton android:id="@+id/rbThresh15" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="15 km/h" android:checked="true" />
+                <RadioButton android:id="@+id/rbThresh25" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="25 km/h" />
             </RadioGroup>
-
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:text="Abmelden und Daten loeschen"
-        android:textSize="13sp"
-        app:cornerRadius="12dp"
-        android:backgroundTint="@color/cream_card"
-        android:textColor="@color/error_muted"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        app:elevation="0dp"
-        style="@style/Widget.Material3.Button.OutlinedButton" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnLogout" android:layout_width="match_parent" android:layout_height="52dp" android:text="Abmelden und löschen" app:cornerRadius="12dp" android:backgroundTint="@color/cream_card" android:textColor="@color/error_muted" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" style="@style/Widget.Material3.Button.OutlinedButton" />
 
 </LinearLayout>

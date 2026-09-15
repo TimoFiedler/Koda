@@ -12,11 +12,6 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class AutoTripService : Service(), LocationListener {
 
@@ -30,7 +25,7 @@ class AutoTripService : Service(), LocationListener {
     private var speedCounter = 0
     private var stationaryCounter = 0
     private var thresholdKmh = 15
-    private var scope = CoroutineScope(Dispatchers.Main + Job())
+    private var isWaiting = true
 
     override fun onCreate() {
         super.onCreate()
@@ -51,28 +46,26 @@ class AutoTripService : Service(), LocationListener {
         isRunning = true
         speedCounter = 0
         stationaryCounter = 0
+        isWaiting = true
 
-        scope.launch {
-            val settings = SettingsRepository(this@AutoTripService)
-            thresholdKmh = settings.getAutoTripThreshold()
-        }
+        // Lade Schwelle synchron aus Cache für sofortigen Start
+        thresholdKmh = getSharedPreferences("settings_cache", MODE_PRIVATE).getInt("auto_threshold", 15)
+        // Async update aus DataStore
+        Thread {
+            try {
+                val settings = SettingsRepository(this)
+                val thresh = kotlinx.coroutines.runBlocking { settings.getAutoTripThreshold() }
+                thresholdKmh = thresh
+                getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", thresh).apply()
+            } catch (_: Exception) {}
+        }.start()
 
-        val notification = buildNotification("Auto-Erkennung aktiv - wartet auf Fahrt")
+        val notification = buildNotification("Auto-Erkennung aktiv - wartet auf Fahrt ab ${thresholdKmh} km/h")
         startForeground(2, notification)
 
         try {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                2000L,
-                5f,
-                this
-            )
-            locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                3000L,
-                10f,
-                this
-            )
+            // Nur GPS für Auto-Erkennung - Netzwerk liefert oft 0 km/h und stört
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1500L, 2f, this)
         } catch (e: SecurityException) {
             e.printStackTrace()
         }
@@ -80,49 +73,62 @@ class AutoTripService : Service(), LocationListener {
 
     private fun stopAuto() {
         isRunning = false
-        try {
-            locationManager.removeUpdates(this)
-        } catch (e: Exception) {}
+        try { locationManager.removeUpdates(this) } catch (_: Exception) {}
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
     override fun onLocationChanged(location: Location) {
+        // Filter ungenaue Punkte
+        if (location.accuracy > 40f) return
+        if (!location.hasSpeed()) return
+
         val speedKmh = location.speed * 3.6
 
         if (speedKmh >= thresholdKmh) {
             speedCounter++
             stationaryCounter = 0
-            if (speedCounter >= 5 && !TripService.isRunning) {
-                // Auto start trip
+            if (isWaiting) {
+                updateNotification("Bewegung erkannt ${speedKmh.toInt()} km/h - starte in ${3 - speedCounter}...")
+            }
+            // 3 Messungen über Schwelle = ca 4.5 Sekunden -> sicher dass wirklich fährt
+            if (speedCounter >= 3 && !TripService.isRunning) {
                 val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_START_AUTO }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(intent)
-                } else {
-                    startService(intent)
-                }
-                updateNotification("Fahrt automatisch erkannt - Aufzeichnung läuft")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
+                updateNotification("Fahrt erkannt - Aufzeichnung läuft")
+                isWaiting = false
                 speedCounter = 0
             }
-        } else if (speedKmh < 5) {
+        } else if (speedKmh < 4) {
             stationaryCounter++
             speedCounter = 0
-            if (stationaryCounter >= 90 && TripService.isRunning) {
-                // 90 * 2s = 3min stationary -> auto stop
-                val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
-                startService(intent)
-                updateNotification("Fahrzeug steht - Aufzeichnung beendet")
-                stationaryCounter = 0
+            if (!isWaiting && TripService.isRunning) {
+                // 80 * 1.5s = 120s = 2 Min Stillstand -> Stop
+                if (stationaryCounter >= 80) {
+                    val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
+                    startService(intent)
+                    updateNotification("Steht seit 2 Min - Aufzeichnung beendet - wartet wieder")
+                    isWaiting = true
+                    stationaryCounter = 0
+                } else if (stationaryCounter % 20 == 0) {
+                    updateNotification("Steht ${stationaryCounter * 1.5 / 60} Min - stoppt gleich")
+                }
+            } else if (isWaiting) {
+                // Reset waiting message
+                if (stationaryCounter % 30 == 0) {
+                    updateNotification("Auto-Erkennung aktiv - wartet auf Fahrt ab ${thresholdKmh} km/h")
+                }
             }
         } else {
+            // Zwischen 4 und Schwelle - weder fahren noch stehen
             speedCounter = 0
-            stationaryCounter = 0
+            // stationary nicht erhöhen
         }
     }
 
     private fun buildNotification(content: String): Notification {
         return NotificationCompat.Builder(this, "auto_trip_channel")
-            .setContentTitle("SkodaDash Auto")
+            .setContentTitle("Auto Erkennung")
             .setContentText(content)
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setOngoing(true)
@@ -136,11 +142,7 @@ class AutoTripService : Service(), LocationListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "auto_trip_channel",
-                "Auto Fahrt Erkennung",
-                NotificationManager.IMPORTANCE_LOW
-            )
+            val channel = NotificationChannel("auto_trip_channel", "Auto Fahrt Erkennung", NotificationManager.IMPORTANCE_LOW)
             val nm = getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(channel)
         }
