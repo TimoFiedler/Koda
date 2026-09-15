@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Konfigurierbar fuer deinen Homescreen"
+        android:text="Voll konfigurierbar mit eigenem Editor"
         android:textSize="13sp"
         android:textColor="@color/text_secondary"
         android:layout_marginBottom="24dp" />
@@ -52,7 +52,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1. Homescreen lange gedrueckt halten\n2. Widgets auswaehlen\n3. SkodaDash suchen und platzieren\n4. Konfiguration oeffnet sich automatisch"
+                android:text="1. Homescreen lange gedrueckt halten\n2. Widgets auswaehlen\n3. SkodaDash suchen und platzieren\n4. Editor oeffnet sich automatisch\n5. Layout, Farben und Inhalte anpassen"
                 android:textSize="14sp"
                 android:textColor="@color/text_primary"
                 android:lineSpacingExtra="6dp" />
@@ -67,7 +67,7 @@
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:strokeWidth="0dp"
-        android:backgroundTint="@color/beige_light"
+        android:backgroundTint="@color/brown_primary"
         android:layout_marginBottom="16dp">
 
         <LinearLayout
@@ -79,19 +79,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Anzeigeoptionen"
+                android:text="Editor Features"
                 android:textSize="11sp"
                 android:textAllCaps="true"
                 android:letterSpacing="0.08"
-                android:textColor="@color/brown_dark"
+                android:textColor="#80FFFFFF"
                 android:layout_marginBottom="16dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="In der Konfiguration kannst du waehlen:\n\n- Fahrzeugname anzeigen\n- Ladezustand in Prozent\n- Reichweite in Kilometern\n- Kilometerstand\n- Verriegelungsstatus\n- Ladezustand (Laden, Bereit, Voll)\n- Hintergrund: Hell, Dunkel, Transparent\n\nJedes Widget kann unterschiedlich konfiguriert werden."
+                android:text="Layout\n- Kompakt, Detailliert, Minimal\n\nInhalte\n- Name, Batterie/Tank, Reichweite, Kilometerstand, Verriegelung, Ladestatus\n\nFarben\n- Hintergrund: Creme, Sand, Mocca, Dunkel, Transparent\n- Akzent: Braun, Gold, Sage, Olive, Graphit\n- Text: Automatisch angepasst\n\nStil\n- Ecken: Klein, Mittel, Gross\n- Schrift: Klein, Mittel, Gross"
                 android:textSize="13sp"
-                android:textColor="@color/text_primary"
+                android:textColor="#FFFEF9"
                 android:lineSpacingExtra="4dp" />
 
         </LinearLayout>
@@ -115,7 +115,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Aktualisierung alle 15 Minuten und bei jedem App-Refresh. Tippen auf das Widget oeffnet die App."
+                android:text="Aktualisierung alle 15 Minuten und bei jedem App-Refresh. Tippen auf das Widget oeffnet die App. Jedes Widget kann unterschiedlich konfiguriert werden."
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:lineSpacingExtra="3dp" />

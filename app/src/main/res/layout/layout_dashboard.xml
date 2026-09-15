@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="@color/cream_background">
 
-    <!-- Header Status -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,11 +38,23 @@
                 android:textColor="@color/text_secondary"
                 android:letterSpacing="0.02" />
 
+            <TextView
+                android:id="@+id/tvEngineBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ELEKTRO"
+                android:textSize="10sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:textColor="@color/brown_primary"
+                android:background="@drawable/card_bg_accent"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp" />
+
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Main Vehicle Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,6 +105,7 @@
                         android:fontFamily="sans-serif-light" />
 
                     <TextView
+                        android:id="@+id/tvBatteryLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Ladezustand"
@@ -181,7 +193,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Refresh Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRefresh"
         android:layout_width="match_parent"
@@ -197,7 +208,6 @@
         android:layout_marginBottom="20dp"
         style="@style/Widget.Material3.Button.OutlinedButton" />
 
-    <!-- Trip Tracking Card -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -212,15 +222,35 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Fahrtenbuch"
-                android:textSize="11sp"
-                android:textAllCaps="true"
-                android:letterSpacing="0.08"
-                android:textColor="#80FFFFFF"
-                android:layout_marginBottom="12dp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fahrtenbuch"
+                    android:textSize="11sp"
+                    android:textAllCaps="true"
+                    android:letterSpacing="0.08"
+                    android:textColor="#80FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvAutoStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Auto aus"
+                    android:textSize="10sp"
+                    android:textColor="#B3FFFEF9"
+                    android:background="#33FFFFFF"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp" />
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -234,7 +264,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="GPS mit 1Hz und G-Sensor fuer Beschleunigung, Bremsen und Kurven"
+                android:text="Manuell starten oder automatisch bei Fahrtbeginn. GPS 1Hz und G-Sensor für Fahrdynamik"
                 android:textSize="13sp"
                 android:textColor="#B3FFFEF9"
                 android:lineSpacingExtra="2dp"
@@ -244,7 +274,7 @@
                 android:id="@+id/btnStartTrip"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:text="Fahrt starten"
+                android:text="Fahrt manuell starten"
                 android:textSize="14sp"
                 app:cornerRadius="12dp"
                 android:backgroundTint="@color/cream_surface"
@@ -263,7 +293,51 @@
                 app:strokeWidth="1dp"
                 app:strokeColor="#80FFFEF9"
                 app:elevation="0dp"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_marginBottom="16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#33FFFFFF"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Automatisch"
+                        android:textSize="14sp"
+                        android:textColor="@color/cream_surface"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Start bei Bewegung"
+                        android:textSize="11sp"
+                        android:textColor="#B3FFFEF9"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/swAutoTrip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

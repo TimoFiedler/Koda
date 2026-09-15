@@ -31,7 +31,7 @@
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,6 +56,245 @@
                 android:textSize="13sp"
                 android:textColor="@color/text_primary"
                 android:lineSpacingExtra="5dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Antriebsart"
+        android:textSize="11sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:textColor="@color/text_hint"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <RadioGroup
+                android:id="@+id/rgEngineSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rbElectricSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Elektro - Zeigt Akku % und Ladezustand"
+                    android:textSize="14sp"
+                    android:padding="12dp" />
+
+                <RadioButton
+                    android:id="@+id/rbCombustionSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Verbrenner - Zeigt Tank % und Reichweite"
+                    android:textSize="14sp"
+                    android:padding="12dp" />
+
+                <RadioButton
+                    android:id="@+id/rbHybridSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hybrid / PHEV - Zeigt beides"
+                    android:textSize="14sp"
+                    android:padding="12dp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Design"
+        android:textSize="11sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:textColor="@color/text_hint"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="App Farbschema"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="12dp" />
+
+            <RadioGroup
+                android:id="@+id/rgAppTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/rbThemeCreme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Creme - Warm und hell"
+                    android:checked="true"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/rbThemeSand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sand - Helles Beige"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/rbThemeMocca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mocca - Kuehles Grau-Beige"
+                    android:textSize="14sp" />
+
+                <RadioButton
+                    android:id="@+id/rbThemeGraphite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Graphit - Minimal und modern"
+                    android:textSize="14sp" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fahrtenbuch"
+        android:textSize="11sp"
+        android:textAllCaps="true"
+        android:letterSpacing="0.08"
+        android:textColor="@color/text_hint"
+        android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Automatische Erkennung"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Startet Fahrt bei Bewegung"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_secondary" />
+
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/swAutoTripSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Schwelle"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rgThreshold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbThresh10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="10 km/h"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/rbThresh15"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="15 km/h"
+                    android:checked="true"
+                    android:textSize="13sp" />
+
+                <RadioButton
+                    android:id="@+id/rbThresh25"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="25 km/h"
+                    android:textSize="13sp" />
+
+            </RadioGroup>
 
         </LinearLayout>
 
@@ -89,7 +328,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="SkodaDash Ultra\nVersion 1.1 - Creme Edition\n\nOffizielle API: public.api.connect.skoda-auto.cz\nLimit: 20 Anfragen pro Stunde\nWidget: 15 Minuten Intervall\nFahrtenbuch: GPS 1Hz und linearer Beschleunigungssensor"
+                android:text="SkodaDash Ultra\nVersion 2.0 - Premium Creme\n\nOffizielle API: public.api.connect.skoda-auto.cz\nLimit: 20 Anfragen pro Stunde\nWidget: 15 Minuten Intervall\nFahrtenbuch: GPS 1Hz, Auto-Erkennung, linearer Beschleunigungssensor"
                 android:textSize="12sp"
                 android:textColor="@color/text_secondary"
                 android:lineSpacingExtra="4dp" />

@@ -1,5 +1,5 @@
 <resources>
-    <!-- Creme Beige Theme -->
+    <!-- 100% Premium Creme Theme -->
     <style name="Theme.SkodaDash" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/brown_primary</item>
         <item name="colorPrimaryVariant">@color/brown_dark</item>
@@ -14,6 +14,9 @@
         <item name="colorSurfaceVariant">@color/beige_light</item>
         <item name="colorOnSurfaceVariant">@color/text_secondary</item>
         <item name="colorOutline">@color/cream_border</item>
+        <item name="android:statusBarColor">@color/cream_background</item>
+        <item name="android:navigationBarColor">@color/cream_background</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.SkodaDash.WidgetConfig" parent="Theme.Material3.DayNight.NoActionBar">

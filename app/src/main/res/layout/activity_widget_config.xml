@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Widget konfigurieren"
+        android:text="Widget Editor"
         android:textSize="26sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
@@ -20,10 +20,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Waehle welche Informationen angezeigt werden"
+        android:text="Layout, Farben und Inhalte anpassen"
         android:textSize="13sp"
         android:textColor="@color/text_secondary"
-        android:layout_marginBottom="28dp" />
+        android:layout_marginBottom="24dp" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Anzeige"
+                android:text="Inhalte"
                 android:textSize="11sp"
                 android:textAllCaps="true"
                 android:letterSpacing="0.08"
@@ -72,28 +72,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Fahrzeugname"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Modell oder individueller Name"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="2dp" />
-
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrzeugname" android:textSize="14sp" android:textColor="@color/text_primary" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Modell oder individueller Name" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/cbName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbName" android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
                     </LinearLayout>
 
@@ -105,35 +87,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Ladezustand"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Akku in Prozent"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="2dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ladezustand / Tank" android:textSize="14sp" android:textColor="@color/text_primary" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Akku oder Tank in Prozent" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/cbBattery"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbBattery" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
@@ -144,35 +102,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Reichweite"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Verbleibende Kilometer"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="2dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Reichweite" android:textSize="14sp" android:textColor="@color/text_primary" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verbleibende Kilometer" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/cbRange"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbRange" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
@@ -183,35 +117,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Kilometerstand"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Gesamtlaufleistung"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="2dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Kilometerstand" android:textSize="14sp" android:textColor="@color/text_primary" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gesamtlaufleistung" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/cbOdo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbOdo" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
@@ -222,35 +132,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Verriegelung"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Ob das Fahrzeug verriegelt ist"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="2dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Verriegelung" android:textSize="14sp" android:textColor="@color/text_primary" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ob das Fahrzeug verriegelt ist" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/cbLock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbLock" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" android:layout_marginHorizontal="12dp" />
@@ -261,35 +147,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Ladestatus"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_primary" />
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Laden, Bereit, Vollstaendig"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="2dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ladestatus" android:textSize="14sp" android:textColor="@color/text_primary" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Laden, Bereit, Vollstaendig" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="2dp" />
                         </LinearLayout>
-
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/cbCharging"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
+                        <com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/cbCharging" android:layout_width="wrap_content" android:layout_height="wrap_content" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -299,7 +161,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Darstellung"
+                android:text="Layout"
                 android:textSize="11sp"
                 android:textAllCaps="true"
                 android:letterSpacing="0.08"
@@ -313,7 +175,7 @@
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/cream_border"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -324,7 +186,97 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Hintergrundstil"
+                        android:text="Darstellung"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgLayoutStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp">
+
+                        <RadioButton android:id="@+id/rbLayoutCompact" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Kompakt - Nur wichtigste Infos" android:textSize="14sp" android:checked="true" />
+                        <RadioButton android:id="@+id/rbLayoutDetailed" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Detailliert - Alle Infos mit Labels" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbLayoutMinimal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Minimal - Nur Prozent und Status" android:textSize="14sp" />
+
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ecken"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgCornerRadius"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
+
+                        <RadioButton android:id="@+id/rbCornerSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Klein" android:textSize="13sp" />
+                        <RadioButton android:id="@+id/rbCornerMedium" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Mittel" android:checked="true" android:textSize="13sp" />
+                        <RadioButton android:id="@+id/rbCornerLarge" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross" android:textSize="13sp" />
+
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Schriftgroesse"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgTextSize"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton android:id="@+id/rbTextSmall" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Klein" android:textSize="13sp" />
+                        <RadioButton android:id="@+id/rbTextMedium" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Mittel" android:checked="true" android:textSize="13sp" />
+                        <RadioButton android:id="@+id/rbTextLarge" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Gross" android:textSize="13sp" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Farben"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:textColor="@color/text_hint"
+                android:layout_marginBottom="12dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/cream_border"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hintergrund"
                         android:textSize="13sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginBottom="12dp" />
@@ -332,29 +284,35 @@
                     <RadioGroup
                         android:id="@+id/rgBackground"
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp">
+
+                        <RadioButton android:id="@+id/rbLight" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Creme - Warm und hell" android:textSize="14sp" android:checked="true" />
+                        <RadioButton android:id="@+id/rbSand" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sand - Helles Beige" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbMocca" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mocca - Kuehles Beige" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbDark" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Dunkel - Braun" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbTransparent" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Transparent" android:textSize="14sp" />
+
+                    </RadioGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Akzentfarbe"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="12dp" />
+
+                    <RadioGroup
+                        android:id="@+id/rgAccent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <RadioButton
-                            android:id="@+id/rbLight"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Hell - Creme"
-                            android:textSize="14sp"
-                            android:checked="true" />
-
-                        <RadioButton
-                            android:id="@+id/rbDark"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Dunkel - Braun"
-                            android:textSize="14sp" />
-
-                        <RadioButton
-                            android:id="@+id/rbTransparent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Transparent"
-                            android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbAccentBrown" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Braun - Klassisch" android:checked="true" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbAccentGold" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gold - Warm und elegant" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbAccentSage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sage - Gruen und natuerlich" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbAccentOlive" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Olive - Erdig" android:textSize="14sp" />
+                        <RadioButton android:id="@+id/rbAccentGraphite" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Graphit - Modern und minimal" android:textSize="14sp" />
 
                     </RadioGroup>
 

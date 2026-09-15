@@ -14,7 +14,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
-import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import kotlin.math.sqrt
@@ -23,8 +22,10 @@ class TripService : Service(), SensorEventListener, LocationListener {
 
     companion object {
         const val ACTION_START = "START"
+        const val ACTION_START_AUTO = "START_AUTO"
         const val ACTION_STOP = "STOP"
         var isRunning = false
+        var isAutoStarted = false
     }
 
     private lateinit var locationManager: LocationManager
@@ -42,10 +43,6 @@ class TripService : Service(), SensorEventListener, LocationListener {
     private var pointCount = 0
     private var startTime = 0L
 
-    private var lastAccelX = 0f
-    private var lastAccelY = 0f
-    private var lastAccelZ = 0f
-
     private val GRAVITY_EARTH = 9.81f
 
     override fun onCreate() {
@@ -58,15 +55,17 @@ class TripService : Service(), SensorEventListener, LocationListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_START -> startTrip()
+            ACTION_START -> startTrip(false)
+            ACTION_START_AUTO -> startTrip(true)
             ACTION_STOP -> stopTrip()
         }
         return START_STICKY
     }
 
-    private fun startTrip() {
+    private fun startTrip(auto: Boolean) {
         if (isRunning) return
         isRunning = true
+        isAutoStarted = auto
         startTime = System.currentTimeMillis()
         tripId = startTime
         distanceMeters = 0.0
@@ -79,7 +78,7 @@ class TripService : Service(), SensorEventListener, LocationListener {
         pointCount = 0
         lastLocation = null
 
-        val notification = buildNotification("Fahrt läuft - GPS aktiv")
+        val notification = buildNotification(if (auto) "Auto Fahrt erkannt - GPS aktiv" else "Manuelle Fahrt - GPS aktiv")
         startForeground(1, notification)
 
         try {
@@ -124,12 +123,14 @@ class TripService : Service(), SensorEventListener, LocationListener {
             maxG = maxG,
             maxAccel = maxAccel,
             maxBrake = maxBrake,
-            pointCount = pointCount
+            pointCount = pointCount,
+            isAuto = isAutoStarted
         )
 
         TripStorage(this).saveTrip(trip)
 
         isRunning = false
+        isAutoStarted = false
         try {
             locationManager.removeUpdates(this)
         } catch (e: Exception) {}
@@ -151,9 +152,8 @@ class TripService : Service(), SensorEventListener, LocationListener {
         }
         lastLocation = location
 
-        // Update notification
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(1, buildNotification("${String.format("%.1f km/h", speedKmh)} - ${String.format("%.1f km", distanceMeters/1000)}"))
+        nm.notify(1, buildNotification("${String.format("%.1f km/h", speedKmh)} - ${String.format("%.1f km", distanceMeters/1000)} ${if (isAutoStarted) "Auto" else "Manuell"}"))
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -161,16 +161,12 @@ class TripService : Service(), SensorEventListener, LocationListener {
             val x = event.values[0]
             val y = event.values[1]
             val z = event.values[2]
-            lastAccelX = x
-            lastAccelY = y
-            lastAccelZ = z
 
             val total = sqrt((x*x + y*y + z*z).toDouble())
             val gForce = (total / GRAVITY_EARTH).toDouble()
 
             if (gForce > maxG) maxG = gForce
 
-            // Longitudinal = Y axis (forward/backward) approx
             val longitudinal = y.toDouble()
             if (longitudinal > maxAccel) maxAccel = longitudinal
             if (-longitudinal > maxBrake) maxBrake = -longitudinal
@@ -214,5 +210,6 @@ data class TripData(
     val maxG: Double,
     val maxAccel: Double,
     val maxBrake: Double,
-    val pointCount: Int
+    val pointCount: Int,
+    val isAuto: Boolean = false
 )

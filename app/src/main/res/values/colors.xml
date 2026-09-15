@@ -1,22 +1,61 @@
 <resources>
-    <!-- Creme Beige Palette -->
+    <!-- Base -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Creme Beige Premium Palette - 100% Design -->
     <color name="cream_background">#FFF8E7</color>
     <color name="cream_surface">#FFFEF9</color>
     <color name="cream_card">#FFFFFF</color>
     <color name="cream_border">#E8DDC7</color>
+    <color name="cream_border_light">#F0E6D2</color>
+    
     <color name="beige_light">#F5E6C8</color>
     <color name="beige_medium">#D2B48C</color>
     <color name="beige_dark">#C19A6B</color>
+    <color name="beige_warm">#E6D5B8</color>
+    
     <color name="brown_primary">#8B7355</color>
     <color name="brown_dark">#6B5B46</color>
     <color name="brown_light">#A68B6A</color>
+    <color name="brown_deep">#3E2723</color>
+    <color name="brown_mocha">#5D4037</color>
+    
     <color name="text_primary">#3E2723</color>
     <color name="text_secondary">#8D6E63</color>
     <color name="text_hint">#BCAAA4</color>
+    <color name="text_tertiary">#D7CCC8</color>
+    
     <color name="accent_gold">#C5A880</color>
+    <color name="accent_sand">#D4C4A8</color>
+    <color name="accent_mocha">#8D7B6C</color>
+    <color name="accent_olive">#8B8B6E</color>
+    <color name="accent_graphite">#6B6B6B</color>
+    <color name="accent_sage">#9CAF88</color>
+    
     <color name="success_green">#7A9E7E</color>
     <color name="error_muted">#B85450</color>
+    
+    <!-- Widget Backgrounds -->
     <color name="widget_bg_light">#FFF8E7</color>
     <color name="widget_bg_dark">#3E2723</color>
     <color name="widget_bg_transparent">#E6FFF8E7</color>
+    <color name="widget_bg_sand">#F5E6C8</color>
+    <color name="widget_bg_mocha">#EFEBE9</color>
+    <color name="widget_bg_graphite">#FAFAFA</color>
+    
+    <!-- Theme Variations -->
+    <color name="theme_creme_bg">#FFF8E7</color>
+    <color name="theme_sand_bg">#FDF6E3</color>
+    <color name="theme_mocca_bg">#F5F0EB</color>
+    <color name="theme_graphite_bg">#FAFAFA</color>
+    
+    <!-- Card Shadows / Elevations -->
+    <color name="shadow_light">#0D000000</color>
+    <color name="shadow_medium">#1A000000</color>
+    
+    <!-- Status -->
+    <color name="status_online">#7A9E7E</color>
+    <color name="status_offline">#BCAAA4</color>
+    <color name="status_charging">#8B7355</color>
 </resources>

@@ -28,6 +28,7 @@ class WidgetConfigActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("widget_config_$widgetId", MODE_PRIVATE)
 
+        // Inhalte
         binding.cbName.isChecked = prefs.getBoolean("show_name", true)
         binding.cbBattery.isChecked = prefs.getBoolean("show_battery", true)
         binding.cbRange.isChecked = prefs.getBoolean("show_range", true)
@@ -35,17 +36,75 @@ class WidgetConfigActivity : AppCompatActivity() {
         binding.cbLock.isChecked = prefs.getBoolean("show_lock", true)
         binding.cbCharging.isChecked = prefs.getBoolean("show_charging", true)
 
+        // Layout
+        when (prefs.getString("layout_style", "compact")) {
+            "detailed" -> binding.rbLayoutDetailed.isChecked = true
+            "minimal" -> binding.rbLayoutMinimal.isChecked = true
+            else -> binding.rbLayoutCompact.isChecked = true
+        }
+
+        when (prefs.getString("corner_radius", "medium")) {
+            "small" -> binding.rbCornerSmall.isChecked = true
+            "large" -> binding.rbCornerLarge.isChecked = true
+            else -> binding.rbCornerMedium.isChecked = true
+        }
+
+        when (prefs.getString("text_size", "medium")) {
+            "small" -> binding.rbTextSmall.isChecked = true
+            "large" -> binding.rbTextLarge.isChecked = true
+            else -> binding.rbTextMedium.isChecked = true
+        }
+
+        // Farben
         when (prefs.getString("bg_style", "light")) {
+            "sand" -> binding.rbSand.isChecked = true
+            "mocca" -> binding.rbMocca.isChecked = true
             "dark" -> binding.rbDark.isChecked = true
             "transparent" -> binding.rbTransparent.isChecked = true
             else -> binding.rbLight.isChecked = true
         }
 
+        when (prefs.getString("accent_color", "brown")) {
+            "gold" -> binding.rbAccentGold.isChecked = true
+            "sage" -> binding.rbAccentSage.isChecked = true
+            "olive" -> binding.rbAccentOlive.isChecked = true
+            "graphite" -> binding.rbAccentGraphite.isChecked = true
+            else -> binding.rbAccentBrown.isChecked = true
+        }
+
         binding.btnSave.setOnClickListener {
             val bgStyle = when (binding.rgBackground.checkedRadioButtonId) {
+                R.id.rbSand -> "sand"
+                R.id.rbMocca -> "mocca"
                 R.id.rbDark -> "dark"
                 R.id.rbTransparent -> "transparent"
                 else -> "light"
+            }
+
+            val accentColor = when (binding.rgAccent.checkedRadioButtonId) {
+                R.id.rbAccentGold -> "gold"
+                R.id.rbAccentSage -> "sage"
+                R.id.rbAccentOlive -> "olive"
+                R.id.rbAccentGraphite -> "graphite"
+                else -> "brown"
+            }
+
+            val layoutStyle = when (binding.rgLayoutStyle.checkedRadioButtonId) {
+                R.id.rbLayoutDetailed -> "detailed"
+                R.id.rbLayoutMinimal -> "minimal"
+                else -> "compact"
+            }
+
+            val cornerRadius = when (binding.rgCornerRadius.checkedRadioButtonId) {
+                R.id.rbCornerSmall -> "small"
+                R.id.rbCornerLarge -> "large"
+                else -> "medium"
+            }
+
+            val textSize = when (binding.rgTextSize.checkedRadioButtonId) {
+                R.id.rbTextSmall -> "small"
+                R.id.rbTextLarge -> "large"
+                else -> "medium"
             }
 
             prefs.edit().apply {
@@ -56,6 +115,10 @@ class WidgetConfigActivity : AppCompatActivity() {
                 putBoolean("show_lock", binding.cbLock.isChecked)
                 putBoolean("show_charging", binding.cbCharging.isChecked)
                 putString("bg_style", bgStyle)
+                putString("accent_color", accentColor)
+                putString("layout_style", layoutStyle)
+                putString("corner_radius", cornerRadius)
+                putString("text_size", textSize)
                 apply()
             }
 

@@ -69,12 +69,18 @@ class MainActivity : AppCompatActivity() {
         val etVin = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etVin)
         val btnLogin = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogin)
         val tvHelp = view.findViewById<android.widget.TextView>(R.id.tvHelp)
+        val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineType)
 
-        tvHelp.text = "1. MySkoda App oeffnen (Version 8.16 oder neuer)\n2. Profil -> Einstellungen -> Drittanbieter-Zugriff\n3. Neuen API-Key erstellen und Fahrzeug auswaehlen\n4. API-Key und FIN hier eingeben\n\nDer Key ist 6 Monate gueltig und erlaubt 20 Anfragen pro Stunde."
+        tvHelp.text = "1. MySkoda App oeffnen (Version 8.16 oder neuer)\n2. Profil -> Einstellungen -> Drittanbieter-Zugriff\n3. Neuen API-Key erstellen und Fahrzeug auswaehlen\n4. API-Key und FIN hier eingeben\n5. Antriebsart waehlen fuer korrekte Anzeige\n\nDer Key ist 6 Monate gueltig und erlaubt 20 Anfragen pro Stunde."
 
         lifecycleScope.launch {
             etApiKey.setText(settings.getApiKey())
             etVin.setText(settings.getVin())
+            when (settings.getEngineType()) {
+                "combustion" -> view.findViewById<android.widget.RadioButton>(R.id.rbCombustion).isChecked = true
+                "hybrid" -> view.findViewById<android.widget.RadioButton>(R.id.rbHybrid).isChecked = true
+                else -> view.findViewById<android.widget.RadioButton>(R.id.rbElectric).isChecked = true
+            }
         }
 
         btnLogin.setOnClickListener {
@@ -84,9 +90,15 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Bitte gueltigen API-Key und FIN eingeben", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            val engineType = when (rgEngine.checkedRadioButtonId) {
+                R.id.rbCombustion -> "combustion"
+                R.id.rbHybrid -> "hybrid"
+                else -> "electric"
+            }
             lifecycleScope.launch {
                 settings.saveApiKey(key)
                 settings.saveVin(vin)
+                settings.saveEngineType(engineType)
                 Toast.makeText(this@MainActivity, "Gespeichert", Toast.LENGTH_SHORT).show()
                 showDashboard()
             }
@@ -101,19 +113,66 @@ class MainActivity : AppCompatActivity() {
 
         val tvStatus = view.findViewById<android.widget.TextView>(R.id.tvStatus)
         val tvBattery = view.findViewById<android.widget.TextView>(R.id.tvBattery)
+        val tvBatteryLabel = view.findViewById<android.widget.TextView>(R.id.tvBatteryLabel)
         val tvRange = view.findViewById<android.widget.TextView>(R.id.tvRange)
         val tvOdo = view.findViewById<android.widget.TextView>(R.id.tvOdo)
         val tvLock = view.findViewById<android.widget.TextView>(R.id.tvLock)
         val tvCharging = view.findViewById<android.widget.TextView>(R.id.tvCharging)
+        val tvEngineBadge = view.findViewById<android.widget.TextView>(R.id.tvEngineBadge)
+        val tvAutoStatus = view.findViewById<android.widget.TextView>(R.id.tvAutoStatus)
         val btnRefresh = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRefresh)
         val btnStartTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStartTrip)
         val btnStopTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStopTrip)
+        val swAutoTrip = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.swAutoTrip)
+
+        lifecycleScope.launch {
+            val engineType = settings.getEngineType()
+            tvEngineBadge.text = when (engineType) {
+                "combustion" -> "Verbrenner"
+                "hybrid" -> "Hybrid"
+                else -> "Elektro"
+            }
+            tvBatteryLabel.text = when (engineType) {
+                "combustion" -> "Tank"
+                "hybrid" -> "Akku"
+                else -> "Ladezustand"
+            }
+            swAutoTrip.isChecked = settings.getAutoTripEnabled()
+            tvAutoStatus.text = if (settings.getAutoTripEnabled()) "Auto an" else "Auto aus"
+        }
 
         fun updateTrackingButtons() {
             val running = TripService.isRunning
+            val autoRunning = AutoTripService.isRunning
             btnStartTrip.isEnabled = !running
             btnStopTrip.isEnabled = running
-            btnStartTrip.text = if (running) "Aufzeichnung laeuft" else "Fahrt starten"
+            btnStartTrip.text = if (running) "Aufzeichnung laeuft" else "Fahrt manuell starten"
+            tvAutoStatus.text = when {
+                running && autoRunning -> "Auto erkennt - Fahrt laeuft"
+                running -> "Manuell - Fahrt laeuft"
+                autoRunning -> "Auto an - wartet"
+                else -> "Bereit"
+            }
+        }
+
+        swAutoTrip.setOnCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                settings.saveAutoTripEnabled(isChecked)
+                if (isChecked) {
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        startForegroundService(intent)
+                    } else {
+                        startService(intent)
+                    }
+                    Toast.makeText(this@MainActivity, "Automatische Erkennung aktiviert", Toast.LENGTH_SHORT).show()
+                } else {
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_STOP }
+                    startService(intent)
+                    Toast.makeText(this@MainActivity, "Automatische Erkennung deaktiviert", Toast.LENGTH_SHORT).show()
+                }
+                updateTrackingButtons()
+            }
         }
 
         updateTrackingButtons()
@@ -124,6 +183,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val data = api.fetchVehicle()
                     if (data != null) {
+                        val engineType = settings.getEngineType()
                         tvStatus.text = "${data.name} - ${data.lastUpdated}"
 
                         tvBattery.text = data.batteryPercent?.let { "${it.toInt()}%" } ?: "--"
@@ -141,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                             "CONSERVING" -> "Ladeerhaltung aktiv"
                             "CHARGING_INTERRUPTED" -> "Laden unterbrochen"
                             "CONNECT_CABLE" -> "Kabel verbinden"
-                            null, "" -> ""
+                            null, "" -> if (engineType == "electric") "Nicht am Laden" else ""
                             else -> data.chargingState
                         }
 
@@ -153,9 +213,9 @@ class MainActivity : AppCompatActivity() {
                             if (data.doorsLocked != null) putBoolean("hasLock", true) else remove("hasLock")
                             putString("charging", data.chargingState ?: "")
                             putString("name", data.name)
+                            putString("engine_type", engineType)
                             apply()
                         }
-                        // Update all widgets
                         sendBroadcast(Intent(this@MainActivity, SkodaWidgetProvider::class.java).apply {
                             action = "android.appwidget.action.APPWIDGET_UPDATE"
                         })
@@ -206,7 +266,7 @@ class MainActivity : AppCompatActivity() {
         fun loadTrips() {
             val trips = TripStorage(this).getTrips().reversed()
             if (trips.isEmpty()) {
-                tvTrips.text = "Noch keine Fahrten vorhanden.\n\nStarte die Aufzeichnung im Dashboard vor deiner Fahrt.\n\nErfasst werden:\n- GPS Verlauf mit 1Hz\n- Geschwindigkeit\n- G-Kraefte fuer Beschleunigung, Bremsen und Kurven\n- Distanz, Maximal- und Durchschnittsgeschwindigkeit"
+                tvTrips.text = "Noch keine Fahrten vorhanden.\n\nManuell:\nIm Dashboard Fahrt manuell starten vor deiner Fahrt.\n\nAutomatisch:\nIn den Einstellungen automatische Erkennung aktivieren. Startet automatisch ab eingestellter Geschwindigkeit und stoppt nach 3 Minuten Stillstand.\n\nErfasst werden:\n- GPS Verlauf mit 1Hz\n- Geschwindigkeit\n- G-Kraefte fuer Beschleunigung, Bremsen und Kurven\n- Distanz, Maximal- und Durchschnittsgeschwindigkeit"
             } else {
                 val sb = StringBuilder()
                 trips.take(30).forEach { trip ->
@@ -239,11 +299,95 @@ class MainActivity : AppCompatActivity() {
 
         val tvInfo = view.findViewById<android.widget.TextView>(R.id.tvSettingsInfo)
         val btnLogout = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogout)
+        val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineSettings)
+        val rgTheme = view.findViewById<android.widget.RadioGroup>(R.id.rgAppTheme)
+        val swAutoTrip = view.findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.swAutoTripSettings)
+        val rgThreshold = view.findViewById<android.widget.RadioGroup>(R.id.rgThreshold)
 
         lifecycleScope.launch {
             val vin = settings.getVin()
             val key = settings.getApiKey()
-            tvInfo.text = "FIN\n$vin\n\nAPI-Key\n${key.take(12)}...${key.takeLast(6)}\n\nDiese App nutzt die offizielle Skoda Public API. Der Key wird lokal verschluesselt gespeichert und nur fuer Anfragen an public.api.connect.skoda-auto.cz verwendet."
+            val engine = settings.getEngineType()
+            val theme = settings.getAppTheme()
+            val autoEnabled = settings.getAutoTripEnabled()
+            val threshold = settings.getAutoTripThreshold()
+
+            tvInfo.text = "FIN\n$vin\n\nAPI-Key\n${key.take(12)}...${key.takeLast(6)}\n\nDiese App nutzt die offizielle Skoda Public API. Der Key wird lokal verschluesselt gespeichert."
+
+            when (engine) {
+                "combustion" -> view.findViewById<android.widget.RadioButton>(R.id.rbCombustionSettings).isChecked = true
+                "hybrid" -> view.findViewById<android.widget.RadioButton>(R.id.rbHybridSettings).isChecked = true
+                else -> view.findViewById<android.widget.RadioButton>(R.id.rbElectricSettings).isChecked = true
+            }
+
+            when (theme) {
+                "sand" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeSand).isChecked = true
+                "mocca" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeMocca).isChecked = true
+                "graphite" -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeGraphite).isChecked = true
+                else -> view.findViewById<android.widget.RadioButton>(R.id.rbThemeCreme).isChecked = true
+            }
+
+            swAutoTrip.isChecked = autoEnabled
+
+            when (threshold) {
+                10 -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh10).isChecked = true
+                25 -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh25).isChecked = true
+                else -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh15).isChecked = true
+            }
+        }
+
+        rgEngine.setOnCheckedChangeListener { _, checkedId ->
+            val type = when (checkedId) {
+                R.id.rbCombustionSettings -> "combustion"
+                R.id.rbHybridSettings -> "hybrid"
+                else -> "electric"
+            }
+            lifecycleScope.launch {
+                settings.saveEngineType(type)
+                getSharedPreferences("widget_data", MODE_PRIVATE).edit().putString("engine_type", type).apply()
+                Toast.makeText(this, "Antriebsart auf $type gestellt", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        rgTheme.setOnCheckedChangeListener { _, checkedId ->
+            val theme = when (checkedId) {
+                R.id.rbThemeSand -> "sand"
+                R.id.rbThemeMocca -> "mocca"
+                R.id.rbThemeGraphite -> "graphite"
+                else -> "creme"
+            }
+            lifecycleScope.launch {
+                settings.saveAppTheme(theme)
+                Toast.makeText(this, "Design auf $theme gestellt - Neustart fuer vollen Effekt", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        swAutoTrip.setOnCheckedChangeListener { _, isChecked ->
+            lifecycleScope.launch {
+                settings.saveAutoTripEnabled(isChecked)
+                if (isChecked) {
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        startForegroundService(intent)
+                    } else {
+                        startService(intent)
+                    }
+                } else {
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_STOP }
+                    startService(intent)
+                }
+            }
+        }
+
+        rgThreshold.setOnCheckedChangeListener { _, checkedId ->
+            val thresh = when (checkedId) {
+                R.id.rbThresh10 -> 10
+                R.id.rbThresh25 -> 25
+                else -> 15
+            }
+            lifecycleScope.launch {
+                settings.saveAutoTripThreshold(thresh)
+            }
         }
 
         btnLogout.setOnClickListener {

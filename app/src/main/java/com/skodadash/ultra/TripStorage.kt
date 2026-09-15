@@ -25,7 +25,7 @@ class TripStorage(private val context: Context) {
                     TripData(
                         id = o.getLong("id"),
                         startTime = o.getLong("startTime"),
-                        endTime = if (o.has("endTime")) o.getLong("endTime") else null,
+                        endTime = if (o.has("endTime") && !o.isNull("endTime")) o.getLong("endTime") else null,
                         distanceMeters = o.getDouble("distanceMeters"),
                         durationSec = o.getLong("durationSec"),
                         maxSpeedKmh = o.getDouble("maxSpeedKmh"),
@@ -33,7 +33,8 @@ class TripStorage(private val context: Context) {
                         maxG = o.getDouble("maxG"),
                         maxAccel = o.getDouble("maxAccel"),
                         maxBrake = o.getDouble("maxBrake"),
-                        pointCount = o.getInt("pointCount")
+                        pointCount = o.getInt("pointCount"),
+                        isAuto = o.optBoolean("isAuto", false)
                     )
                 )
             }
@@ -62,6 +63,7 @@ class TripStorage(private val context: Context) {
             o.put("maxAccel", trip.maxAccel)
             o.put("maxBrake", trip.maxBrake)
             o.put("pointCount", trip.pointCount)
+            o.put("isAuto", trip.isAuto)
             arr.put(o)
         }
         prefs.edit().putString("trips_json", arr.toString()).apply()
