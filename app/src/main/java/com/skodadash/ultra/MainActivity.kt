@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
         settings = SettingsRepository(this)
         api = SkodaApi(settings)
 
-        // Permissions
         val perms = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         ).filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
         if (perms.isNotEmpty()) permissionLauncher.launch(perms.toTypedArray())
 
-        // Check login
         lifecycleScope.launch {
             val apiKey = settings.getApiKey()
             val vin = settings.getVin()
@@ -72,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         val btnLogin = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogin)
         val tvHelp = view.findViewById<android.widget.TextView>(R.id.tvHelp)
 
-        tvHelp.text = "Offizielle Skoda API:\n1. MySkoda App öffnen (v8.16+)\n2. Profil > Einstellungen > Drittanbieter-Zugriff\n3. API-Key generieren\n4. Hier einfügen + FIN eingeben\n\nAPI-Key läuft nach 6 Monaten ab."
+        tvHelp.text = "1. MySkoda App oeffnen (Version 8.16 oder neuer)\n2. Profil -> Einstellungen -> Drittanbieter-Zugriff\n3. Neuen API-Key erstellen und Fahrzeug auswaehlen\n4. API-Key und FIN hier eingeben\n\nDer Key ist 6 Monate gueltig und erlaubt 20 Anfragen pro Stunde."
 
         lifecycleScope.launch {
             etApiKey.setText(settings.getApiKey())
@@ -83,13 +81,13 @@ class MainActivity : AppCompatActivity() {
             val key = etApiKey.text.toString().trim()
             val vin = etVin.text.toString().trim().uppercase()
             if (key.length < 10 || vin.length < 10) {
-                Toast.makeText(this, "Bitte gültigen API-Key und FIN eingeben", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Bitte gueltigen API-Key und FIN eingeben", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             lifecycleScope.launch {
                 settings.saveApiKey(key)
                 settings.saveVin(vin)
-                Toast.makeText(this@MainActivity, "Gespeichert! Lade Daten...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Gespeichert", Toast.LENGTH_SHORT).show()
                 showDashboard()
             }
         }
@@ -115,53 +113,57 @@ class MainActivity : AppCompatActivity() {
             val running = TripService.isRunning
             btnStartTrip.isEnabled = !running
             btnStopTrip.isEnabled = running
-            btnStartTrip.text = if (running) "Fahrt läuft..." else "Fahrt starten"
+            btnStartTrip.text = if (running) "Aufzeichnung laeuft" else "Fahrt starten"
         }
 
         updateTrackingButtons()
 
         btnRefresh.setOnClickListener {
             lifecycleScope.launch {
-                tvStatus.text = "Lade..."
+                tvStatus.text = "Aktualisiere"
                 try {
                     val data = api.fetchVehicle()
                     if (data != null) {
-                        tvStatus.text = "${data.name} - ${data.lastUpdated}\nDebug: Batt=${data.batteryPercent} Range=${data.rangeKm} Odo=${data.odometerKm} Locked=${data.doorsLocked}"
-                        tvBattery.text = "Akku: ${data.batteryPercent?.let { "${it.toInt()}%" } ?: "n/a (Verbrenner?)"}"
-                        tvRange.text = "Reichweite: ${data.rangeKm?.let { "${it.toInt()} km" } ?: "n/a"}"
-                        tvOdo.text = "KM: ${data.odometerKm?.let { "${it.toInt()} km" } ?: "n/a"}"
+                        tvStatus.text = "${data.name} - ${data.lastUpdated}"
+
+                        tvBattery.text = data.batteryPercent?.let { "${it.toInt()}%" } ?: "--"
+                        tvRange.text = data.rangeKm?.let { "${it.toInt()} km" } ?: "--"
+                        tvOdo.text = data.odometerKm?.let { "Kilometerstand ${it.toInt()} km" } ?: "Kilometerstand nicht verfuegbar"
                         tvLock.text = when (data.doorsLocked) {
-                            true -> "🔒 Verriegelt"
-                            false -> "🔓 Offen"
-                            null -> "Verriegelung: n/a"
+                            true -> "Verriegelt"
+                            false -> "Offen"
+                            null -> "Status nicht verfuegbar"
                         }
                         tvCharging.text = when (data.chargingState) {
-                            "CHARGING" -> "⚡ Lädt ${data.chargingPowerKw?.toInt() ?: 0} kW"
-                            "CHARGED" -> "✅ Voll"
-                            "READY_FOR_CHARGING" -> "🔌 Bereit"
-                            "CONSERVING" -> "🔋 Erhaltung"
-                            null, "" -> "Laden: n/a (kein E-Auto?) - ${data.rawJson.take(200)}"
-                            else -> "Status: ${data.chargingState}"
+                            "CHARGING" -> "Laden mit ${data.chargingPowerKw?.let { "${it.toInt()} kW" } ?: ""}".trim()
+                            "CHARGED" -> "Vollstaendig geladen"
+                            "READY_FOR_CHARGING" -> "Bereit zum Laden"
+                            "CONSERVING" -> "Ladeerhaltung aktiv"
+                            "CHARGING_INTERRUPTED" -> "Laden unterbrochen"
+                            "CONNECT_CABLE" -> "Kabel verbinden"
+                            null, "" -> ""
+                            else -> data.chargingState
                         }
-                        // Save for widget
+
                         getSharedPreferences("widget_data", MODE_PRIVATE).edit().apply {
-                            putInt("battery", data.batteryPercent?.toInt() ?: 0)
-                            putInt("range", data.rangeKm?.toInt() ?: 0)
+                            putInt("battery", data.batteryPercent?.toInt() ?: -1)
+                            putInt("range", data.rangeKm?.toInt() ?: -1)
+                            putInt("odometer", data.odometerKm?.toInt() ?: -1)
                             putBoolean("locked", data.doorsLocked ?: false)
+                            if (data.doorsLocked != null) putBoolean("hasLock", true) else remove("hasLock")
                             putString("charging", data.chargingState ?: "")
                             putString("name", data.name)
                             apply()
                         }
-                        // Update widgets
-                        val intent = Intent(this@MainActivity, SkodaWidgetProvider::class.java).apply {
+                        // Update all widgets
+                        sendBroadcast(Intent(this@MainActivity, SkodaWidgetProvider::class.java).apply {
                             action = "android.appwidget.action.APPWIDGET_UPDATE"
-                        }
-                        sendBroadcast(intent)
+                        })
                     } else {
-                        tvStatus.text = "Fehler: Keine Daten. API-Key prüfen."
+                        tvStatus.text = "Keine Daten erhalten"
                     }
                 } catch (e: Exception) {
-                    tvStatus.text = "Fehler: ${e.message}"
+                    tvStatus.text = e.message ?: "Fehler beim Laden"
                 }
             }
         }
@@ -173,21 +175,19 @@ class MainActivity : AppCompatActivity() {
             } else {
                 startService(intent)
             }
-            Toast.makeText(this, "Fahrt gestartet - GPS + G-Sensor aktiv", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Aufzeichnung gestartet", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
         btnStopTrip.setOnClickListener {
             val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
             startService(intent)
-            Toast.makeText(this, "Fahrt beendet - sieh Fahrten Tab", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Aufzeichnung beendet", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
-        // Auto refresh once
         btnRefresh.performClick()
 
-        // Poll tracking state
         lifecycleScope.launch {
             while (true) {
                 kotlinx.coroutines.delay(1000)
@@ -206,15 +206,13 @@ class MainActivity : AppCompatActivity() {
         fun loadTrips() {
             val trips = TripStorage(this).getTrips().reversed()
             if (trips.isEmpty()) {
-                tvTrips.text = "Noch keine Fahrten.\n\nStarte Tracking im Dashboard vor deiner Fahrt.\n\nEs wird geloggt:\n• GPS Verlauf (1Hz)\n• Geschwindigkeit\n• G-Kräfte: Beschleunigen/Bremsen/Kurven\n• Strecke, Max Speed, Ø Speed\n• Harsh Events"
+                tvTrips.text = "Noch keine Fahrten vorhanden.\n\nStarte die Aufzeichnung im Dashboard vor deiner Fahrt.\n\nErfasst werden:\n- GPS Verlauf mit 1Hz\n- Geschwindigkeit\n- G-Kraefte fuer Beschleunigung, Bremsen und Kurven\n- Distanz, Maximal- und Durchschnittsgeschwindigkeit"
             } else {
                 val sb = StringBuilder()
-                sb.append("${trips.size} Fahrten:\n\n")
-                trips.take(20).forEach { trip ->
-                    sb.append("📅 ${java.text.SimpleDateFormat("dd.MM HH:mm", java.util.Locale.GERMANY).format(java.util.Date(trip.startTime))}\n")
-                    sb.append("   ${String.format("%.1f km", trip.distanceMeters/1000)} | ${trip.durationSec/60} Min | Max ${trip.maxSpeedKmh.toInt()} km/h\n")
-                    sb.append("   Max G: ${String.format("%.2f", trip.maxG)} | Accel ${String.format("%.1f", trip.maxAccel)} m/s² | Brake ${String.format("%.1f", trip.maxBrake)} m/s²\n")
-                    sb.append("   Punkte: ${trip.pointCount} | ${if (trip.endTime == null) "LÄUFT" else "Beendet"}\n\n")
+                trips.take(30).forEach { trip ->
+                    sb.append("${java.text.SimpleDateFormat("dd.MM.yyyy HH:mm", java.util.Locale.GERMANY).format(java.util.Date(trip.startTime))}\n")
+                    sb.append("Distanz ${String.format("%.1f km", trip.distanceMeters/1000)}  Dauer ${trip.durationSec/60} Min  Max ${trip.maxSpeedKmh.toInt()} km/h  Schnitt ${trip.avgSpeedKmh.toInt()} km/h\n")
+                    sb.append("Max G ${String.format("%.2f", trip.maxG)}  Beschl ${String.format("%.1f", trip.maxAccel)} m/s2  Bremse ${String.format("%.1f", trip.maxBrake)} m/s2  Punkte ${trip.pointCount}\n\n")
                 }
                 tvTrips.text = sb.toString()
             }
@@ -224,7 +222,7 @@ class MainActivity : AppCompatActivity() {
         btnClear.setOnClickListener {
             TripStorage(this).clearAll()
             loadTrips()
-            Toast.makeText(this, "Alle Fahrten gelöscht", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Verlauf geloescht", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -245,7 +243,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val vin = settings.getVin()
             val key = settings.getApiKey()
-            tvInfo.text = "FIN: $vin\nAPI-Key: ${key.take(8)}...${key.takeLast(4)}\n\nApp: SkodaDash Ultra v1.0.1\nAPI: public.api.connect.skoda-auto.cz\nWidget: alle 15 Min\nFahrtenbuch: GPS 1Hz + G-Sensor\n\nFür Widget: Lange auf Homescreen drücken > Widgets > SkodaDash"
+            tvInfo.text = "FIN\n$vin\n\nAPI-Key\n${key.take(12)}...${key.takeLast(6)}\n\nDiese App nutzt die offizielle Skoda Public API. Der Key wird lokal verschluesselt gespeichert und nur fuer Anfragen an public.api.connect.skoda-auto.cz verwendet."
         }
 
         btnLogout.setOnClickListener {

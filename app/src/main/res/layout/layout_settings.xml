@@ -1,31 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/cream_background">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Einstellungen"
-        android:textSize="20sp"
+        android:text="Profil"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="12dp" />
+        android:textColor="@color/text_primary"
+        android:letterSpacing="0.02"
+        android:layout_marginBottom="4dp" />
 
     <TextView
-        android:id="@+id/tvSettingsInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lade..."
+        android:text="Fahrzeug und Konto"
         android:textSize="13sp"
-        android:lineSpacingExtra="3dp"
-        android:layout_marginBottom="16dp" />
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Verbundenes Fahrzeug"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:textColor="@color/text_hint"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/tvSettingsInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:lineSpacingExtra="5dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        android:backgroundTint="@color/beige_light"
+        android:layout_marginBottom="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Information"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:textColor="@color/brown_dark"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SkodaDash Ultra\nVersion 1.1 - Creme Edition\n\nOffizielle API: public.api.connect.skoda-auto.cz\nLimit: 20 Anfragen pro Stunde\nWidget: 15 Minuten Intervall\nFahrtenbuch: GPS 1Hz und linearer Beschleunigungssensor"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Abmelden &amp; Alles löschen"
+        android:layout_height="52dp"
+        android:text="Abmelden und Daten loeschen"
+        android:textSize="13sp"
+        app:cornerRadius="12dp"
+        android:backgroundTint="@color/cream_card"
+        android:textColor="@color/error_muted"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        app:elevation="0dp"
         style="@style/Widget.Material3.Button.OutlinedButton" />
 
 </LinearLayout>

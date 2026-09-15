@@ -5,48 +5,92 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/widget_bg"
-    android:padding="12dp">
+    android:padding="18dp">
 
-    <TextView
-        android:id="@+id/tvWidgetTitle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Skoda"
-        android:textStyle="bold"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/tvWidgetTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Skoda"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#3E2723"
+            android:letterSpacing="0.04"
+            android:textAllCaps="true" />
+
+        <View
+            android:id="@+id/dotWidget"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:background="@drawable/dot_online" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvWidgetBattery"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Akku: --"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="2dp" />
+        android:text=""
+        android:textSize="22sp"
+        android:textColor="#3E2723"
+        android:fontFamily="sans-serif-light"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvWidgetRange"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reichweite: --"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF" />
-
-    <TextView
-        android:id="@+id/tvWidgetLock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text=""
-        android:textSize="12sp"
-        android:textColor="#FFFFFF" />
+        android:textSize="13sp"
+        android:textColor="#8D6E63"
+        android:layout_marginTop="2dp"
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/tvWidgetCharging"
+        android:id="@+id/tvWidgetOdo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="11sp"
-        android:textColor="#FFEB3B" />
+        android:textColor="#BCAAA4"
+        android:layout_marginTop="6dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvWidgetLock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text=""
+            android:textSize="11sp"
+            android:textColor="#6B5B46"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvWidgetCharging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="11sp"
+            android:textColor="#8B7355"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </LinearLayout>

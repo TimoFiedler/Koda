@@ -1,22 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/cream_background">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Widget einrichten"
-        android:textSize="20sp"
+        android:text="Widget"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="12dp" />
+        android:textColor="@color/text_primary"
+        android:letterSpacing="0.02"
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="So fügst du das Widget hinzu:\n\n1. Lange auf Homescreen drücken\n2. Widgets wählen\n3. SkodaDash finden und platzieren\n4. Konfiguration öffnet sich - wählen was angezeigt wird\n\nDas Widget zeigt:\n• Akku % (konfigurierbar)\n• Reichweite km\n• Verriegelung\n• Ladezustand\n\nUpdate alle 15 Min + bei jedem App-Refresh.\n\nTipp auf Widget öffnet die App."
-        android:textSize="14sp"
-        android:lineSpacingExtra="4dp" />
+        android:text="Konfigurierbar fuer deinen Homescreen"
+        android:textSize="13sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Einrichtung"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:textColor="@color/text_hint"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1. Homescreen lange gedrueckt halten\n2. Widgets auswaehlen\n3. SkodaDash suchen und platzieren\n4. Konfiguration oeffnet sich automatisch"
+                android:textSize="14sp"
+                android:textColor="@color/text_primary"
+                android:lineSpacingExtra="6dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="0dp"
+        android:backgroundTint="@color/beige_light"
+        android:layout_marginBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Anzeigeoptionen"
+                android:textSize="11sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.08"
+                android:textColor="@color/brown_dark"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="In der Konfiguration kannst du waehlen:\n\n- Fahrzeugname anzeigen\n- Ladezustand in Prozent\n- Reichweite in Kilometern\n- Kilometerstand\n- Verriegelungsstatus\n- Ladezustand (Laden, Bereit, Voll)\n- Hintergrund: Hell, Dunkel, Transparent\n\nJedes Widget kann unterschiedlich konfiguriert werden."
+                android:textSize="13sp"
+                android:textColor="@color/text_primary"
+                android:lineSpacingExtra="4dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Aktualisierung alle 15 Minuten und bei jedem App-Refresh. Tippen auf das Widget oeffnet die App."
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:lineSpacingExtra="3dp" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

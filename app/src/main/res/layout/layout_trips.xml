@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/cream_background">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Fahrtenbuch"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textColor="@color/text_primary"
+        android:letterSpacing="0.02"
+        android:layout_marginBottom="4dp" />
 
     <TextView
-        android:id="@+id/tvTrips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lade..."
+        android:text="Aufgezeichnete Fahrten mit GPS und Fahrdynamik"
         android:textSize="13sp"
-        android:lineSpacingExtra="2dp" />
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="20dp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/tvTrips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="13sp"
+            android:textColor="@color/text_primary"
+            android:lineSpacingExtra="4dp" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnClearTrips"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Alle löschen"
-        android:layout_marginTop="16dp"
+        android:layout_height="50dp"
+        android:text="Verlauf loeschen"
+        android:textSize="13sp"
+        app:cornerRadius="12dp"
+        android:backgroundTint="@color/cream_card"
+        android:textColor="@color/text_secondary"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/cream_border"
+        app:elevation="0dp"
         style="@style/Widget.Material3.Button.OutlinedButton" />
 
 </LinearLayout>

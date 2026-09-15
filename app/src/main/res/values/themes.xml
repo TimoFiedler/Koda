@@ -1,3 +1,24 @@
 <resources>
-    <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar" />
+    <!-- Creme Beige Theme -->
+    <style name="Theme.SkodaDash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/brown_primary</item>
+        <item name="colorPrimaryVariant">@color/brown_dark</item>
+        <item name="colorOnPrimary">@color/cream_surface</item>
+        <item name="colorSecondary">@color/beige_medium</item>
+        <item name="colorSecondaryVariant">@color/beige_dark</item>
+        <item name="colorOnSecondary">@color/text_primary</item>
+        <item name="android:colorBackground">@color/cream_background</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+        <item name="colorSurface">@color/cream_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorSurfaceVariant">@color/beige_light</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/cream_border</item>
+    </style>
+
+    <style name="Theme.SkodaDash.WidgetConfig" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/brown_primary</item>
+        <item name="android:colorBackground">@color/cream_background</item>
+        <item name="colorSurface">@color/cream_surface</item>
+    </style>
 </resources>
