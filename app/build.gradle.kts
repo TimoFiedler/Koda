@@ -11,8 +11,8 @@ android {
         applicationId = "com.skodadash.ultra"
         minSdk = 26
         targetSdk = 34
-        versionCode = 7
-        versionName = "3.0.0"
+        versionCode = 8
+        versionName = "4.0.0-Vollversion"
     }
 
     buildTypes {

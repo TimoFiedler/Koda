@@ -17,6 +17,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import kotlin.math.sqrt
+import kotlin.math.abs
 
 class TripService : Service(), SensorEventListener, LocationListener {
 
@@ -44,6 +45,7 @@ class TripService : Service(), SensorEventListener, LocationListener {
     private var startTime = 0L
     private val tripPoints = mutableListOf<TripPoint>()
     private val tripEvents = mutableListOf<TripEvent>()
+    private var lastEventTime = 0L
 
     private val GRAVITY_EARTH = 9.81f
 
@@ -81,37 +83,21 @@ class TripService : Service(), SensorEventListener, LocationListener {
         lastLocation = null
         tripPoints.clear()
         tripEvents.clear()
+        lastEventTime = 0L
 
-        val notification = buildNotification(if (auto) "Auto Fahrt erkannt - GPS aktiv" else "Manuelle Fahrt - GPS aktiv")
+        val notification = buildNotification(if (auto) "Auto Fahrt erkannt - Tracking aktiv" else "Manuelle Fahrt - Tracking aktiv")
         startForeground(1, notification)
 
         try {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                1000L,
-                1f,
-                this
-            )
-            locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                2000L,
-                5f,
-                this
-            )
-        } catch (e: SecurityException) {
-            e.printStackTrace()
-        }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 800L, 0.5f, this)
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1500L, 3f, this)
+        } catch (e: SecurityException) { e.printStackTrace() }
 
-        accelerometer?.let {
-            sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME)
-        }
+        accelerometer?.let { sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_GAME) }
     }
 
     private fun stopTrip() {
-        if (!isRunning) {
-            stopSelf()
-            return
-        }
+        if (!isRunning) { stopSelf(); return }
 
         val endTime = System.currentTimeMillis()
         val durationSec = (endTime - startTime) / 1000
@@ -134,17 +120,17 @@ class TripService : Service(), SensorEventListener, LocationListener {
         )
 
         val trip = tempTrip.copy(
-            score = tempTrip.calculateScore(),
-            ecoScore = tempTrip.calculateEcoScore()
+            sportScore = tempTrip.calculateSportScore(),
+            score = tempTrip.calculateSportScore(),
+            ecoScore = tempTrip.calculateEcoScore(),
+            efficiencyScore = tempTrip.calculateEfficiencyScore()
         )
 
         TripStorage(this).saveTrip(trip)
 
         isRunning = false
         isAutoStarted = false
-        try {
-            locationManager.removeUpdates(this)
-        } catch (e: Exception) {}
+        try { locationManager.removeUpdates(this) } catch (e: Exception) {}
         sensorManager.unregisterListener(this)
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
@@ -162,24 +148,29 @@ class TripService : Service(), SensorEventListener, LocationListener {
             lon = location.longitude,
             speedKmh = speedKmh,
             time = System.currentTimeMillis(),
-            accuracy = location.accuracy
+            accuracy = location.accuracy,
+            altitude = location.altitude
         )
         tripPoints.add(point)
-        if (tripPoints.size > 2000) tripPoints.removeAt(0)
+        if (tripPoints.size > 3000) tripPoints.removeAt(0)
 
         lastLocation?.let { last ->
             val dist = last.distanceTo(location).toDouble()
-            if (dist < 1000) distanceMeters += dist
+            if (dist < 500 && dist > 0.5) distanceMeters += dist
         }
         lastLocation = location
 
-        // Detect harsh events
-        if (speedKmh > 130) {
-            tripEvents.add(TripEvent("SPEED", System.currentTimeMillis(), speedKmh, location.latitude, location.longitude))
+        // Speed event - high speed
+        val now = System.currentTimeMillis()
+        if (now - lastEventTime > 3000) {
+            if (speedKmh > 120) {
+                tripEvents.add(TripEvent("SPEED", now, speedKmh, location.latitude, location.longitude, speedKmh))
+                lastEventTime = now
+            }
         }
 
         val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(1, buildNotification("${String.format("%.1f km/h", speedKmh)} - ${String.format("%.1f km", distanceMeters/1000)} ${if (isAutoStarted) "Auto" else "Manuell"}"))
+        nm.notify(1, buildNotification("${String.format("%.0f km/h", speedKmh)} - ${String.format("%.1f km", distanceMeters/1000)} - ${tripEvents.size} Events"))
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -187,28 +178,45 @@ class TripService : Service(), SensorEventListener, LocationListener {
             val x = event.values[0]
             val y = event.values[1]
             val z = event.values[2]
-
             val total = sqrt((x*x + y*y + z*z).toDouble())
-            val gForce = (total / GRAVITY_EARTH).toDouble()
-
+            val gForce = total / GRAVITY_EARTH
             if (gForce > maxG) maxG = gForce
 
             val longitudinal = y.toDouble()
-            if (longitudinal > maxAccel) {
-                maxAccel = longitudinal
-                if (longitudinal > 2.5 && lastLocation != null) {
-                    tripEvents.add(TripEvent("ACCEL", System.currentTimeMillis(), longitudinal, lastLocation!!.latitude, lastLocation!!.longitude))
-                }
-            }
-            if (-longitudinal > maxBrake) {
-                maxBrake = -longitudinal
-                if (-longitudinal > 2.5 && lastLocation != null) {
-                    tripEvents.add(TripEvent("BRAKE", System.currentTimeMillis(), -longitudinal, lastLocation!!.latitude, lastLocation!!.longitude))
-                }
-            }
             val lateral = x.toDouble()
-            if (kotlin.math.abs(lateral) > 2.5 && lastLocation != null) {
-                tripEvents.add(TripEvent("CORNER", System.currentTimeMillis(), lateral, lastLocation!!.latitude, lastLocation!!.longitude))
+            val now = System.currentTimeMillis()
+
+            // Throttle events to 1.5s
+            if (now - lastEventTime < 1500) return
+            val loc = lastLocation ?: return
+            if (loc.speed * 3.6 < 8) return // ignore when standing
+
+            when {
+                longitudinal > 3.5 -> {
+                    if (longitudinal > maxAccel) maxAccel = longitudinal
+                    val type = if (longitudinal > 4.5) "HARD_ACCEL" else "ACCEL"
+                    tripEvents.add(TripEvent(type, now, longitudinal, loc.latitude, loc.longitude, loc.speed*3.6))
+                    lastEventTime = now
+                }
+                longitudinal < -3.5 -> {
+                    val brakeVal = -longitudinal
+                    if (brakeVal > maxBrake) maxBrake = brakeVal
+                    val type = if (brakeVal > 4.5) "HARD_BRAKE" else "BRAKE"
+                    tripEvents.add(TripEvent(type, now, brakeVal, loc.latitude, loc.longitude, loc.speed*3.6))
+                    lastEventTime = now
+                }
+                abs(lateral) > 3.0 -> {
+                    val type = if (abs(lateral) > 4.5) "SHARP_CORNER" else "CORNER"
+                    tripEvents.add(TripEvent(type, now, abs(lateral), loc.latitude, loc.longitude, loc.speed*3.6))
+                    lastEventTime = now
+                }
+                gForce > 0.8 -> {
+                    // High G without specific direction - count as corner
+                    if (abs(lateral) > 2.0) {
+                        tripEvents.add(TripEvent("CORNER", now, gForce, loc.latitude, loc.longitude, loc.speed*3.6))
+                        lastEventTime = now
+                    }
+                }
             }
         }
     }
@@ -217,7 +225,7 @@ class TripService : Service(), SensorEventListener, LocationListener {
 
     private fun buildNotification(content: String): Notification {
         return NotificationCompat.Builder(this, "trip_channel")
-            .setContentTitle("Fahrten Tracker")
+            .setContentTitle("Fahrten Tracker - Vollversion")
             .setContentText(content)
             .setSmallIcon(android.R.drawable.ic_menu_mylocation)
             .setOngoing(true)
@@ -226,11 +234,7 @@ class TripService : Service(), SensorEventListener, LocationListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "trip_channel",
-                "Fahrten",
-                NotificationManager.IMPORTANCE_LOW
-            )
+            val channel = NotificationChannel("trip_channel", "Fahrten Tracker", NotificationManager.IMPORTANCE_LOW)
             val nm = getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(channel)
         }

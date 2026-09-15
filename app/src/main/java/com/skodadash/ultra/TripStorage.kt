@@ -11,6 +11,10 @@ class TripStorage(private val context: Context) {
     fun saveTrip(trip: TripData) {
         val trips = getTrips().toMutableList()
         trips.add(trip)
+        // Keep last 100 trips to avoid huge storage
+        if (trips.size > 100) {
+            trips.removeAt(0)
+        }
         saveAll(trips)
     }
 
@@ -32,7 +36,8 @@ class TripStorage(private val context: Context) {
                                 lon = po.getDouble("lon"),
                                 speedKmh = po.getDouble("speedKmh"),
                                 time = po.getLong("time"),
-                                accuracy = po.optDouble("accuracy", 0.0).toFloat()
+                                accuracy = po.optDouble("accuracy", 0.0).toFloat(),
+                                altitude = po.optDouble("altitude", 0.0)
                             )
                         )
                     }
@@ -48,31 +53,42 @@ class TripStorage(private val context: Context) {
                                 time = eo.getLong("time"),
                                 value = eo.getDouble("value"),
                                 lat = eo.getDouble("lat"),
-                                lon = eo.getDouble("lon")
+                                lon = eo.getDouble("lon"),
+                                speedKmh = eo.optDouble("speedKmh", 0.0)
                             )
                         )
                     }
                 }
-                list.add(
-                    TripData(
-                        id = o.getLong("id"),
-                        startTime = o.getLong("startTime"),
-                        endTime = if (o.has("endTime") && !o.isNull("endTime")) o.getLong("endTime") else null,
-                        distanceMeters = o.getDouble("distanceMeters"),
-                        durationSec = o.getLong("durationSec"),
-                        maxSpeedKmh = o.getDouble("maxSpeedKmh"),
-                        avgSpeedKmh = o.getDouble("avgSpeedKmh"),
-                        maxG = o.getDouble("maxG"),
-                        maxAccel = o.getDouble("maxAccel"),
-                        maxBrake = o.getDouble("maxBrake"),
-                        pointCount = o.getInt("pointCount"),
-                        isAuto = o.optBoolean("isAuto", false),
-                        points = points,
-                        events = events,
-                        score = o.optInt("score", 0),
-                        ecoScore = o.optInt("ecoScore", 0)
-                    )
+                val base = TripData(
+                    id = o.getLong("id"),
+                    startTime = o.getLong("startTime"),
+                    endTime = if (o.has("endTime") && !o.isNull("endTime")) o.getLong("endTime") else null,
+                    distanceMeters = o.getDouble("distanceMeters"),
+                    durationSec = o.getLong("durationSec"),
+                    maxSpeedKmh = o.getDouble("maxSpeedKmh"),
+                    avgSpeedKmh = o.getDouble("avgSpeedKmh"),
+                    maxG = o.getDouble("maxG"),
+                    maxAccel = o.getDouble("maxAccel"),
+                    maxBrake = o.getDouble("maxBrake"),
+                    pointCount = o.getInt("pointCount"),
+                    isAuto = o.optBoolean("isAuto", false),
+                    points = points,
+                    events = events,
+                    score = o.optInt("score", 0),
+                    ecoScore = o.optInt("ecoScore", 0),
+                    sportScore = o.optInt("sportScore", o.optInt("score", 0)),
+                    efficiencyScore = o.optInt("efficiencyScore", 0)
                 )
+                // Recalculate if old data has 0 score
+                val recalculated = if (base.score == 0 && base.distanceMeters > 0) {
+                    base.copy(
+                        sportScore = base.calculateSportScore(),
+                        score = base.calculateSportScore(),
+                        ecoScore = base.calculateEcoScore(),
+                        efficiencyScore = base.calculateEfficiencyScore()
+                    )
+                } else base
+                list.add(recalculated)
             }
             list
         } catch (e: Exception) {
@@ -80,20 +96,44 @@ class TripStorage(private val context: Context) {
         }
     }
 
-    fun getTripById(id: Long): TripData? {
-        return getTrips().find { it.id == id }
+    fun getTripById(id: Long): TripData? = getTrips().find { it.id == id }
+
+    fun deleteTrip(id: Long) {
+        val filtered = getTrips().filter { it.id != id }
+        saveAll(filtered)
     }
 
-    fun clearAll() {
-        prefs.edit().clear().apply()
-    }
+    fun clearAll() { prefs.edit().clear().apply() }
 
-    fun getTotalScore(): Int {
-        return getTrips().sumOf { it.score }
+    fun getTotalScore(): Int = getTrips().sumOf { it.score }
+    fun getTotalDistance(): Double = getTrips().sumOf { it.distanceMeters }
+    fun getTotalDuration(): Long = getTrips().sumOf { it.durationSec }
+    fun getAverageSpeed(): Double {
+        val trips = getTrips()
+        return if (trips.isEmpty()) 0.0 else trips.map { it.avgSpeedKmh }.average()
     }
-
-    fun getTotalDistance(): Double {
-        return getTrips().sumOf { it.distanceMeters }
+    fun getBestTrip(): TripData? = getTrips().maxByOrNull { it.score }
+    fun getLevel(): String {
+        val total = getTotalScore()
+        return when {
+            total >= 10000 -> "Legende"
+            total >= 5000 -> "Meister"
+            total >= 2500 -> "Profi"
+            total >= 1000 -> "Fortgeschritten"
+            total >= 300 -> "Geuebt"
+            else -> "Einsteiger"
+        }
+    }
+    fun getLevelProgress(): Int {
+        val total = getTotalScore()
+        return when {
+            total >= 10000 -> 100
+            total >= 5000 -> ((total - 5000) / 50).coerceIn(0,100)
+            total >= 2500 -> ((total - 2500) / 25).coerceIn(0,100)
+            total >= 1000 -> ((total - 1000) / 15).coerceIn(0,100)
+            total >= 300 -> ((total - 300) / 7).coerceIn(0,100)
+            else -> (total / 3).coerceIn(0,100)
+        }
     }
 
     private fun saveAll(trips: List<TripData>) {
@@ -114,7 +154,9 @@ class TripStorage(private val context: Context) {
             o.put("isAuto", trip.isAuto)
             o.put("score", trip.score)
             o.put("ecoScore", trip.ecoScore)
-            
+            o.put("sportScore", trip.sportScore)
+            o.put("efficiencyScore", trip.efficiencyScore)
+
             val pa = JSONArray()
             trip.points.takeLast(500).forEach { p ->
                 val po = JSONObject()
@@ -123,10 +165,11 @@ class TripStorage(private val context: Context) {
                 po.put("speedKmh", p.speedKmh)
                 po.put("time", p.time)
                 po.put("accuracy", p.accuracy)
+                po.put("altitude", p.altitude)
                 pa.put(po)
             }
             o.put("points", pa)
-            
+
             val ea = JSONArray()
             trip.events.forEach { e ->
                 val eo = JSONObject()
@@ -135,6 +178,7 @@ class TripStorage(private val context: Context) {
                 eo.put("value", e.value)
                 eo.put("lat", e.lat)
                 eo.put("lon", e.lon)
+                eo.put("speedKmh", e.speedKmh)
                 ea.put(eo)
             }
             o.put("events", ea)

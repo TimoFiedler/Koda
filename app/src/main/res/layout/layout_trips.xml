@@ -6,73 +6,21 @@
     android:orientation="vertical"
     android:background="@color/cream_background">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="4dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Fahrten Tracker"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:letterSpacing="0.02" />
-
-        <TextView
-            android:id="@+id/tvTotalScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0 Punkte"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:textColor="@color/brown_primary"
-            android:background="@drawable/card_bg_accent"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp" />
-
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fahrten Tracker" android:textSize="24sp" android:textStyle="bold" android:textColor="@color/text_primary" android:letterSpacing="0.02" />
+        <TextView android:id="@+id/tvTotalScore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 Punkte" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/brown_primary" android:background="@drawable/card_bg_accent" android:paddingHorizontal="12dp" android:paddingVertical="6dp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Jede Fahrt als Kachel mit Punkten und Eco Score"
-        android:textSize="13sp"
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="16dp" />
+    <TextView android:id="@+id/tvLevel" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Level Einsteiger - 0% - 0 km gesamt" android:textSize="12sp" android:textColor="@color/brown_light" android:textStyle="bold" android:layout_marginBottom="4dp" />
 
-    <LinearLayout
-        android:id="@+id/containerTrips"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="16dp" />
+    <TextView android:id="@+id/tvStatsDetail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Schnitt 0 km/h - Beste Fahrt 0 Punkte" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginBottom="12dp" />
 
-    <TextView
-        android:id="@+id/tvTripsEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:textColor="@color/text_primary"
-        android:lineSpacingExtra="4dp"
-        android:visibility="gone" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Vollversion: Sport Score fuer hohe Geschwindigkeit, hohe G-Kraefte, wenig Bremsen. Jede Kachel klickbar fuer Karte mit Events." android:textSize="12sp" android:textColor="@color/text_secondary" android:lineSpacingExtra="2dp" android:layout_marginBottom="16dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnClearTrips"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Verlauf loeschen"
-        android:textSize="13sp"
-        app:cornerRadius="12dp"
-        android:backgroundTint="@color/cream_card"
-        android:textColor="@color/text_secondary"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        app:elevation="0dp"
-        style="@style/Widget.Material3.Button.OutlinedButton" />
+    <LinearLayout android:id="@+id/containerTrips" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="16dp" />
+
+    <TextView android:id="@+id/tvTripsEmpty" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="@color/text_primary" android:lineSpacingExtra="4dp" android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnClearTrips" android:layout_width="match_parent" android:layout_height="50dp" android:text="Verlauf loeschen" android:textSize="13sp" app:cornerRadius="12dp" android:backgroundTint="@color/cream_card" android:textColor="@color/text_secondary" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" app:elevation="0dp" style="@style/Widget.Material3.Button.OutlinedButton" />
 
 </LinearLayout>

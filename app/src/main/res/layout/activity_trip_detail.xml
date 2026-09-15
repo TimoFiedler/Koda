@@ -15,26 +15,48 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDetailTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fahrt Detail"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:id="@+id/tvDetailSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sportlich - 450 Punkte"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="4dp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvDetailTitle"
-                android:layout_width="match_parent"
+                android:id="@+id/tvDetailLevel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fahrt Detail"
-                android:textSize="20sp"
+                android:text="PROFI"
+                android:textSize="10sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_primary" />
-
-            <TextView
-                android:id="@+id/tvDetailSubtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Manuell"
-                android:textSize="12sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="4dp" />
+                android:letterSpacing="0.08"
+                android:textColor="#FFFEF9"
+                android:background="@drawable/card_bg_accent"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp" />
 
         </LinearLayout>
 
@@ -49,12 +71,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="16dp">
 
+            <!-- Karte Vollversion -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp"
                 app:strokeColor="@color/cream_border"
@@ -63,25 +86,91 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Strecken Verlauf"
+                            android:textSize="11sp"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.08"
+                            android:textColor="@color/text_hint" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tippe auf Punkte"
+                            android:textSize="10sp"
+                            android:textColor="@color/text_hint" />
+
+                    </LinearLayout>
+
+                    <com.skodadash.ultra.TripMapView
+                        android:id="@+id/mapView"
+                        android:layout_width="match_parent"
+                        android:layout_height="340dp"
+                        android:background="@color/cream_surface" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:gravity="center_vertical">
+
+                        <View android:layout_width="10dp" android:layout_height="10dp" android:background="#4CAF50" android:layout_marginEnd="6dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Start" android:textSize="10sp" android:textColor="@color/text_secondary" android:layout_marginEnd="12dp" />
+                        <View android:layout_width="10dp" android:layout_height="10dp" android:background="#F44336" android:layout_marginEnd="6dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ziel" android:textSize="10sp" android:textColor="@color/text_secondary" android:layout_marginEnd="12dp" />
+                        <View android:layout_width="10dp" android:layout_height="10dp" android:background="#FFA726" android:layout_marginEnd="6dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bremse" android:textSize="10sp" android:textColor="@color/text_secondary" android:layout_marginEnd="12dp" />
+                        <View android:layout_width="10dp" android:layout_height="10dp" android:background="#66BB6A" android:layout_marginEnd="6dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gas" android:textSize="10sp" android:textColor="@color/text_secondary" />
+
+                    </LinearLayout>
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/cream_border" />
+
+                    <TextView
+                        android:id="@+id/tvSelectedEvent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tippe auf einen farbigen Punkt in der Karte um Details zu sehen - Beschleunigung, Bremsen, Kurven"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:padding="16dp"
+                        android:lineSpacingExtra="3dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/cream_border"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Statistik"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_hint"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:id="@+id/tvDetailStats"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_primary"
-                        android:lineSpacingExtra="4dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Statistik" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
+                    <TextView android:id="@+id/tvDetailStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textColor="@color/text_primary" android:lineSpacingExtra="4dp" />
 
                 </LinearLayout>
 
@@ -94,7 +183,7 @@
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp"
                 android:backgroundTint="@color/brown_primary"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -102,26 +191,54 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Punkte System"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:textColor="#80FFFFFF"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:id="@+id/tvDetailScores"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="#FFFEF9"
-                        android:lineSpacingExtra="4dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sport Score - Vollversion" android:textSize="11sp" android:textAllCaps="true" android:textColor="#80FFFFFF" android:layout_marginBottom="12dp" />
+                    <TextView android:id="@+id/tvDetailScores" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textColor="#FFFEF9" android:lineSpacingExtra="4dp" />
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/cream_border"
+                    android:layout_marginEnd="6dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrdynamik" android:textSize="10sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="8dp" />
+                        <TextView android:id="@+id/tvDetailG" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@color/text_primary" android:lineSpacingExtra="3dp" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/cream_border"
+                    android:layout_marginStart="6dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Analyse" android:textSize="10sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="8dp" />
+                        <TextView android:id="@+id/tvDetailAnalysis" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@color/text_primary" android:lineSpacingExtra="3dp" />
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -132,117 +249,22 @@
                 app:strokeColor="@color/cream_border"
                 android:layout_marginBottom="16dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fahrdynamik"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_hint"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:id="@+id/tvDetailG"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_primary"
-                        android:lineSpacingExtra="4dp" />
-
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Alle Ereignisse - Tippe in Karte" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
+                    <TextView android:id="@+id/tvDetailEvents" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@color/text_primary" android:lineSpacingExtra="4dp" />
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/cream_border"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Ereignisse"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_hint"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:id="@+id/tvDetailEvents"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_primary"
-                        android:lineSpacingExtra="4dp" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/cream_border"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Karten Verlauf"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_hint"
-                        android:layout_marginBottom="12dp" />
-
-                    <TextView
-                        android:id="@+id/tvDetailMap"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_secondary"
-                        android:lineSpacingExtra="3dp"
-                        android:fontFamily="monospace" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnExportGpx" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="GPX Export" app:cornerRadius="12dp" android:backgroundTint="@color/cream_card" android:textColor="@color/brown_primary" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" android:layout_marginEnd="6dp" style="@style/Widget.Material3.Button.OutlinedButton" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnDeleteTrip" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="Loeschen" app:cornerRadius="12dp" android:backgroundTint="@color/cream_card" android:textColor="@color/error_muted" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" android:layout_marginStart="6dp" style="@style/Widget.Material3.Button.OutlinedButton" />
+            </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnClose"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="Schliessen"
-        android:layout_margin="20dp"
-        app:cornerRadius="12dp"
-        android:backgroundTint="@color/brown_primary" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnClose" android:layout_width="match_parent" android:layout_height="56dp" android:text="Schliessen" android:layout_margin="16dp" app:cornerRadius="12dp" android:backgroundTint="@color/brown_primary" />
 
 </LinearLayout>
