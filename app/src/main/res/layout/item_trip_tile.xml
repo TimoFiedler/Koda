@@ -4,30 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/cream_border">
+    app:strokeWidth="0dp"
+    android:backgroundTint="#FF1C1C1E">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp" android:background="@color/cream_card">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
-            <TextView android:id="@+id/tvTileDate" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="15.09.2026 14:30" android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-            <TextView android:id="@+id/tvTileType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manuell - Einsteiger" android:textSize="9sp" android:textColor="#FFFEF9" android:background="@drawable/card_bg_accent" android:paddingHorizontal="8dp" android:paddingVertical="3dp" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="10dp">
+            <TextView android:id="@+id/tvTileDate" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Morgen Fahrt" android:textSize="15sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+            <TextView android:id="@+id/tvTileType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manuell" android:textSize="10sp" android:textColor="#FF8E8E93" android:background="#FF2C2C2E" android:paddingHorizontal="10dp" android:paddingVertical="4dp" />
         </LinearLayout>
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="8dp">
-            <TextView android:id="@+id/tvTileDistance" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="12.5 km" android:textSize="18sp" android:textColor="@color/text_primary" android:fontFamily="sans-serif-light" />
-            <TextView android:id="@+id/tvTileDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="25 Min" android:textSize="13sp" android:textColor="@color/text_secondary" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp" android:gravity="center_vertical">
+            <TextView android:id="@+id/tvTileDistance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="12.5 km" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginEnd="16dp" />
+            <TextView android:id="@+id/tvTileDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="25 Min" android:textSize="13sp" android:textColor="#FF8E8E93" />
         </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="6dp">
-            <TextView android:id="@+id/tvTileScore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="85 Pkt" android:textSize="11sp" android:textStyle="bold" android:textColor="@color/brown_primary" android:layout_marginEnd="10dp" />
-            <TextView android:id="@+id/tvTileEco" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sportlich" android:textSize="11sp" android:textColor="@color/brown_light" android:layout_marginEnd="10dp" />
-            <TextView android:id="@+id/tvTileSpeed" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Max 120 km/h - 0.8 G" android:textSize="10sp" android:textColor="@color/text_hint" />
+            <TextView android:id="@+id/tvTileScore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="85 Pkt" android:textSize="12sp" android:textStyle="bold" android:textColor="#FF6ECFC3" android:layout_marginEnd="12dp" />
+            <TextView android:id="@+id/tvTileEco" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sportlich" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginEnd="12dp" />
+            <TextView android:id="@+id/tvTileSpeed" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="120 km/h" android:textSize="11sp" android:textColor="#FF8E8E93" android:gravity="end" />
         </LinearLayout>
 
-        <TextView android:id="@+id/tvTileEvents" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="3 Events - 120 GPS - 85% Eff" android:textSize="10sp" android:textColor="@color/text_hint" android:letterSpacing="0.02" />
+        <TextView android:id="@+id/tvTileEvents" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="3 Events" android:textSize="11sp" android:textColor="#FF636366" />
 
     </LinearLayout>
 

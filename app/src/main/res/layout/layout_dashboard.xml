@@ -4,100 +4,107 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/cream_background">
+    android:background="#FF000000">
 
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_online" android:layout_marginEnd="10dp" />
-                <TextView android:id="@+id/tvStatus" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fahrzeugdaten laden" android:textSize="13sp" android:textColor="@color/text_secondary" />
-                <TextView android:id="@+id/tvEngineBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ELEKTRO" android:textSize="10sp" android:textAllCaps="true" android:textColor="@color/brown_primary" android:background="@drawable/card_bg_accent" android:paddingHorizontal="10dp" android:paddingVertical="4dp" />
-            </LinearLayout>
-            <TextView android:id="@+id/tvRateLimit" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Rate Limit: 20/20" android:textSize="10sp" android:textColor="@color/text_hint" android:layout_marginTop="8dp" />
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/cream_border"
-        android:layout_marginBottom="16dp">
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp" android:background="@color/cream_card">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrzeug" android:textSize="11sp" android:textAllCaps="true" android:textColor="@color/text_hint" android:layout_marginBottom="16dp" />
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="20dp">
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:id="@+id/tvBattery" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="--" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                    <TextView android:id="@+id/tvBatteryLabel" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ladezustand" android:textSize="11sp" android:textColor="@color/text_secondary" android:textAllCaps="true" android:layout_marginTop="2dp" />
-                </LinearLayout>
-                <View android:layout_width="1dp" android:layout_height="40dp" android:background="@color/cream_border" android:layout_marginHorizontal="16dp" />
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:id="@+id/tvRange" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="--" android:textSize="28sp" android:textStyle="bold" android:textColor="@color/text_primary" />
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Reichweite" android:textSize="11sp" android:textColor="@color/text_secondary" android:textAllCaps="true" android:layout_marginTop="2dp" />
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
-                <TextView android:id="@+id/tvOdo" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Kilometerstand" android:textSize="13sp" android:textColor="@color/text_secondary" />
-                <TextView android:id="@+id/tvLock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Status" android:textSize="13sp" android:textColor="@color/text_secondary" android:textStyle="bold" />
-            </LinearLayout>
-            <TextView android:id="@+id/tvCharging" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textSize="12sp" android:textColor="@color/brown_light" android:layout_marginTop="12dp" />
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <com.google.android.material.button.MaterialButton android:id="@+id/btnRefresh" android:layout_width="match_parent" android:layout_height="52dp" android:text="Aktualisieren" app:cornerRadius="12dp" android:backgroundTint="@color/cream_card" android:textColor="@color/brown_primary" app:strokeWidth="1dp" app:strokeColor="@color/cream_border" app:elevation="0dp" android:layout_marginBottom="16dp" style="@style/Widget.Material3.Button.OutlinedButton" />
-
+    <!-- Profil Header like reference -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:strokeWidth="0dp"
-        android:backgroundTint="@color/brown_primary">
+        android:backgroundTint="#FF1C1C1E"
+        android:layout_marginBottom="12dp">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="20dp">
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
-                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Fahrten Tracker" android:textSize="11sp" android:textAllCaps="true" android:textColor="#80FFFFFF" />
-                <TextView android:id="@+id/tvAutoStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bereit" android:textSize="10sp" android:textColor="#B3FFFEF9" android:background="#33FFFFFF" android:paddingHorizontal="8dp" android:paddingVertical="3dp" />
+            <View android:layout_width="56dp" android:layout_height="56dp" android:background="@drawable/card_dark_accent" android:layout_marginEnd="16dp" />
+
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                <TextView android:id="@+id/tvEngineBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SCALA" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-black" />
+                <TextView android:id="@+id/tvStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Germany - Scala" android:textSize="12sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
 
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrt aufzeichnen" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/cream_surface" android:layout_marginBottom="6dp" />
-            <TextView android:id="@+id/tvTrackerStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0 Punkte - Einsteiger" android:textSize="12sp" android:textColor="#80FFFEF9" android:layout_marginBottom="12dp" />
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Genaues Tracking nur mit GPS. Wenig Bremsen + viel Speed + hohe G = mehr Punkte." android:textSize="12sp" android:textColor="#B3FFFEF9" android:layout_marginBottom="20dp" />
-
-            <com.google.android.material.button.MaterialButton android:id="@+id/btnStartTrip" android:layout_width="match_parent" android:layout_height="52dp" android:text="Fahrt manuell starten" app:cornerRadius="12dp" android:backgroundTint="@color/cream_surface" android:textColor="@color/brown_primary" app:elevation="0dp" android:layout_marginBottom="10dp" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/btnStopTrip" android:layout_width="match_parent" android:layout_height="52dp" android:text="Fahrt beenden" app:cornerRadius="12dp" android:backgroundTint="#33FFFEF9" android:textColor="@color/cream_surface" app:strokeWidth="1dp" app:strokeColor="#80FFFEF9" app:elevation="0dp" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_marginBottom="16dp" />
-
-            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#33FFFFFF" android:layout_marginBottom="16dp" />
-
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:padding="4dp">
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Automatisch" android:textSize="14sp" android:textColor="@color/cream_surface" android:textStyle="bold" />
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Startet ab Schwelle automatisch" android:textSize="11sp" android:textColor="#B3FFFEF9" android:layout_marginTop="2dp" />
-                </LinearLayout>
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/swAutoTrip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:thumbTint="@color/cream_surface"
-                    app:trackTint="#80FFFEF9" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="end">
+                <TextView android:id="@+id/tvRange" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="km/h" android:textSize="11sp" android:textColor="#FF8E8E93" />
             </LinearLayout>
 
         </LinearLayout>
 
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Fahrzeug Stats - 4 cards like reference -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⛽" android:textSize="20sp" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvBattery" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:id="@+id/tvBatteryLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tank / Akku" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏱️" android:textSize="20sp" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvOdo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kilometerstand" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp">
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔒" android:textSize="20sp" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvLock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Status" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" android:gravity="center">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⚡" android:textSize="20sp" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvCharging" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="--" android:textSize="12sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:maxLines="2" />
+                <TextView android:id="@+id/tvRateLimit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="20/20" android:textSize="10sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnRefresh" android:layout_width="match_parent" android:layout_height="52dp" android:text="Aktualisieren" app:cornerRadius="16dp" android:backgroundTint="#FF1C1C1E" android:textColor="#FFFFFFFF" app:strokeWidth="0dp" android:layout_marginBottom="20dp" />
+
+    <!-- Tracker Section -->
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrten Tracker" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-black" android:layout_marginBottom="12dp" />
+
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="12dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Tracking" android:textSize="14sp" android:textColor="#FFFFFFFF" android:textStyle="bold" />
+                <TextView android:id="@+id/tvAutoStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bereit" android:textSize="11sp" android:textColor="#FF8E8E93" android:background="#FF2C2C2E" android:paddingHorizontal="10dp" android:paddingVertical="4dp" />
+            </LinearLayout>
+
+            <TextView android:id="@+id/tvTrackerStats" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0 Punkte" android:textSize="24sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginBottom="8dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Wenig Bremsen + viel Speed + hohe G = mehr Punkte" android:textSize="12sp" android:textColor="#FF8E8E93" android:layout_marginBottom="20dp" />
+
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnStartTrip" android:layout_width="match_parent" android:layout_height="52dp" android:text="Fahrt starten" app:cornerRadius="16dp" android:backgroundTint="#FFFFFFFF" android:textColor="#FF000000" app:elevation="0dp" android:layout_marginBottom="10dp" android:textStyle="bold" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnStopTrip" android:layout_width="match_parent" android:layout_height="52dp" android:text="Fahrt beenden" app:cornerRadius="16dp" android:backgroundTint="#FF2C2C2E" android:textColor="#FFFFFFFF" app:strokeWidth="0dp" app:elevation="0dp" android:layout_marginBottom="16dp" />
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#FF2C2C2E" android:layout_marginBottom="16dp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Automatisch" android:textSize="14sp" android:textColor="#FFFFFFFF" android:textStyle="bold" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Start ab Schwelle" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
+                </LinearLayout>
+                <androidx.appcompat.widget.SwitchCompat android:id="@+id/swAutoTrip" android:layout_width="wrap_content" android:layout_height="wrap_content" app:thumbTint="#FF6ECFC3" app:trackTint="#FF2C2C2E" />
+            </LinearLayout>
+
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

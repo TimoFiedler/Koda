@@ -19,18 +19,18 @@ class TripMapView @JvmOverloads constructor(
     var onEventSelected: ((TripEvent) -> Unit)? = null
 
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FFFEF9")
+        color = Color.parseColor("#1C1C1E")
         style = Paint.Style.FILL
     }
 
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#F0E6D2")
+        color = Color.parseColor("#2C2C2E")
         style = Paint.Style.STROKE
         strokeWidth = 1f
     }
 
     private val pathPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#5D4037")
+        color = Color.parseColor("#6ECFC3")
         style = Paint.Style.STROKE
         strokeWidth = 8f
         strokeCap = Paint.Cap.ROUND
@@ -38,7 +38,7 @@ class TripMapView @JvmOverloads constructor(
     }
 
     private val pathBgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#E8DCC6")
+        color = Color.parseColor("#2C2C2E")
         style = Paint.Style.STROKE
         strokeWidth = 14f
         strokeCap = Paint.Cap.ROUND
@@ -46,40 +46,40 @@ class TripMapView @JvmOverloads constructor(
     }
 
     private val startPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#4CAF50")
+        color = Color.parseColor("#30D158")
         style = Paint.Style.FILL
     }
 
     private val endPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#D32F2F")
+        color = Color.parseColor("#FF3B30")
         style = Paint.Style.FILL
     }
 
     private val whitePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+        color = Color.parseColor("#2C2C2E")
         style = Paint.Style.FILL
     }
 
     private val whiteStroke = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+        color = Color.parseColor("#1C1C1E")
         style = Paint.Style.STROKE
         strokeWidth = 3f
     }
 
     private val selectedRing = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#FFC107")
+        color = Color.parseColor("#FFCC02")
         style = Paint.Style.STROKE
         strokeWidth = 4f
     }
 
     private val eventColors = mapOf(
-        "ACCEL" to Color.parseColor("#81C784"),
-        "HARD_ACCEL" to Color.parseColor("#388E3C"),
-        "BRAKE" to Color.parseColor("#FFB74D"),
-        "HARD_BRAKE" to Color.parseColor("#E57373"),
-        "CORNER" to Color.parseColor("#64B5F6"),
-        "SHARP_CORNER" to Color.parseColor("#1976D2"),
-        "SPEED" to Color.parseColor("#BA68C8")
+        "ACCEL" to Color.parseColor("#30D158"),
+        "HARD_ACCEL" to Color.parseColor("#1B7A3A"),
+        "BRAKE" to Color.parseColor("#FF9F0A"),
+        "HARD_BRAKE" to Color.parseColor("#FF3B30"),
+        "CORNER" to Color.parseColor("#5856D6"),
+        "SHARP_CORNER" to Color.parseColor("#AF52DE"),
+        "SPEED" to Color.parseColor("#6ECFC3")
     )
 
     private var minLat = 0.0
@@ -88,10 +88,24 @@ class TripMapView @JvmOverloads constructor(
     private var maxLon = 0.0
     private var hasBounds = false
 
+    // Replay feature
+    private var replayIndex = -1
+    private var isReplaying = false
+    private val replayPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#6ECFC3")
+        style = Paint.Style.FILL
+    }
+    private val replayWhite = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#2C2C2E")
+        style = Paint.Style.FILL
+    }
+
     fun setTripData(tripPoints: List<TripPoint>, tripEvents: List<TripEvent>) {
         points = tripPoints
         events = tripEvents
         selectedEvent = null
+        replayIndex = -1
+        isReplaying = false
         calcBounds()
         invalidate()
     }
@@ -100,6 +114,35 @@ class TripMapView @JvmOverloads constructor(
         selectedEvent = event
         invalidate()
     }
+
+    fun startReplay(onUpdate: ((Int, TripPoint) -> Unit)? = null): Boolean {
+        if (points.size < 2) return false
+        isReplaying = true
+        replayIndex = 0
+        Thread {
+            for (i in points.indices) {
+                if (!isReplaying) break
+                replayIndex = i
+                post { 
+                    invalidate()
+                    onUpdate?.invoke(i, points[i])
+                }
+                try { Thread.sleep(80) } catch (_: Exception) {}
+            }
+            isReplaying = false
+            replayIndex = -1
+            post { invalidate() }
+        }.start()
+        return true
+    }
+
+    fun stopReplay() {
+        isReplaying = false
+        replayIndex = -1
+        invalidate()
+    }
+
+    fun isReplayActive(): Boolean = isReplaying
 
     private fun calcBounds() {
         if (points.isEmpty()) { hasBounds = false; return }
@@ -207,6 +250,15 @@ class TripMapView @JvmOverloads constructor(
             val e = toXY(points.last().lat, points.last().lon)
             canvas.drawCircle(e.x, e.y, 14f, whitePaint)
             canvas.drawCircle(e.x, e.y, 10f, endPaint)
+        }
+
+        // Replay dot
+        if (isReplaying && replayIndex in points.indices) {
+            val rp = points[replayIndex]
+            val xy = toXY(rp.lat, rp.lon)
+            canvas.drawCircle(xy.x, xy.y, 20f, replayWhite)
+            canvas.drawCircle(xy.x, xy.y, 14f, replayPaint)
+            canvas.drawCircle(xy.x, xy.y, 14f, whiteStroke)
         }
     }
 

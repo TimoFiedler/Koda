@@ -1,61 +1,92 @@
 <resources>
-    <!-- Base -->
+    <!-- Base Dark Reference - from screenshots -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Creme Beige Premium Palette - 100% Design -->
-    <color name="cream_background">#FFF8E7</color>
-    <color name="cream_surface">#FFFEF9</color>
-    <color name="cream_card">#FFFFFF</color>
-    <color name="cream_border">#E8DDC7</color>
-    <color name="cream_border_light">#F0E6D2</color>
-    
-    <color name="beige_light">#F5E6C8</color>
-    <color name="beige_medium">#D2B48C</color>
-    <color name="beige_dark">#C19A6B</color>
-    <color name="beige_warm">#E6D5B8</color>
-    
-    <color name="brown_primary">#8B7355</color>
-    <color name="brown_dark">#6B5B46</color>
-    <color name="brown_light">#A68B6A</color>
-    <color name="brown_deep">#3E2723</color>
-    <color name="brown_mocha">#5D4037</color>
-    
-    <color name="text_primary">#3E2723</color>
-    <color name="text_secondary">#8D6E63</color>
-    <color name="text_hint">#BCAAA4</color>
-    <color name="text_tertiary">#D7CCC8</color>
-    
-    <color name="accent_gold">#C5A880</color>
-    <color name="accent_sand">#D4C4A8</color>
-    <color name="accent_mocha">#8D7B6C</color>
-    <color name="accent_olive">#8B8B6E</color>
-    <color name="accent_graphite">#6B6B6B</color>
-    <color name="accent_sage">#9CAF88</color>
-    
-    <color name="success_green">#7A9E7E</color>
-    <color name="error_muted">#B85450</color>
-    
-    <!-- Widget Backgrounds -->
-    <color name="widget_bg_light">#FFF8E7</color>
-    <color name="widget_bg_dark">#3E2723</color>
-    <color name="widget_bg_transparent">#E6FFF8E7</color>
-    <color name="widget_bg_sand">#F5E6C8</color>
-    <color name="widget_bg_mocha">#EFEBE9</color>
-    <color name="widget_bg_graphite">#FAFAFA</color>
-    
-    <!-- Theme Variations -->
-    <color name="theme_creme_bg">#FFF8E7</color>
-    <color name="theme_sand_bg">#FDF6E3</color>
-    <color name="theme_mocca_bg">#F5F0EB</color>
-    <color name="theme_graphite_bg">#FAFAFA</color>
-    
-    <!-- Card Shadows / Elevations -->
-    <color name="shadow_light">#0D000000</color>
-    <color name="shadow_medium">#1A000000</color>
-    
-    <!-- Status -->
-    <color name="status_online">#7A9E7E</color>
-    <color name="status_offline">#BCAAA4</color>
-    <color name="status_charging">#8B7355</color>
+    <!-- New Dark Palette - Reference Design -->
+    <color name="background_dark">#FF000000</color>
+    <color name="card_dark">#FF1C1C1E</color>
+    <color name="card_dark2">#FF232323</color>
+    <color name="card_dark3">#FF2C2C2E</color>
+    <color name="card_border_dark">#FF2C2C2E</color>
+
+    <color name="text_white">#FFFFFFFF</color>
+    <color name="text_gray">#FF9E9E9E</color>
+    <color name="text_gray2">#FF8E8E93</color>
+    <color name="text_hint_dark">#FF636366</color>
+    <color name="text_secondary_dark">#FF8E8E93</color>
+
+    <color name="accent_teal">#FF6ECFC3</color>
+    <color name="accent_teal_dark">#FF5AC8BE</color>
+    <color name="accent_red">#FFFF3B30</color>
+    <color name="accent_red2">#FFFF453A</color>
+    <color name="accent_green">#FF30D158</color>
+    <color name="accent_green2">#FF34C759</color>
+    <color name="accent_blue">#FF5856D6</color>
+    <color name="accent_blue2">#FF5E5CE6</color>
+    <color name="accent_orange">#FFFF9F0A</color>
+    <color name="accent_orange2">#FFFF9500</color>
+    <color name="accent_purple">#FFAF52DE</color>
+    <color name="accent_purple2">#FF8E44AD</color>
+    <color name="accent_yellow">#FFFFCC02</color>
+
+    <!-- Legacy mapping - now point to dark theme for compatibility -->
+    <color name="cream_background">#FF000000</color>
+    <color name="cream_surface">#FF1C1C1E</color>
+    <color name="cream_card">#FF1C1C1E</color>
+    <color name="cream_border">#FF2C2C2E</color>
+    <color name="cream_border_light">#FF2C2C2E</color>
+
+    <color name="beige_light">#FF2C2C2E</color>
+    <color name="beige_medium">#FF3A3A3C</color>
+    <color name="beige_dark">#FF48484A</color>
+    <color name="beige_warm">#FF2C2C2E</color>
+
+    <color name="brown_primary">#FF6ECFC3</color>
+    <color name="brown_dark">#FF5AC8BE</color>
+    <color name="brown_light">#FF8E8E93</color>
+    <color name="brown_deep">#FFFFFFFF</color>
+    <color name="brown_mocha">#FF6ECFC3</color>
+
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#FF9E9E9E</color>
+    <color name="text_hint">#FF636366</color>
+    <color name="text_tertiary">#FF8E8E93</color>
+
+    <color name="accent_gold">#FF6ECFC3</color>
+    <color name="accent_sand">#FF2C2C2E</color>
+    <color name="accent_mocha">#FF8E8E93</color>
+    <color name="accent_olive">#FF8E8E93</color>
+    <color name="accent_graphite">#FF636366</color>
+    <color name="accent_sage">#FF30D158</color>
+
+    <color name="success_green">#FF30D158</color>
+    <color name="error_muted">#FFFF3B30</color>
+
+    <color name="widget_bg_light">#FF1C1C1E</color>
+    <color name="widget_bg_dark">#FF1C1C1E</color>
+    <color name="widget_bg_transparent">#801C1C1E</color>
+    <color name="widget_bg_sand">#FF1C1C1E</color>
+    <color name="widget_bg_mocha">#FF1C1C1E</color>
+    <color name="widget_bg_graphite">#FF1C1C1E</color>
+
+    <color name="theme_creme_bg">#FF000000</color>
+    <color name="theme_sand_bg">#FF000000</color>
+    <color name="theme_mocca_bg">#FF000000</color>
+    <color name="theme_graphite_bg">#FF000000</color>
+
+    <color name="shadow_light">#0DFFFFFF</color>
+    <color name="shadow_medium">#1AFFFFFF</color>
+
+    <color name="status_online">#FF30D158</color>
+    <color name="status_offline">#FF636366</color>
+    <color name="status_charging">#FF6ECFC3</color>
+
+    <!-- Specific for reference UI -->
+    <color name="ref_blue">#FF5856D6</color>
+    <color name="ref_red">#FFFF3B30</color>
+    <color name="ref_teal">#FF6ECFC3</color>
+    <color name="ref_orange">#FFFF9F0A</color>
+    <color name="ref_green">#FF30D158</color>
+    <color name="ref_purple">#FFAF52DE</color>
 </resources>

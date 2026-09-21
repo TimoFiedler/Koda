@@ -59,6 +59,11 @@ class TripStorage(private val context: Context) {
                         )
                     }
                 }
+                val tags = mutableListOf<String>()
+                if (o.has("tags")) {
+                    val ta = o.getJSONArray("tags")
+                    for (k in 0 until ta.length()) tags.add(ta.getString(k))
+                }
                 val base = TripData(
                     id = o.getLong("id"),
                     startTime = o.getLong("startTime"),
@@ -77,7 +82,10 @@ class TripStorage(private val context: Context) {
                     score = o.optInt("score", 0),
                     ecoScore = o.optInt("ecoScore", 0),
                     sportScore = o.optInt("sportScore", o.optInt("score", 0)),
-                    efficiencyScore = o.optInt("efficiencyScore", 0)
+                    efficiencyScore = o.optInt("efficiencyScore", 0),
+                    notes = o.optString("notes", ""),
+                    tags = tags,
+                    customName = o.optString("customName", "")
                 )
                 // Recalculate if old data has 0 score
                 val recalculated = if (base.score == 0 && base.distanceMeters > 0) {
@@ -101,6 +109,15 @@ class TripStorage(private val context: Context) {
     fun deleteTrip(id: Long) {
         val filtered = getTrips().filter { it.id != id }
         saveAll(filtered)
+    }
+
+    fun updateTrip(updated: TripData) {
+        val trips = getTrips().toMutableList()
+        val idx = trips.indexOfFirst { it.id == updated.id }
+        if (idx >= 0) {
+            trips[idx] = updated
+            saveAll(trips)
+        }
     }
 
     fun clearAll() { prefs.edit().clear().apply() }
@@ -156,6 +173,11 @@ class TripStorage(private val context: Context) {
             o.put("ecoScore", trip.ecoScore)
             o.put("sportScore", trip.sportScore)
             o.put("efficiencyScore", trip.efficiencyScore)
+            o.put("notes", trip.notes)
+            o.put("customName", trip.customName)
+            val ta = JSONArray()
+            trip.tags.forEach { ta.put(it) }
+            o.put("tags", ta)
 
             val pa = JSONArray()
             trip.points.takeLast(500).forEach { p ->

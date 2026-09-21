@@ -36,7 +36,10 @@ data class TripData(
     val score: Int = 0,
     val ecoScore: Int = 0,
     val sportScore: Int = 0,
-    val efficiencyScore: Int = 0
+    val efficiencyScore: Int = 0,
+    val notes: String = "",
+    val tags: List<String> = emptyList(),
+    val customName: String = ""
 ) {
     // Vollversion: Sport Score - mehr Punkte für hohe Geschwindigkeit, hohe G-Kräfte, wenig Bremsen
     fun calculateSportScore(): Int {

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cream_background"
+    android:background="#FF000000"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cream_background"
+        android:background="#FF000000"
         app:elevation="0dp">
 
         <LinearLayout
@@ -19,39 +19,23 @@
             android:padding="24dp"
             android:paddingBottom="12dp">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="SkodaDash"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_primary"
-                    android:letterSpacing="0.02"
-                    android:fontFamily="sans-serif-medium" />
-
-                <View
-                    android:layout_width="32dp"
-                    android:layout_height="3dp"
-                    android:background="@color/accent_gold"
-                    android:layout_marginStart="12dp" />
-
-            </LinearLayout>
+                android:text="SkodaDash"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFFFF"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="-0.02" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Vollversion - Minimal und genau"
+                android:text="Vollversion - Dark Reference"
                 android:textSize="13sp"
-                android:textColor="@color/text_secondary"
-                android:layout_marginTop="2dp"
-                android:letterSpacing="0.03" />
+                android:textColor="#FF8E8E93"
+                android:layout_marginTop="2dp" />
 
         </LinearLayout>
 
@@ -59,50 +43,38 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cream_background"
-            app:tabIndicatorColor="@color/brown_primary"
+            android:background="#FF000000"
+            app:tabIndicatorColor="#FF6ECFC3"
             app:tabIndicatorHeight="3dp"
-            app:tabSelectedTextColor="@color/brown_primary"
-            app:tabTextColor="@color/text_secondary"
+            app:tabSelectedTextColor="#FFFFFFFF"
+            app:tabTextColor="#FF8E8E93"
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:tabMode="fixed"
             app:tabGravity="fill">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Dashboard" />
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tracker" />
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profil" />
+            <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Dashboard" />
+            <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tracker" />
+            <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profil" />
 
         </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/cream_border" />
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#FF1C1C1E" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/cream_background"
+        android:background="#FF000000"
         android:clipToPadding="false"
-        android:paddingBottom="16dp">
+        android:paddingBottom="24dp">
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp" />
+            android:padding="16dp" />
 
     </ScrollView>
 
