@@ -11,14 +11,14 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↗" android:textSize="20sp" android:textColor="#FF6ECFC3" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_distance" android:tint="#FF6ECFC3" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvTotalDistance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 km" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamtstrecke" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏱" android:textSize="20sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_time" android:tint="#FFFF9F0A" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvTotalDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamtdauer" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -28,14 +28,14 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏸" android:textSize="20sp" android:textColor="#FFAF52DE" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_time" android:tint="#FFAF52DE" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvStandzeit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Standzeit" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏁" android:textSize="20sp" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_car" android:tint="#FF6ECFC3" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvTotalTrips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fahrten gesamt" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -44,7 +44,7 @@
 
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⚡" android:textSize="20sp" android:textColor="#FFFF3B30" android:layout_marginBottom="8dp" />
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_speed" android:tint="#FFFF3B30" android:layout_marginBottom="8dp" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Höchstgeschwindigkeit" android:textSize="11sp" android:textColor="#FF8E8E93" />
             <TextView android:id="@+id/tvMaxSpeed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 km/h" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
         </LinearLayout>
@@ -55,14 +55,14 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="←" android:textSize="24sp" android:textColor="#FF5856D6" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_curve_left" android:tint="#FF5856D6" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvLeftCurves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Linkskurven" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="→" android:textSize="24sp" android:textColor="#FFFF3B30" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_curve_right" android:tint="#FFFF3B30" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvRightCurves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Rechtskurven" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -72,14 +72,14 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="●" android:textSize="20sp" android:textColor="#FFFF3B30" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_brake" android:tint="#FFFF3B30" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvBrakes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bremsvorgänge" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↗" android:textSize="22sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_lane" android:tint="#FFFF9F0A" android:layout_marginBottom="8dp" />
                 <TextView android:id="@+id/tvLaneChanges" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Spurwechsel" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -103,14 +103,14 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬇" android:textSize="14sp" android:background="#FFFF3B30" android:textColor="#FFFFFFFF" android:padding="6dp" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_curve_left" android:tint="#FFFF3B30" android:background="#FFFF3B30" android:padding="4dp" android:layout_marginBottom="8dp" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Max. Verzögerung" android:textSize="11sp" android:textColor="#FF8E8E93" />
                 <TextView android:id="@+id/tvMaxBrake" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 m/s²" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬆" android:textSize="14sp" android:background="#FF30D158" android:textColor="#FFFFFFFF" android:padding="6dp" android:layout_marginBottom="8dp" />
+                <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_curve_right" android:tint="#FFFFFFFF" android:background="#FF30D158" android:padding="4dp" android:layout_marginBottom="8dp" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Max. Beschleunigung" android:textSize="11sp" android:textColor="#FF8E8E93" />
                 <TextView android:id="@+id/tvMaxAccel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 m/s²" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
             </LinearLayout>
@@ -119,7 +119,7 @@
 
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◉" android:textSize="18sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_gforce" android:tint="#FFFF9F0A" android:layout_marginBottom="8dp" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Maximale G-Kraft" android:textSize="11sp" android:textColor="#FF8E8E93" />
             <TextView android:id="@+id/tvMaxG" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.00 G" android:textSize="24sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
         </LinearLayout>
@@ -130,14 +130,14 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🚗" android:textSize="20sp" android:layout_marginBottom="6dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_car" android:tint="#FF6ECFC3" android:layout_marginBottom="6dp" />
                 <TextView android:id="@+id/tvTotalTrips2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fahrten gesamt" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🛑" android:textSize="20sp" android:layout_marginBottom="6dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_stop" android:tint="#FFFF3B30" android:layout_marginBottom="6dp" />
                 <TextView android:id="@+id/tvTotalStops" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Stopps gesamt" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
@@ -147,21 +147,20 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⇄" android:textSize="20sp" android:layout_marginBottom="6dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_distance" android:tint="#FF8E8E93" android:layout_marginBottom="6dp" />
                 <TextView android:id="@+id/tvAvgDistance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 km" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ø Fahrtlänge" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◷" android:textSize="20sp" android:layout_marginBottom="6dp" />
+                <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_time" android:tint="#FF8E8E93" android:layout_marginBottom="6dp" />
                 <TextView android:id="@+id/tvTotalDuration2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamtdauer" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <!-- Chart -->
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="12dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Letzte 7 Tage" android:textSize="11sp" android:textAllCaps="true" android:textColor="#FF8E8E93" android:layout_marginBottom="12dp" />
@@ -170,7 +169,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Eigene Features minimal -->
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
             <TextView android:id="@+id/tvTotalScore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 Punkte" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:visibility="gone" />

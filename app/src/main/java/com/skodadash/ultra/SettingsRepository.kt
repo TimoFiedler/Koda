@@ -25,6 +25,8 @@ class SettingsRepository(private val context: Context) {
     private val widgetCustomBgKey = stringPreferencesKey("widget_custom_bg")
     private val widgetCustomAccentKey = stringPreferencesKey("widget_custom_accent")
     private val widgetCustomTextKey = stringPreferencesKey("widget_custom_text")
+    private val carModelKey = stringPreferencesKey("car_model")
+    private val profileImageKey = stringPreferencesKey("profile_image_uri")
 
     suspend fun saveApiKey(key: String) { context.dataStore.edit { it[apiKeyKey] = key } }
     suspend fun saveVin(vin: String) { context.dataStore.edit { it[vinKey] = vin } }
@@ -66,6 +68,12 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun saveWidgetCustomText(hex: String) { context.dataStore.edit { it[widgetCustomTextKey] = hex } }
     suspend fun getWidgetCustomText(): String = context.dataStore.data.first()[widgetCustomTextKey] ?: ""
+
+    suspend fun saveCarModel(model: String) { context.dataStore.edit { it[carModelKey] = model } }
+    suspend fun getCarModel(): String = context.dataStore.data.first()[carModelKey] ?: "SCALA"
+
+    suspend fun saveProfileImageUri(uri: String) { context.dataStore.edit { it[profileImageKey] = uri } }
+    suspend fun getProfileImageUri(): String = context.dataStore.data.first()[profileImageKey] ?: ""
 
     suspend fun clear() { context.dataStore.edit { it.clear() } }
 }

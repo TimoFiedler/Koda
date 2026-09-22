@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.skodadash.ultra.databinding.ActivityTripDetailBinding
 import org.osmdroid.config.Configuration
-import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
@@ -31,8 +30,8 @@ class TripDetailActivity : AppCompatActivity() {
         binding = ActivityTripDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bgColor = getSharedPreferences("theme_cache", MODE_PRIVATE).getInt("bg_color", Color.parseColor("#000000"))
-        binding.root.setBackgroundColor(bgColor)
+        // Force black background always for dark reference
+        binding.root.setBackgroundColor(Color.parseColor("#FF000000"))
 
         val tripId = intent.getLongExtra("trip_id", -1)
         if (tripId == -1L) { finish(); return }
@@ -40,50 +39,65 @@ class TripDetailActivity : AppCompatActivity() {
         if (trip == null) { finish(); return }
         currentTrip = trip
 
-        val sdfShort = SimpleDateFormat("HH:mm", Locale.GERMANY)
-        val suggestedName = if (trip.customName.isNotEmpty()) trip.customName else StatsHelper.suggestTripName(trip)
+        // If trip has 0 distance but has points, recalculate
+        val effectiveTrip = if (trip.distanceMeters < 5 && trip.points.size > 1) {
+            var dist = 0.0
+            for (i in 1 until trip.points.size) {
+                val a = trip.points[i-1]
+                val b = trip.points[i]
+                val result = FloatArray(1)
+                android.location.Location.distanceBetween(a.lat, a.lon, b.lat, b.lon, result)
+                dist += result[0]
+            }
+            trip.copy(distanceMeters = dist)
+        } else trip
+
+        val suggestedName = if (effectiveTrip.customName.isNotEmpty()) effectiveTrip.customName else StatsHelper.suggestTripName(effectiveTrip)
         binding.tvDetailTitle.text = suggestedName
-        binding.tvDetailSubtitle.text = "${String.format("%.1f km", trip.distanceMeters/1000)} - ${trip.durationSec/60} Min"
-        binding.tvDetailLevel.text = trip.getLevel().uppercase()
+        binding.tvDetailSubtitle.text = "${String.format("%.1f km", effectiveTrip.distanceMeters/1000)} - ${effectiveTrip.durationSec/60} Min ${effectiveTrip.durationSec%60} Sek"
+        binding.tvDetailLevel.text = effectiveTrip.getLevel().uppercase()
 
         binding.tvDetailStats.text = """
-${String.format("%.2f km", trip.distanceMeters/1000)}
-${trip.durationSec/60} Min ${trip.durationSec%60} Sek
-Max ${trip.maxSpeedKmh.toInt()} km/h
-Ø ${trip.avgSpeedKmh.toInt()} km/h
+${String.format("%.2f km", effectiveTrip.distanceMeters/1000)}
+${effectiveTrip.durationSec/60} Min ${effectiveTrip.durationSec%60} Sek
+Max ${effectiveTrip.maxSpeedKmh.toInt()} km/h
+Ø ${effectiveTrip.avgSpeedKmh.toInt()} km/h
+${effectiveTrip.pointCount} Punkte
         """.trimIndent()
 
         binding.tvDetailScores.text = """
-${trip.score} Punkte
-${trip.getDrivingStyle()}
-${String.format("%.2f G", trip.maxG)} max
+${effectiveTrip.score} Punkte
+${effectiveTrip.getDrivingStyle()}
+${String.format("%.2f G", effectiveTrip.maxG)} max
+${String.format("%.1f", effectiveTrip.maxAccel)} m/s² Acc
+${String.format("%.1f", effectiveTrip.maxBrake)} m/s² Brake
         """.trimIndent()
 
         val engineType = try { kotlinx.coroutines.runBlocking { SettingsRepository(this@TripDetailActivity).getEngineType() } } catch (_: Exception) { "electric" }
-        val cost = CostCalculator.calculate(trip, engineType)
+        val cost = CostCalculator.calculate(effectiveTrip, engineType)
         binding.tvCostDetail.text = "${String.format("%.2f €", cost.costEuro)} - ${cost.efficiency}\n${if (cost.fuelLiters>0) "${String.format("%.2f L", cost.fuelLiters)}" else "${String.format("%.1f kWh", cost.kwh)}"} - ${String.format("%.1f kg CO2", cost.co2Kg)}"
-        binding.tvBehavior.text = StatsHelper.getDrivingBehavior(trip).entries.joinToString("\n") { "${it.key}: ${it.value}" }
+        binding.tvBehavior.text = StatsHelper.getDrivingBehavior(effectiveTrip).entries.joinToString("\n") { "${it.key}: ${it.value}" }
 
-        binding.etCustomName.setText(trip.customName)
-        binding.etNotes.setText(trip.notes)
+        binding.etCustomName.setText(effectiveTrip.customName)
+        binding.etNotes.setText(effectiveTrip.notes)
 
-        binding.tvDetailEvents.text = if (trip.events.isEmpty()) "Keine Events" else {
-            trip.events.groupBy { it.type }.entries.joinToString("\n") { (t, l) ->
+        binding.tvDetailEvents.text = if (effectiveTrip.events.isEmpty()) "Keine Events - sanfte Fahrt" else {
+            effectiveTrip.events.groupBy { it.type }.entries.joinToString("\n") { (t, l) ->
                 val n = when(t) {
                     "BRAKE" -> "Bremsen"; "HARD_BRAKE" -> "Stark Bremsen"
                     "ACCEL" -> "Gas"; "HARD_ACCEL" -> "Stark Gas"
                     "CORNER" -> "Kurve"; "SHARP_CORNER" -> "Scharfe Kurve"
                     "SPEED" -> "Schnell"; else -> t
                 }
-                "$n: ${l.size}x"
+                "$n: ${l.size}x - max ${String.format("%.1f", l.maxOfOrNull { it.value } ?: 0.0)}"
             }
         }
 
-        setupMap(trip)
+        setupMap(effectiveTrip)
 
         binding.btnToggleMap.setOnClickListener {
             isSatellite = !isSatellite
-            setupMap(trip)
+            setupMap(effectiveTrip)
             binding.btnToggleMap.text = if (isSatellite) "Satellit" else "Karte"
         }
 
@@ -95,12 +109,12 @@ ${String.format("%.2f G", trip.maxG)} max
             } else {
                 binding.btnReplay.text = "Stop"
                 binding.tvReplayInfo.visibility = android.view.View.VISIBLE
-                startReplay(trip)
+                startReplay(effectiveTrip)
             }
         }
 
         binding.btnSaveNote.setOnClickListener {
-            val updated = trip.copy(customName = binding.etCustomName.text.toString().trim(), notes = binding.etNotes.text.toString().trim())
+            val updated = effectiveTrip.copy(customName = binding.etCustomName.text.toString().trim(), notes = binding.etNotes.text.toString().trim())
             TripStorage(this@TripDetailActivity).updateTrip(updated)
             currentTrip = updated
             Toast.makeText(this@TripDetailActivity, "Gespeichert", Toast.LENGTH_SHORT).show()
@@ -108,33 +122,33 @@ ${String.format("%.2f G", trip.maxG)} max
         }
 
         binding.btnOpenMaps.setOnClickListener {
-            if (trip.points.isNotEmpty()) {
-                val start = trip.points.first()
-                val end = trip.points.last()
+            if (effectiveTrip.points.isNotEmpty()) {
+                val start = effectiveTrip.points.first()
+                val end = effectiveTrip.points.last()
                 val uri = Uri.parse("https://www.google.com/maps/dir/${start.lat},${start.lon}/${end.lat},${end.lon}/")
                 startActivity(Intent(Intent.ACTION_VIEW, uri))
             }
         }
 
         binding.btnShareTrip.setOnClickListener {
-            val shareText = "${binding.tvDetailTitle.text} - ${String.format("%.1f km", trip.distanceMeters/1000)} - ${trip.score} Pkt"
-            startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply { type = "text/plain"; putExtra(Intent.EXTRA_TEXT, shareText) }, "Teilen"))
+            val shareText = "${binding.tvDetailTitle.text} - ${String.format("%.1f km", effectiveTrip.distanceMeters/1000)} - ${effectiveTrip.score} Pkt - ${effectiveTrip.durationSec/60} Min"
+            startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).also { it.type = "text/plain"; it.putExtra(Intent.EXTRA_TEXT, shareText) }, "Teilen"))
         }
 
         binding.btnExportGpx.setOnClickListener {
-            val file = GpxExporter.exportTrip(this@TripDetailActivity, trip)
+            val file = GpxExporter.exportTrip(this@TripDetailActivity, effectiveTrip)
             if (file != null) GpxExporter.shareGpx(this@TripDetailActivity, file) else Toast.makeText(this@TripDetailActivity, "Fehler", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnDeleteTrip.setOnClickListener {
-            TripStorage(this@TripDetailActivity).deleteTrip(trip.id)
+            TripStorage(this@TripDetailActivity).deleteTrip(effectiveTrip.id)
             Toast.makeText(this@TripDetailActivity, "Gelöscht", Toast.LENGTH_SHORT).show()
             finish()
         }
 
         binding.btnClose.setOnClickListener { finish() }
 
-        val accent = getSharedPreferences("theme_cache", MODE_PRIVATE).getInt("accent_color", Color.parseColor("#6ECFC3"))
+        val accent = Color.parseColor("#FF6ECFC3")
         binding.btnClose.backgroundTintList = android.content.res.ColorStateList.valueOf(accent)
         binding.btnSaveNote.backgroundTintList = android.content.res.ColorStateList.valueOf(accent)
         binding.btnReplay.backgroundTintList = android.content.res.ColorStateList.valueOf(accent)
@@ -145,61 +159,60 @@ ${String.format("%.2f G", trip.maxG)} max
         map.setMultiTouchControls(true)
         map.setUseDataConnection(true)
 
-        val tileSource = if (isSatellite) {
-            XYTileSource("EsriWorldImagery", 0, 19, 256, ".jpg", arrayOf("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/"))
-        } else {
-            XYTileSource("Mapnik", 0, 19, 256, ".png", arrayOf("https://tile.openstreetmap.org/"))
-        }
+        val tileSource = if (isSatellite) EsriTileSource() else OsmTileSource()
         map.setTileSource(tileSource)
         map.overlays.clear()
 
-        if (trip.points.isEmpty()) return
+        if (trip.points.isEmpty()) {
+            binding.tvSelectedEvent.text = "Keine Punkte"
+            return
+        }
 
         val geoPoints = trip.points.map { GeoPoint(it.lat, it.lon) }
 
-        val polyline = Polyline().apply {
-            setPoints(geoPoints)
-            outlinePaint.color = Color.parseColor("#6ECFC3")
-            outlinePaint.strokeWidth = 10f
+        val polyline = Polyline().also {
+            it.setPoints(geoPoints)
+            it.outlinePaint.color = Color.parseColor("#FF6ECFC3")
+            it.outlinePaint.strokeWidth = 10f
         }
         map.overlays.add(polyline)
 
-        Marker(map).apply {
-            position = geoPoints.first()
-            setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-            icon = getDrawable(android.R.drawable.presence_online)?.apply { setTint(Color.parseColor("#30D158")) }
-            title = "Start"
-            map.overlays.add(this)
+        Marker(map).also {
+            it.position = geoPoints.first()
+            it.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+            it.icon = getDrawable(android.R.drawable.presence_online)?.also { d -> d.setTint(Color.parseColor("#FF30D158")) }
+            it.title = "Start"
+            map.overlays.add(it)
         }
 
         if (geoPoints.size > 1) {
-            Marker(map).apply {
-                position = geoPoints.last()
-                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-                icon = getDrawable(android.R.drawable.presence_busy)?.apply { setTint(Color.parseColor("#FF3B30")) }
-                title = "Ziel"
-                map.overlays.add(this)
+            Marker(map).also {
+                it.position = geoPoints.last()
+                it.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                it.icon = getDrawable(android.R.drawable.presence_busy)?.also { d -> d.setTint(Color.parseColor("#FFFF3B30")) }
+                it.title = "Ziel"
+                map.overlays.add(it)
             }
         }
 
         trip.events.forEach { ev ->
-            Marker(map).apply {
-                position = GeoPoint(ev.lat, ev.lon)
-                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+            Marker(map).also {
+                it.position = GeoPoint(ev.lat, ev.lon)
+                it.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
                 val color = when(ev.type) {
-                    "BRAKE" -> "#FF9F0A"; "HARD_BRAKE" -> "#FF3B30"
-                    "ACCEL" -> "#30D158"; "HARD_ACCEL" -> "#1B7A3A"
-                    "CORNER" -> "#5856D6"; "SHARP_CORNER" -> "#AF52DE"
-                    "SPEED" -> "#6ECFC3"; else -> "#FFFFFF"
+                    "BRAKE" -> "#FFFF9F0A"; "HARD_BRAKE" -> "#FFFF3B30"
+                    "ACCEL" -> "#FF30D158"; "HARD_ACCEL" -> "#FF1B7A3A"
+                    "CORNER" -> "#FF5856D6"; "SHARP_CORNER" -> "#FFAF52DE"
+                    "SPEED" -> "#FF6ECFC3"; else -> "#FFFFFFFF"
                 }
-                icon = getDrawable(android.R.drawable.presence_invisible)?.apply { setTint(Color.parseColor(color)) }
-                title = "${ev.type} ${String.format("%.1f", ev.value)}"
-                snippet = "${ev.speedKmh.toInt()} km/h"
-                setOnMarkerClickListener { _, _ ->
-                    binding.tvSelectedEvent.text = "${ev.type} - ${String.format("%.1f", ev.value)} - ${ev.speedKmh.toInt()} km/h"
+                it.icon = getDrawable(android.R.drawable.presence_invisible)?.also { d -> d.setTint(Color.parseColor(color)) }
+                it.title = "${ev.type} ${String.format("%.1f", ev.value)}"
+                it.snippet = "${ev.speedKmh.toInt()} km/h"
+                it.setOnMarkerClickListener { _, _ ->
+                    binding.tvSelectedEvent.text = "${ev.type} - ${String.format("%.1f", ev.value)} m/s² - ${ev.speedKmh.toInt()} km/h"
                     true
                 }
-                map.overlays.add(this)
+                map.overlays.add(it)
             }
         }
 
@@ -213,11 +226,13 @@ ${String.format("%.2f G", trip.maxG)} max
         val lonDiff = maxLon - minLon
         val maxDiff = maxOf(latDiff, lonDiff)
         val zoom = when {
+            maxDiff < 0.001 -> 18.0
             maxDiff < 0.005 -> 16.0
             maxDiff < 0.02 -> 14.0
             maxDiff < 0.05 -> 13.0
             maxDiff < 0.1 -> 12.0
-            else -> 11.0
+            maxDiff < 0.5 -> 10.0
+            else -> 8.0
         }
         map.controller.setZoom(zoom)
         map.invalidate()
@@ -231,15 +246,15 @@ ${String.format("%.2f G", trip.maxG)} max
                 if (Thread.interrupted()) break
                 val pt = trip.points[i]
                 runOnUiThread {
-                    binding.tvReplayInfo.text = "${i+1}/${trip.points.size} - ${pt.speedKmh.toInt()} km/h"
+                    binding.tvReplayInfo.text = "${i+1}/${trip.points.size} - ${pt.speedKmh.toInt()} km/h - ${String.format("%.1f", pt.lat)} ${String.format("%.1f", pt.lon)}"
                     map.controller.animateTo(GeoPoint(pt.lat, pt.lon))
                     map.overlays.removeIf { it is Marker && it.title == "REPLAY" }
-                    Marker(map).apply {
-                        position = GeoPoint(pt.lat, pt.lon)
-                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
-                        icon = getDrawable(android.R.drawable.presence_online)?.apply { setTint(Color.parseColor("#FFCC02")) }
-                        title = "REPLAY"
-                        map.overlays.add(this)
+                    Marker(map).also {
+                        it.position = GeoPoint(pt.lat, pt.lon)
+                        it.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+                        it.icon = getDrawable(android.R.drawable.presence_online)?.also { d -> d.setTint(Color.parseColor("#FFFFCC02")) }
+                        it.title = "REPLAY"
+                        map.overlays.add(it)
                     }
                     map.invalidate()
                 }

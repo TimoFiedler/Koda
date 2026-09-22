@@ -7,7 +7,7 @@
     android:background="#FF000000">
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Profil" android:textSize="24sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-black" android:layout_marginBottom="4dp" />
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Dark Reference - minimal" android:textSize="13sp" android:textColor="#FF8E8E93" android:layout_marginBottom="20dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Dark Reference - SCALA" android:textSize="13sp" android:textColor="#FF8E8E93" android:layout_marginBottom="20dp" />
 
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
@@ -17,8 +17,12 @@
             <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="API-Key" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="12dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox" app:boxStrokeColor="#FF2C2C2E" app:hintTextColor="#FF8E8E93">
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/etApiKeySettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textColor="#FFFFFFFF" />
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Auto Modell z.B. SCALA" app:boxCornerRadiusTopStart="12dp" app:boxCornerRadiusTopEnd="12dp" app:boxCornerRadiusBottomStart="12dp" app:boxCornerRadiusBottomEnd="12dp" android:layout_marginBottom="12dp" style="@style/Widget.Material3.TextInputLayout.OutlinedBox" app:boxStrokeColor="#FF2C2C2E" app:hintTextColor="#FF8E8E93">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etCarModelSettings" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textColor="#FFFFFFFF" android:text="SCALA" />
+            </com.google.android.material.textfield.TextInputLayout>
             <TextView android:id="@+id/tvRateStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Rate Limit: 20/20" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginBottom="12dp" />
-            <com.google.android.material.button.MaterialButton android:id="@+id/btnSaveProfile" android:layout_width="match_parent" android:layout_height="48dp" android:text="Profil speichern" app:cornerRadius="12dp" android:backgroundTint="#FF6ECFC3" android:textColor="#FF000000" android:textStyle="bold" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnSaveProfile" android:layout_width="match_parent" android:layout_height="48dp" android:text="Profil speichern" app:cornerRadius="12dp" android:backgroundTint="#FF6ECFC3" android:textColor="#FF000000" android:textStyle="bold" android:layout_marginBottom="8dp" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/btnPickProfileImage" android:layout_width="match_parent" android:layout_height="48dp" android:text="Profilbild wählen (türkis)" app:cornerRadius="12dp" android:backgroundTint="#FF2C2C2E" android:textColor="#FFFFFFFF" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

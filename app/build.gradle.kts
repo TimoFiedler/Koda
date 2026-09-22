@@ -11,8 +11,8 @@ android {
         applicationId = "com.skodadash.ultra"
         minSdk = 26
         targetSdk = 34
-        versionCode = 13
-        versionName = "6.1.0-DarkFixSat2"
+        versionCode = 14
+        versionName = "6.2.0-DarkIconsScala"
     }
 
     buildTypes {

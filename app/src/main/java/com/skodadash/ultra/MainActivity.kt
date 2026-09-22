@@ -5,12 +5,16 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
@@ -33,6 +37,21 @@ class MainActivity : AppCompatActivity() {
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { _ -> }
+
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            try {
+                contentResolver.takePersistableUriPermission(it, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } catch (_: Exception) {}
+            lifecycleScope.launch {
+                settings.saveProfileImageUri(it.toString())
+                Toast.makeText(this@MainActivity, "Profilbild gespeichert", Toast.LENGTH_SHORT).show()
+                if (currentTab == 0) showDashboard()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,9 +134,8 @@ class MainActivity : AppCompatActivity() {
                 apply()
             }
 
-            bgColor?.let {
-                binding.root.setBackgroundColor(it)
-            }
+            // Force black for dark reference, ignore custom bg if empty check? Keep custom but dashboard forced black
+            binding.root.setBackgroundColor(Color.parseColor("#FF000000"))
         } catch (_: Exception) {}
     }
 
@@ -174,39 +192,76 @@ class MainActivity : AppCompatActivity() {
         val tvBattery = view.findViewById<TextView>(R.id.tvBattery)
         val tvBatteryLabel = view.findViewById<TextView>(R.id.tvBatteryLabel)
         val tvRange = view.findViewById<TextView>(R.id.tvRange)
+        val tvRangeTile = view.findViewById<TextView>(R.id.tvRangeTile)
         val tvOdo = view.findViewById<TextView>(R.id.tvOdo)
         val tvLock = view.findViewById<TextView>(R.id.tvLock)
         val tvCharging = view.findViewById<TextView>(R.id.tvCharging)
         val tvEngineBadge = view.findViewById<TextView>(R.id.tvEngineBadge)
+        val tvEngineBadge2 = view.findViewById<TextView>(R.id.tvEngineBadge2)
         val tvAutoStatus = view.findViewById<TextView>(R.id.tvAutoStatus)
         val btnRefresh = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRefresh)
         val btnStartTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStartTrip)
         val btnStopTrip = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnStopTrip)
         val swAutoTrip = view.findViewById<SwitchCompat>(R.id.swAutoTrip)
         val tvRateLimit = view.findViewById<TextView>(R.id.tvRateLimit)
-        val tvTrackerStats = view.findViewById<TextView>(R.id.tvTrackerStats)
+        val ivProfile = view.findViewById<ImageView>(R.id.ivProfile)
+        val tvCarModelLabel = view.findViewById<TextView>(R.id.tvCarModelLabel)
 
         var initializing = true
         lifecycleScope.launch {
+            val carModel = settings.getCarModel()
+            tvEngineBadge.text = carModel.uppercase()
+            tvEngineBadge2.text = carModel.uppercase()
+
             val engineType = settings.getEngineType()
-            tvEngineBadge.text = when (engineType) {
-                "combustion" -> "Verbrenner"
-                "hybrid" -> "Hybrid"
-                else -> "Elektro"
-            }
             tvBatteryLabel.text = when (engineType) {
                 "combustion" -> "Tank"
                 "hybrid" -> "Akku"
                 else -> "Ladezustand"
             }
-            val storage = TripStorage(this@MainActivity)
-            tvTrackerStats.text = "${storage.getTotalScore()} Punkte - ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
+
+            val profileUri = settings.getProfileImageUri()
+            if (profileUri.isNotEmpty()) {
+                try {
+                    ivProfile.setImageURI(Uri.parse(profileUri))
+                } catch (_: Exception) {}
+            }
+
             swAutoTrip.isChecked = settings.getAutoTripEnabled()
             tvAutoStatus.text = if (settings.getAutoTripEnabled()) "Auto an" else "Auto aus"
             tvRateLimit.text = RateLimiter(this@MainActivity).getStatusText()
             initializing = false
-            applyCustomColors()
         }
+
+        ivProfile.setOnClickListener {
+            imagePickerLauncher.launch("image/*")
+        }
+
+        val carModelClickListener = View.OnClickListener {
+            val editText = EditText(this@MainActivity)
+            editText.hint = "z.B. SCALA, OCTAVIA"
+            lifecycleScope.launch {
+                editText.setText(settings.getCarModel())
+            }
+            AlertDialog.Builder(this@MainActivity)
+                .setTitle("Auto Modell")
+                .setMessage("Welches Auto hast du? z.B. Scala")
+                .setView(editText)
+                .setPositiveButton("Speichern") { _, _ ->
+                    val model = editText.text.toString().trim().ifEmpty { "SCALA" }
+                    lifecycleScope.launch {
+                        settings.saveCarModel(model)
+                        tvEngineBadge.text = model.uppercase()
+                        tvEngineBadge2.text = model.uppercase()
+                        Toast.makeText(this@MainActivity, "Modell: $model", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .setNegativeButton("Abbrechen", null)
+                .show()
+        }
+        tvEngineBadge.setOnClickListener(carModelClickListener)
+        tvEngineBadge2.setOnClickListener(carModelClickListener)
+        tvCarModelLabel.setOnClickListener(carModelClickListener)
 
         fun updateTrackingButtons() {
             try {
@@ -221,8 +276,6 @@ class MainActivity : AppCompatActivity() {
                     autoRunning -> "Auto wartet"
                     else -> "Bereit"
                 }
-                val storage = TripStorage(this@MainActivity)
-                tvTrackerStats.text = "${storage.getTotalScore()} Punkte - ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
             } catch (_: Exception) {}
         }
 
@@ -234,11 +287,11 @@ class MainActivity : AppCompatActivity() {
                 if (isChecked) {
                     val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_START }
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-                    Toast.makeText(this@MainActivity, "Auto Erkennung an - startet ab Schwelle", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Auto Erkennung an", Toast.LENGTH_SHORT).show()
                 } else {
                     val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_STOP }
                     startService(intent)
-                    Toast.makeText(this@MainActivity, "Auto Erkennung aus", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Auto aus", Toast.LENGTH_SHORT).show()
                 }
                 updateTrackingButtons()
             }
@@ -259,13 +312,14 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val data = api.fetchVehicle()
                     if (data != null) {
-                        tvStatus.text = "${data.name} - ${data.lastUpdated}"
+                        tvStatus.text = "${data.name} - ${settings.getCarModel()}"
                         tvRateLimit.text = limiter.getStatusText()
                         tvBattery.text = data.batteryPercent?.let { "${it.toInt()}%" } ?: "--"
                         tvRange.text = data.rangeKm?.let { "${it.toInt()} km" } ?: "--"
+                        tvRangeTile.text = data.rangeKm?.let { "${it.toInt()} km" } ?: "--"
                         tvOdo.text = data.odometerKm?.let { "${it.toInt()} km" } ?: "--"
                         tvLock.text = when (data.doorsLocked) { true -> "Verriegelt" else -> "Offen" }
-                        tvCharging.text = data.chargingState ?: ""
+                        tvCharging.text = data.chargingState ?: "Bereit"
                         getSharedPreferences("widget_data", MODE_PRIVATE).edit().apply {
                             putInt("battery", data.batteryPercent?.toInt() ?: -1)
                             putInt("range", data.rangeKm?.toInt() ?: -1)
@@ -274,6 +328,7 @@ class MainActivity : AppCompatActivity() {
                             putString("charging", data.chargingState ?: "")
                             putString("name", data.name)
                             putString("engine_type", settings.getEngineType())
+                            putString("car_model", settings.getCarModel())
                             apply()
                         }
                     } else {
@@ -474,6 +529,7 @@ class MainActivity : AppCompatActivity() {
 
         val etFin = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etFinSettings)
         val etApiKey = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etApiKeySettings)
+        val etCarModel = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCarModelSettings)
         val btnSaveProfile = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveProfile)
         val tvRateStatus = view.findViewById<TextView>(R.id.tvRateStatus)
         val rgEngine = view.findViewById<android.widget.RadioGroup>(R.id.rgEngineSettings)
@@ -484,11 +540,13 @@ class MainActivity : AppCompatActivity() {
         val btnSaveColors = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveColors)
         val viewPreview = view.findViewById<View>(R.id.viewColorPreview)
         val btnLogout = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogout)
+        val btnPickProfile = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPickProfileImage)
 
         var initializing = true
         lifecycleScope.launch {
             etFin.setText(settings.getVin())
             etApiKey.setText(settings.getApiKey())
+            etCarModel.setText(settings.getCarModel())
             etCustomBg.setText(settings.getCustomBgHex().ifEmpty { settings.getAppTheme() })
             etCustomAccent.setText(settings.getCustomAccentHex().ifEmpty { settings.getWidgetAccent() })
             tvRateStatus.text = RateLimiter(this@MainActivity).getStatusText()
@@ -508,11 +566,11 @@ class MainActivity : AppCompatActivity() {
 
             val bg = ColorHelper.parseColor(etCustomBg.text.toString()) ?: Color.parseColor("#FFF8E7")
             val accent = ColorHelper.parseColor(etCustomAccent.text.toString()) ?: Color.parseColor("#8B7355")
-            val drawable = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                cornerRadius = 24f
-                setColor(bg)
-                setStroke(2, accent)
+            val drawable = GradientDrawable().also {
+                it.shape = GradientDrawable.RECTANGLE
+                it.cornerRadius = 24f
+                it.setColor(bg)
+                it.setStroke(2, accent)
             }
             viewPreview.background = drawable
 
@@ -522,11 +580,11 @@ class MainActivity : AppCompatActivity() {
         fun updatePreview() {
             val bg = ColorHelper.parseColor(etCustomBg.text.toString()) ?: Color.parseColor("#FFF8E7")
             val accent = ColorHelper.parseColor(etCustomAccent.text.toString()) ?: Color.parseColor("#8B7355")
-            val drawable = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                cornerRadius = 24f
-                setColor(bg)
-                setStroke(4, accent)
+            val drawable = GradientDrawable().also {
+                it.shape = GradientDrawable.RECTANGLE
+                it.cornerRadius = 24f
+                it.setColor(bg)
+                it.setStroke(4, accent)
             }
             viewPreview.background = drawable
         }
@@ -534,9 +592,14 @@ class MainActivity : AppCompatActivity() {
         etCustomBg.setOnFocusChangeListener { _, _ -> updatePreview() }
         etCustomAccent.setOnFocusChangeListener { _, _ -> updatePreview() }
 
+        btnPickProfile.setOnClickListener {
+            imagePickerLauncher.launch("image/*")
+        }
+
         btnSaveProfile.setOnClickListener {
             val fin = etFin.text.toString().trim().uppercase()
             val key = etApiKey.text.toString().trim()
+            val carModel = etCarModel.text.toString().trim().ifEmpty { "SCALA" }
             if (fin.length < 10 || key.length < 10) {
                 Toast.makeText(this@MainActivity, "Bitte gueltige Werte", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -544,7 +607,8 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 settings.saveVin(fin)
                 settings.saveApiKey(key)
-                Toast.makeText(this@MainActivity, "Profil gespeichert", Toast.LENGTH_SHORT).show()
+                settings.saveCarModel(carModel)
+                Toast.makeText(this@MainActivity, "Profil gespeichert - $carModel", Toast.LENGTH_SHORT).show()
             }
         }
 
