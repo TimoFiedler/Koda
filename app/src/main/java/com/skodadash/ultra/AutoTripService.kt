@@ -12,6 +12,8 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import android.os.Handler
+import android.os.Looper
 
 class AutoTripService : Service(), LocationListener {
 
@@ -23,9 +25,26 @@ class AutoTripService : Service(), LocationListener {
 
     private lateinit var locationManager: LocationManager
     private var speedCounter = 0
-    private var stationaryCounter = 0
+    private var lastLocation: Location? = null
+    private var lastMovingTime = 0L
     private var thresholdKmh = 15
     private var isWaiting = true
+    private val handler = Handler(Looper.getMainLooper())
+    private val checkRunnable = object : Runnable {
+        override fun run() {
+            if (isRunning && !isWaiting && TripService.isRunning) {
+                val now = System.currentTimeMillis()
+                if (now - lastMovingTime > 120_000) { // 2 Min ohne Bewegung
+                    val intent = Intent(this@AutoTripService, TripService::class.java).apply { action = TripService.ACTION_STOP }
+                    startService(intent)
+                    isWaiting = true
+                    speedCounter = 0
+                    updateNotification("Steht 2 Min - Fahrt beendet - wartet wieder")
+                }
+            }
+            if (isRunning) handler.postDelayed(this, 5000)
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -42,15 +61,13 @@ class AutoTripService : Service(), LocationListener {
     }
 
     private fun startAuto() {
-        if (isRunning) return
         isRunning = true
         speedCounter = 0
-        stationaryCounter = 0
+        lastLocation = null
+        lastMovingTime = System.currentTimeMillis()
         isWaiting = true
 
-        // Lade Schwelle synchron aus Cache für sofortigen Start
         thresholdKmh = getSharedPreferences("settings_cache", MODE_PRIVATE).getInt("auto_threshold", 15)
-        // Async update aus DataStore
         Thread {
             try {
                 val settings = SettingsRepository(this)
@@ -60,70 +77,68 @@ class AutoTripService : Service(), LocationListener {
             } catch (_: Exception) {}
         }.start()
 
-        val notification = buildNotification("Auto-Erkennung aktiv - wartet auf Fahrt ab ${thresholdKmh} km/h")
+        val notification = buildNotification("Auto aktiv - wartet ab ${thresholdKmh} km/h")
         startForeground(2, notification)
+        handler.postDelayed(checkRunnable, 5000)
 
         try {
-            // Nur GPS für Auto-Erkennung - Netzwerk liefert oft 0 km/h und stört
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1500L, 2f, this)
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 1f, this)
+            // Fallback network for faster fix, but filter speed 0 later
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000L, 5f, this)
         } catch (e: SecurityException) {
             e.printStackTrace()
+            stopSelf()
         }
     }
 
     private fun stopAuto() {
         isRunning = false
+        handler.removeCallbacks(checkRunnable)
         try { locationManager.removeUpdates(this) } catch (_: Exception) {}
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
     override fun onLocationChanged(location: Location) {
-        // Filter ungenaue Punkte
-        if (location.accuracy > 40f) return
-        if (!location.hasSpeed()) return
+        if (location.accuracy > 50f) return
 
-        val speedKmh = location.speed * 3.6
+        var speedKmh = if (location.hasSpeed()) location.speed * 3.6 else 0.0
+
+        // Falls kein Speed, berechne aus Distanz
+        if (!location.hasSpeed() || speedKmh < 0.5) {
+            lastLocation?.let { last ->
+                val dist = last.distanceTo(location)
+                val timeDiff = (location.time - last.time) / 1000.0
+                if (timeDiff > 0 && timeDiff < 10) {
+                    speedKmh = (dist / timeDiff) * 3.6
+                }
+            }
+        }
 
         if (speedKmh >= thresholdKmh) {
             speedCounter++
-            stationaryCounter = 0
+            lastMovingTime = System.currentTimeMillis()
             if (isWaiting) {
-                updateNotification("Bewegung erkannt ${speedKmh.toInt()} km/h - starte in ${3 - speedCounter}...")
+                updateNotification("Bewegung ${speedKmh.toInt()} km/h - Start in ${3 - speedCounter}")
             }
-            // 3 Messungen über Schwelle = ca 4.5 Sekunden -> sicher dass wirklich fährt
             if (speedCounter >= 3 && !TripService.isRunning) {
                 val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_START_AUTO }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-                updateNotification("Fahrt erkannt - Aufzeichnung läuft")
+                updateNotification("Fahrt läuft - ${speedKmh.toInt()} km/h")
                 isWaiting = false
                 speedCounter = 0
             }
-        } else if (speedKmh < 4) {
-            stationaryCounter++
+        } else if (speedKmh < 5) {
             speedCounter = 0
             if (!isWaiting && TripService.isRunning) {
-                // 80 * 1.5s = 120s = 2 Min Stillstand -> Stop
-                if (stationaryCounter >= 80) {
-                    val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
-                    startService(intent)
-                    updateNotification("Steht seit 2 Min - Aufzeichnung beendet - wartet wieder")
-                    isWaiting = true
-                    stationaryCounter = 0
-                } else if (stationaryCounter % 20 == 0) {
-                    updateNotification("Steht ${stationaryCounter * 1.5 / 60} Min - stoppt gleich")
-                }
-            } else if (isWaiting) {
-                // Reset waiting message
-                if (stationaryCounter % 30 == 0) {
-                    updateNotification("Auto-Erkennung aktiv - wartet auf Fahrt ab ${thresholdKmh} km/h")
-                }
+                // lastMovingTime wird nicht aktualisiert, checkRunnable stoppt nach 2 Min
+                updateNotification("Langsam ${speedKmh.toInt()} km/h - stoppt nach 2 Min Stillstand")
             }
         } else {
-            // Zwischen 4 und Schwelle - weder fahren noch stehen
             speedCounter = 0
-            // stationary nicht erhöhen
         }
+
+        lastLocation = location
     }
 
     private fun buildNotification(content: String): Notification {
@@ -132,6 +147,7 @@ class AutoTripService : Service(), LocationListener {
             .setContentText(content)
             .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
     }
 
@@ -142,7 +158,10 @@ class AutoTripService : Service(), LocationListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("auto_trip_channel", "Auto Fahrt Erkennung", NotificationManager.IMPORTANCE_LOW)
+            val channel = NotificationChannel("auto_trip_channel", "Auto Erkennung", NotificationManager.IMPORTANCE_LOW).apply {
+                description = "Automatische Fahrt Erkennung"
+                setShowBadge(false)
+            }
             val nm = getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(channel)
         }

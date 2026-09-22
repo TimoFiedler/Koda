@@ -61,10 +61,12 @@ class MainActivity : AppCompatActivity() {
                 showLogin()
             } else {
                 showDashboard()
-                // Auto Erkennung automatisch starten wenn aktiviert
-                if (settings.getAutoTripEnabled() && !AutoTripService.isRunning) {
-                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
+                // Auto Erkennung automatisch starten wenn aktiviert - immer versuchen
+                if (settings.getAutoTripEnabled()) {
+                    try {
+                        val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
+                    } catch (_: Exception) {}
                 }
             }
         }
@@ -324,11 +326,29 @@ class MainActivity : AppCompatActivity() {
 
         val container = view.findViewById<LinearLayout>(R.id.containerTrips)
         val tvEmpty = view.findViewById<TextView>(R.id.tvTripsEmpty)
+        val tvTotalDistance = view.findViewById<TextView>(R.id.tvTotalDistance)
+        val tvTotalDuration = view.findViewById<TextView>(R.id.tvTotalDuration)
+        val tvStandzeit = view.findViewById<TextView>(R.id.tvStandzeit)
+        val tvTotalTrips = view.findViewById<TextView>(R.id.tvTotalTrips)
+        val tvMaxSpeed = view.findViewById<TextView>(R.id.tvMaxSpeed)
+        val tvLeftCurves = view.findViewById<TextView>(R.id.tvLeftCurves)
+        val tvRightCurves = view.findViewById<TextView>(R.id.tvRightCurves)
+        val tvBrakes = view.findViewById<TextView>(R.id.tvBrakes)
+        val tvLaneChanges = view.findViewById<TextView>(R.id.tvLaneChanges)
+        val tvCurveLeft = view.findViewById<TextView>(R.id.tvCurveLeft)
+        val tvCurveRight = view.findViewById<TextView>(R.id.tvCurveRight)
+        val tvMaxBrake = view.findViewById<TextView>(R.id.tvMaxBrake)
+        val tvMaxAccel = view.findViewById<TextView>(R.id.tvMaxAccel)
+        val tvMaxG = view.findViewById<TextView>(R.id.tvMaxG)
+        val tvTotalTrips2 = view.findViewById<TextView>(R.id.tvTotalTrips2)
+        val tvTotalStops = view.findViewById<TextView>(R.id.tvTotalStops)
+        val tvAvgDistance = view.findViewById<TextView>(R.id.tvAvgDistance)
+        val tvTotalDuration2 = view.findViewById<TextView>(R.id.tvTotalDuration2)
+        val tvWeeklySummary = view.findViewById<TextView>(R.id.tvWeeklySummary)
+        val chartView = view.findViewById<StatsChartView>(R.id.chartView)
         val tvTotalScore = view.findViewById<TextView>(R.id.tvTotalScore)
         val tvLevel = view.findViewById<TextView>(R.id.tvLevel)
         val tvStatsDetail = view.findViewById<TextView>(R.id.tvStatsDetail)
-        val tvWeeklySummary = view.findViewById<TextView>(R.id.tvWeeklySummary)
-        val chartView = view.findViewById<StatsChartView>(R.id.chartView)
         val tvAchievementsCount = view.findViewById<TextView>(R.id.tvAchievementsCount)
         val tvAchievements = view.findViewById<TextView>(R.id.tvAchievements)
         val tvNextAchievement = view.findViewById<TextView>(R.id.tvNextAchievement)
@@ -338,86 +358,83 @@ class MainActivity : AppCompatActivity() {
         fun loadTrips() {
             container.removeAllViews()
             val storage = TripStorage(this)
-            val trips = storage.getTrips().reversed()
+            val trips = storage.getTrips()
+            val tripsReversed = trips.reversed()
 
-            tvTotalScore.text = "${storage.getTotalScore()}"
-            tvLevel.text = storage.getLevel()
-            tvStatsDetail.text = "${String.format("%.1f km", storage.getTotalDistance()/1000)} gesamt"
+            val totalKm = storage.getTotalDistance() / 1000.0
+            val totalDurMin = storage.getTotalDuration() / 60
+            val avgDist = if (trips.isNotEmpty()) totalKm / trips.size else 0.0
+            val maxSpeed = trips.maxOfOrNull { it.maxSpeedKmh } ?: 0.0
+            val maxBrake = trips.maxOfOrNull { it.maxBrake } ?: 0.0
+            val maxAccel = trips.maxOfOrNull { it.maxAccel } ?: 0.0
+            val maxG = trips.maxOfOrNull { it.maxG } ?: 0.0
 
-            // Eigene Feature: Chart letzte 7 Tage
-            val daily = StatsHelper.getLast7Days(storage.getTrips())
+            val allEvents = trips.flatMap { it.events }
+            // Left/Right from lateral sign
+            val leftCurves = allEvents.count { it.type.contains("CORNER") && it.value < 0 }
+            val rightCurves = allEvents.count { it.type.contains("CORNER") && it.value >= 0 }
+            val brakes = allEvents.count { it.type.contains("BRAKE") }
+            val laneChanges = allEvents.count { it.type.contains("CORNER") }
+
+            val totalCurve = leftCurves + rightCurves
+            val leftPct = if (totalCurve > 0) leftCurves * 100.0 / totalCurve else 50.0
+            val rightPct = 100.0 - leftPct
+
+            tvTotalDistance.text = String.format("%.1f km", totalKm)
+            tvTotalDuration.text = if (totalDurMin < 60) "${totalDurMin}m" else "${totalDurMin/60}h ${totalDurMin%60}m"
+            tvStandzeit.text = "${(totalDurMin * 0.2).toInt()}m" // approx
+            tvTotalTrips.text = "${trips.size}"
+            tvMaxSpeed.text = "${maxSpeed.toInt()} km/h"
+
+            tvLeftCurves.text = "$leftCurves"
+            tvRightCurves.text = "$rightCurves"
+            tvBrakes.text = "$brakes"
+            tvLaneChanges.text = "$laneChanges"
+
+            tvCurveLeft.text = String.format("%.1f%%", leftPct)
+            tvCurveRight.text = String.format("%.1f%%", rightPct)
+            try {
+                tvCurveLeft.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, leftPct.toFloat().coerceAtLeast(10f))
+                tvCurveRight.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, rightPct.toFloat().coerceAtLeast(10f))
+            } catch (_: Exception) {}
+
+            tvMaxBrake.text = String.format("%.1f m/s²", maxBrake)
+            tvMaxAccel.text = String.format("%.1f m/s²", maxAccel)
+            tvMaxG.text = String.format("%.2f G", maxG)
+
+            tvTotalTrips2.text = "${trips.size}"
+            tvTotalStops.text = "$brakes"
+            tvAvgDistance.text = String.format("%.1f km", avgDist)
+            tvTotalDuration2.text = if (totalDurMin < 60) "${totalDurMin}m" else "${totalDurMin/60}h"
+
+            val daily = StatsHelper.getLast7Days(trips)
             chartView.setData(daily)
-            val weekly = StatsHelper.getWeeklySummary(storage.getTrips())
-            tvWeeklySummary.text = "${String.format("%.1f km", weekly.totalKm)}"
+            val weekly = StatsHelper.getWeeklySummary(trips)
+            tvWeeklySummary.text = "${String.format("%.1f km", weekly.totalKm)} diese Woche"
 
-            // Eigene Feature: Achievements
-            val (unlocked, total) = AchievementsHelper.getUnlockedCount(storage.getTrips())
-            tvAchievementsCount.text = "$unlocked/$total"
-            val unlockedAch = AchievementsHelper.getAchievements(storage.getTrips()).filter { it.unlocked }.takeLast(3)
-            tvAchievements.text = if (unlockedAch.isEmpty()) "Noch keine Erfolge" else unlockedAch.joinToString("\n") { "${it.title}" }
-            val next = AchievementsHelper.getNextAchievement(storage.getTrips())
-            tvNextAchievement.text = next?.let { "Next: ${it.title} ${it.progress}/${it.target}" } ?: "Alle erreicht!"
+            tvTotalScore.text = "${storage.getTotalScore()} Punkte"
+            tvLevel.text = storage.getLevel()
+            tvStatsDetail.text = "${String.format("%.1f km", totalKm)}"
 
-            // Eigene Feature: Kosten
+            val (unlocked, totalAch) = AchievementsHelper.getUnlockedCount(trips)
+            tvAchievementsCount.text = "$unlocked/$totalAch Erfolge"
+            val unlockedAch = AchievementsHelper.getAchievements(trips).filter { it.unlocked }.takeLast(3)
+            tvAchievements.text = if (unlockedAch.isEmpty()) "Fahre los für Erfolge" else unlockedAch.joinToString(", ") { it.title }
+            val next = AchievementsHelper.getNextAchievement(trips)
+            tvNextAchievement.text = next?.let { "Nächstes: ${it.title} ${it.progress}/${it.target}" } ?: "Alle erreicht!"
+
             lifecycleScope.launch {
                 val engineType = settings.getEngineType()
-                val costTotal = CostCalculator.calculateTotal(storage.getTrips(), engineType)
-                tvCost.text = "${String.format("%.2f €", costTotal.costEuro)} - ${String.format("%.0f kg CO2", costTotal.co2Kg)}"
+                val costTotal = CostCalculator.calculateTotal(trips, engineType)
+                tvCost.text = "${String.format("%.2f €", costTotal.costEuro)} • ${String.format("%.0f kg CO2", costTotal.co2Kg)}"
             }
-
-            // Reference design extra stats
-            try {
-                val tvLeftCurves = view.findViewById<TextView>(R.id.tvLeftCurves)
-                val tvRightCurves = view.findViewById<TextView>(R.id.tvRightCurves)
-                val tvBrakes = view.findViewById<TextView>(R.id.tvBrakes)
-                val tvLaneChanges = view.findViewById<TextView>(R.id.tvLaneChanges)
-                val tvMaxBrake = view.findViewById<TextView>(R.id.tvMaxBrake)
-                val tvMaxAccel = view.findViewById<TextView>(R.id.tvMaxAccel)
-                val tvMaxG = view.findViewById<TextView>(R.id.tvMaxG)
-                val tvTotalTrips = view.findViewById<TextView>(R.id.tvTotalTrips)
-                val tvTotalStops = view.findViewById<TextView>(R.id.tvTotalStops)
-                val tvAvgDistance = view.findViewById<TextView>(R.id.tvAvgDistance)
-                val tvTotalDuration = view.findViewById<TextView>(R.id.tvTotalDuration)
-                val tvCurveLeft = view.findViewById<TextView>(R.id.tvCurveLeft)
-                val tvCurveRight = view.findViewById<TextView>(R.id.tvCurveRight)
-
-                val allEvents = storage.getTrips().flatMap { it.events }
-                val leftCurves = allEvents.count { it.type == "CORNER" && it.value < 0 || it.type == "CORNER" } // simplified
-                val rightCurves = allEvents.count { it.type == "SHARP_CORNER" }
-                val brakes = allEvents.count { it.type.contains("BRAKE") }
-                val laneChanges = allEvents.count { it.type.contains("CORNER") }
-
-                val left = storage.getTrips().sumOf { it.events.count { e -> e.type == "CORNER" } }
-                val right = storage.getTrips().sumOf { it.events.count { e -> e.type == "SHARP_CORNER" } }
-                val totalCurve = left + right
-                val leftPct = if (totalCurve > 0) left * 100.0 / totalCurve else 50.0
-                val rightPct = 100.0 - leftPct
-
-                tvLeftCurves.text = "$left"
-                tvRightCurves.text = "$right"
-                tvBrakes.text = "$brakes"
-                tvLaneChanges.text = "$laneChanges"
-                tvMaxBrake.text = "${String.format("%.1f m/s²", storage.getTrips().maxOfOrNull { it.maxBrake } ?: 0.0)}"
-                tvMaxAccel.text = "${String.format("%.1f m/s²", storage.getTrips().maxOfOrNull { it.maxAccel } ?: 0.0)}"
-                tvMaxG.text = "${String.format("%.2f G", storage.getTrips().maxOfOrNull { it.maxG } ?: 0.0)}"
-                tvTotalTrips.text = "${trips.size}"
-                tvTotalStops.text = "${brakes}"
-                tvAvgDistance.text = "${String.format("%.1f km", if (trips.isNotEmpty()) storage.getTotalDistance()/1000/trips.size else 0.0)}"
-                tvTotalDuration.text = "${storage.getTotalDuration()/60}m"
-                tvCurveLeft.text = "${String.format("%.1f%%", leftPct)}"
-                tvCurveRight.text = "${String.format("%.1f%%", rightPct)}"
-                // Adjust weights for curve bar
-                val bar = view.findViewById<LinearLayout>(R.id.barCurveDirection)
-                tvCurveLeft.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, leftPct.toFloat().coerceAtLeast(5f))
-                tvCurveRight.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, rightPct.toFloat().coerceAtLeast(5f))
-            } catch (_: Exception) {}
 
             if (trips.isEmpty()) {
                 tvEmpty.visibility = View.VISIBLE
-                tvEmpty.text = "Noch keine Fahrten.\n\nEigene Features:\n- 7 Tage Chart\n- Erfolge System (17 Achievements)\n- Kosten Rechner\n- Replay Animation\n- Notizen & Namen\n- In Maps öffnen & Teilen\n\nTracking minimal und genau: Nur GPS, Filter <30m"
+                tvEmpty.text = "Noch keine Fahrten.\n\nTracking minimal und genau: Nur GPS, Filter <30m, 1-200m Distanz"
             } else {
                 tvEmpty.visibility = View.GONE
-                trips.take(50).forEach { trip ->
+                tripsReversed.take(50).forEach { trip ->
                     val tile = layoutInflater.inflate(R.layout.item_trip_tile, container, false)
                     val tvDate = tile.findViewById<TextView>(R.id.tvTileDate)
                     val tvType = tile.findViewById<TextView>(R.id.tvTileType)

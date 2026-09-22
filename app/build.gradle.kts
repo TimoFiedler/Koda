@@ -11,8 +11,8 @@ android {
         applicationId = "com.skodadash.ultra"
         minSdk = 26
         targetSdk = 34
-        versionCode = 11
-        versionName = "6.0.0-DarkReference"
+        versionCode = 13
+        versionName = "6.1.0-DarkFixSat2"
     }
 
     buildTypes {
@@ -40,4 +40,5 @@ dependencies {
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
 }

@@ -9,87 +9,87 @@
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Dein Profil ist startklar!" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-black" android:fontStyle="italic" android:layout_marginBottom="16dp" />
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↗" android:textSize="20sp" android:textColor="#FF5FC8BE" android:layout_marginBottom="8dp" />
-                <TextView android:id="@+id/tvTotalScore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Punkte gesamt" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↗" android:textSize="20sp" android:textColor="#FF6ECFC3" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvTotalDistance" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 km" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamtstrecke" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏱" android:textSize="20sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
-                <TextView android:id="@+id/tvLevel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Einsteiger" android:textSize="14sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:id="@+id/tvStatsDetail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 km" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+                <TextView android:id="@+id/tvTotalDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamtdauer" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⏸" android:textSize="20sp" android:textColor="#FFAF52DE" android:layout_marginBottom="8dp" />
-                <TextView android:id="@+id/tvWeeklySummary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 km" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Letzte 7 Tage" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+                <TextView android:id="@+id/tvStandzeit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Standzeit" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏁" android:textSize="20sp" android:layout_marginBottom="8dp" />
-                <TextView android:id="@+id/tvAchievementsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0/17" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Erfolge" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
+                <TextView android:id="@+id/tvTotalTrips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fahrten gesamt" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Manöver" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-black" android:layout_marginTop="8dp" android:layout_marginBottom="12dp" />
-
-    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="12dp">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Letzte 7 Tage Distanz" android:textSize="11sp" android:textAllCaps="true" android:textColor="#FF8E8E93" android:layout_marginBottom="12dp" />
-            <com.skodadash.ultra.StatsChartView android:id="@+id/chartView" android:layout_width="match_parent" android:layout_height="100dp" />
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⚡" android:textSize="20sp" android:textColor="#FFFF3B30" android:layout_marginBottom="8dp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Höchstgeschwindigkeit" android:textSize="11sp" android:textColor="#FF8E8E93" />
+            <TextView android:id="@+id/tvMaxSpeed" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 km/h" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Manöver" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:fontFamily="sans-serif-black" android:layout_marginBottom="12dp" />
+
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="←" android:textSize="22sp" android:textColor="#FF5856D6" android:layout_marginBottom="6dp" />
-                <TextView android:id="@+id/tvLeftCurves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Linkskurven" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="←" android:textSize="24sp" android:textColor="#FF5856D6" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvLeftCurves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Linkskurven" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="→" android:textSize="22sp" android:textColor="#FFFF3B30" android:layout_marginBottom="6dp" />
-                <TextView android:id="@+id/tvRightCurves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Rechtskurven" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="→" android:textSize="24sp" android:textColor="#FFFF3B30" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvRightCurves" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Rechtskurven" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬇" android:textSize="22sp" android:textColor="#FFFF3B30" android:layout_marginBottom="6dp" />
-                <TextView android:id="@+id/tvBrakes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bremsvorgänge" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="●" android:textSize="20sp" android:textColor="#FFFF3B30" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvBrakes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bremsvorgänge" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
+        <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="12dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↗" android:textSize="22sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="6dp" />
-                <TextView android:id="@+id/tvLaneChanges" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Spurwechsel" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="↗" android:textSize="22sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
+                <TextView android:id="@+id/tvLaneChanges" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="22sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Spurwechsel" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <!-- Kurvenrichtung like reference -->
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="12dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Kurvenrichtung" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginBottom="16dp" />
-            <LinearLayout android:id="@+id/barCurveDirection" android:layout_width="match_parent" android:layout_height="36dp" android:orientation="horizontal" android:background="@drawable/card_dark">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="36dp" android:orientation="horizontal" android:clipToOutline="true">
                 <TextView android:id="@+id/tvCurveLeft" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="50.0%" android:gravity="center" android:textColor="#FFFFFFFF" android:background="#FF5856D6" android:textSize="13sp" android:textStyle="bold" />
                 <TextView android:id="@+id/tvCurveRight" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:text="50.0%" android:gravity="center" android:textColor="#FFFFFFFF" android:background="#FFFF3B30" android:textSize="13sp" android:textStyle="bold" />
             </LinearLayout>
@@ -103,35 +103,35 @@
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬇" android:textSize="16sp" android:background="#FFFF3B30" android:textColor="#FFFFFFFF" android:padding="6dp" android:layout_marginBottom="8dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬇" android:textSize="14sp" android:background="#FFFF3B30" android:textColor="#FFFFFFFF" android:padding="6dp" android:layout_marginBottom="8dp" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Max. Verzögerung" android:textSize="11sp" android:textColor="#FF8E8E93" />
-                <TextView android:id="@+id/tvMaxBrake" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 m/s²" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
+                <TextView android:id="@+id/tvMaxBrake" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 m/s²" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="110dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬆" android:textSize="16sp" android:background="#FF30D158" android:textColor="#FFFFFFFF" android:padding="6dp" android:layout_marginBottom="8dp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⬆" android:textSize="14sp" android:background="#FF30D158" android:textColor="#FFFFFFFF" android:padding="6dp" android:layout_marginBottom="8dp" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Max. Beschleunigung" android:textSize="11sp" android:textColor="#FF8E8E93" />
-                <TextView android:id="@+id/tvMaxAccel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 m/s²" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
+                <TextView android:id="@+id/tvMaxAccel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.0 m/s²" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="12dp">
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◉" android:textSize="20sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◉" android:textSize="18sp" android:textColor="#FFFF9F0A" android:layout_marginBottom="8dp" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Maximale G-Kraft" android:textSize="11sp" android:textColor="#FF8E8E93" />
             <TextView android:id="@+id/tvMaxG" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0.00 G" android:textSize="24sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="4dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Weitere Statistiken" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginTop="8dp" android:layout_marginBottom="12dp" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Weitere Statistiken" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginBottom="12dp" />
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🚗" android:textSize="20sp" android:layout_marginBottom="6dp" />
-                <TextView android:id="@+id/tvTotalTrips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:id="@+id/tvTotalTrips2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="20sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fahrten gesamt" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -144,7 +144,7 @@
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="16dp">
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginEnd="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="⇄" android:textSize="20sp" android:layout_marginBottom="6dp" />
@@ -155,30 +155,41 @@
         <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="100dp" android:layout_weight="1" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginStart="6dp">
             <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:padding="16dp">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◷" android:textSize="20sp" android:layout_marginBottom="6dp" />
-                <TextView android:id="@+id/tvTotalDuration" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
+                <TextView android:id="@+id/tvTotalDuration2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0m" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" />
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Gesamtdauer" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="2dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <!-- Eigene Features -->
+    <!-- Chart -->
     <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="12dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Erfolge &amp; Kosten - Eigene Features" android:textSize="11sp" android:textAllCaps="true" android:textColor="#FF8E8E93" android:layout_marginBottom="10dp" />
-            <TextView android:id="@+id/tvAchievements" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Noch keine" android:textSize="12sp" android:textColor="#FFFFFFFF" android:lineSpacingExtra="3dp" android:layout_marginBottom="8dp" />
-            <TextView android:id="@+id/tvNextAchievement" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginBottom="8dp" />
-            <TextView android:id="@+id/tvCost" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textSize="11sp" android:textColor="#FF8E8E93" android:lineSpacingExtra="2dp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Letzte 7 Tage" android:textSize="11sp" android:textAllCaps="true" android:textColor="#FF8E8E93" android:layout_marginBottom="12dp" />
+            <com.skodadash.ultra.StatsChartView android:id="@+id/chartView" android:layout_width="match_parent" android:layout_height="110dp" />
+            <TextView android:id="@+id/tvWeeklySummary" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="0 km diese Woche" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginTop="8dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrten - Tippe für Karte" android:textSize="11sp" android:textAllCaps="true" android:textColor="#FF8E8E93" android:layout_marginBottom="8dp" />
+    <!-- Eigene Features minimal -->
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" app:cardCornerRadius="20dp" app:cardElevation="0dp" android:backgroundTint="#FF1C1C1E" android:layout_marginBottom="16dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+            <TextView android:id="@+id/tvTotalScore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 Punkte" android:textSize="16sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:visibility="gone" />
+            <TextView android:id="@+id/tvLevel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Einsteiger" android:textSize="14sp" android:textColor="#FFFFFFFF" android:visibility="gone" />
+            <TextView android:id="@+id/tvStatsDetail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" android:visibility="gone" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Erfolge &amp; Kosten" android:textSize="11sp" android:textAllCaps="true" android:textColor="#FF8E8E93" android:layout_marginBottom="8dp" />
+            <TextView android:id="@+id/tvAchievementsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0/17 Erfolge" android:textSize="13sp" android:textColor="#FFFFFFFF" android:textStyle="bold" android:layout_marginBottom="4dp" />
+            <TextView android:id="@+id/tvAchievements" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textSize="11sp" android:textColor="#FF8E8E93" android:lineSpacingExtra="2dp" android:layout_marginBottom="4dp" />
+            <TextView android:id="@+id/tvNextAchievement" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textSize="11sp" android:textColor="#FF8E8E93" android:layout_marginBottom="8dp" />
+            <TextView android:id="@+id/tvCost" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textSize="11sp" android:textColor="#FF8E8E93" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fahrten" android:textSize="18sp" android:textStyle="bold" android:textColor="#FFFFFFFF" android:layout_marginBottom="12dp" />
 
     <LinearLayout android:id="@+id/containerTrips" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="16dp" />
 
-    <TextView android:id="@+id/tvTripsEmpty" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="#FFFFFFFF" android:lineSpacingExtra="4dp" android:visibility="gone" />
+    <TextView android:id="@+id/tvTripsEmpty" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="13sp" android:textColor="#FF8E8E93" android:lineSpacingExtra="4dp" android:visibility="gone" />
 
-    <com.google.android.material.button.MaterialButton android:id="@+id/btnClearTrips" android:layout_width="match_parent" android:layout_height="52dp" android:text="Verlauf löschen" app:cornerRadius="16dp" android:backgroundTint="#FF1C1C1E" android:textColor="#FF8E8E93" app:strokeWidth="0dp" android:layout_marginBottom="16dp" />
-
-    <com.google.android.material.button.MaterialButton android:layout_width="match_parent" android:layout_height="56dp" android:text="Weiter" app:cornerRadius="16dp" android:backgroundTint="#FF6ECFC3" android:textColor="#FF000000" android:textStyle="bold" app:icon="@android:drawable/ic_media_next" app:iconGravity="textStart" android:layout_marginTop="8dp" />
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnClearTrips" android:layout_width="match_parent" android:layout_height="52dp" android:text="Verlauf löschen" app:cornerRadius="16dp" android:backgroundTint="#FF1C1C1E" android:textColor="#FF8E8E93" android:layout_marginBottom="24dp" />
 
 </LinearLayout>

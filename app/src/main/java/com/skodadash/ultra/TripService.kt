@@ -249,22 +249,23 @@ class TripService : Service(), SensorEventListener, LocationListener {
         val lateral = x.toDouble() // seitlich
 
         when {
-            longitudinal > 3.0 -> {
+            longitudinal > 1.8 -> {
                 if (longitudinal > maxAccel) maxAccel = longitudinal
-                val type = if (longitudinal > 4.5) "HARD_ACCEL" else "ACCEL"
+                val type = if (longitudinal > 3.5) "HARD_ACCEL" else "ACCEL"
                 tripEvents.add(TripEvent(type, now, longitudinal, loc.latitude, loc.longitude, loc.speed*3.6))
                 lastEventTime = now
             }
-            longitudinal < -3.0 -> {
+            longitudinal < -1.8 -> {
                 val brakeVal = -longitudinal
                 if (brakeVal > maxBrake) maxBrake = brakeVal
-                val type = if (brakeVal > 4.5) "HARD_BRAKE" else "BRAKE"
+                val type = if (brakeVal > 3.5) "HARD_BRAKE" else "BRAKE"
                 tripEvents.add(TripEvent(type, now, brakeVal, loc.latitude, loc.longitude, loc.speed*3.6))
                 lastEventTime = now
             }
-            abs(lateral) > 3.0 -> {
-                val type = if (abs(lateral) > 4.8) "SHARP_CORNER" else "CORNER"
-                tripEvents.add(TripEvent(type, now, abs(lateral), loc.latitude, loc.longitude, loc.speed*3.6))
+            abs(lateral) > 1.5 -> {
+                val type = if (abs(lateral) > 3.2) "SHARP_CORNER" else "CORNER"
+                // Store lateral sign in value for left/right detection: negative = left, positive = right
+                tripEvents.add(TripEvent(type, now, lateral, loc.latitude, loc.longitude, loc.speed*3.6))
                 lastEventTime = now
             }
         }
