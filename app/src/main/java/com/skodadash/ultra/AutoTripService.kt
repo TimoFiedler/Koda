@@ -34,8 +34,8 @@ class AutoTripService : Service(), LocationListener {
         override fun run() {
             if (isRunning && !isWaiting && TripService.isRunning) {
                 val now = System.currentTimeMillis()
-                if (now - lastMovingTime > 120_000) { // 2 Min ohne Bewegung
-                    val intent = Intent(this@AutoTripService, TripService::class.java).apply { action = TripService.ACTION_STOP }
+                if (now - lastMovingTime > 120_000) {
+                    val intent = Intent(this@AutoTripService, TripService::class.java).also { it.action = TripService.ACTION_STOP }
                     startService(intent)
                     isWaiting = true
                     speedCounter = 0
@@ -70,7 +70,7 @@ class AutoTripService : Service(), LocationListener {
         thresholdKmh = getSharedPreferences("settings_cache", MODE_PRIVATE).getInt("auto_threshold", 15)
         Thread {
             try {
-                val settings = SettingsRepository(this)
+                val settings = SettingsRepository(this@AutoTripService)
                 val thresh = kotlinx.coroutines.runBlocking { settings.getAutoTripThreshold() }
                 thresholdKmh = thresh
                 getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", thresh).apply()
@@ -82,9 +82,8 @@ class AutoTripService : Service(), LocationListener {
         handler.postDelayed(checkRunnable, 5000)
 
         try {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 1f, this)
-            // Fallback network for faster fix, but filter speed 0 later
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000L, 5f, this)
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 1f, this@AutoTripService)
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000L, 5f, this@AutoTripService)
         } catch (e: SecurityException) {
             e.printStackTrace()
             stopSelf()
@@ -94,7 +93,7 @@ class AutoTripService : Service(), LocationListener {
     private fun stopAuto() {
         isRunning = false
         handler.removeCallbacks(checkRunnable)
-        try { locationManager.removeUpdates(this) } catch (_: Exception) {}
+        try { locationManager.removeUpdates(this@AutoTripService) } catch (_: Exception) {}
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -104,7 +103,6 @@ class AutoTripService : Service(), LocationListener {
 
         var speedKmh = if (location.hasSpeed()) location.speed * 3.6 else 0.0
 
-        // Falls kein Speed, berechne aus Distanz
         if (!location.hasSpeed() || speedKmh < 0.5) {
             lastLocation?.let { last ->
                 val dist = last.distanceTo(location)
@@ -122,7 +120,7 @@ class AutoTripService : Service(), LocationListener {
                 updateNotification("Bewegung ${speedKmh.toInt()} km/h - Start in ${3 - speedCounter}")
             }
             if (speedCounter >= 3 && !TripService.isRunning) {
-                val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_START_AUTO }
+                val intent = Intent(this@AutoTripService, TripService::class.java).also { it.action = TripService.ACTION_START_AUTO }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
                 updateNotification("Fahrt läuft - ${speedKmh.toInt()} km/h")
                 isWaiting = false
@@ -131,7 +129,6 @@ class AutoTripService : Service(), LocationListener {
         } else if (speedKmh < 5) {
             speedCounter = 0
             if (!isWaiting && TripService.isRunning) {
-                // lastMovingTime wird nicht aktualisiert, checkRunnable stoppt nach 2 Min
                 updateNotification("Langsam ${speedKmh.toInt()} km/h - stoppt nach 2 Min Stillstand")
             }
         } else {
@@ -142,7 +139,7 @@ class AutoTripService : Service(), LocationListener {
     }
 
     private fun buildNotification(content: String): Notification {
-        return NotificationCompat.Builder(this, "auto_trip_channel")
+        return NotificationCompat.Builder(this@AutoTripService, "auto_trip_channel")
             .setContentTitle("Auto Erkennung")
             .setContentText(content)
             .setSmallIcon(android.R.drawable.ic_menu_compass)
@@ -158,9 +155,9 @@ class AutoTripService : Service(), LocationListener {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel("auto_trip_channel", "Auto Erkennung", NotificationManager.IMPORTANCE_LOW).apply {
-                description = "Automatische Fahrt Erkennung"
-                setShowBadge(false)
+            val channel = NotificationChannel("auto_trip_channel", "Auto Erkennung", NotificationManager.IMPORTANCE_LOW).also {
+                it.description = "Automatische Fahrt Erkennung"
+                it.setShowBadge(false)
             }
             val nm = getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(channel)

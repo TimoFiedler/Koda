@@ -39,10 +39,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        settings = SettingsRepository(this)
-        api = SkodaApi(settings, this)
+        settings = SettingsRepository(this@MainActivity)
+        api = SkodaApi(settings, this@MainActivity)
 
-        // Farben anwenden
         lifecycleScope.launch {
             applyCustomColors()
         }
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.POST_NOTIFICATIONS
-        ).filter { ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED }
+        ).filter { ContextCompat.checkSelfPermission(this@MainActivity, it) != PackageManager.PERMISSION_GRANTED }
         if (perms.isNotEmpty()) permissionLauncher.launch(perms.toTypedArray())
 
         lifecycleScope.launch {
@@ -61,10 +60,9 @@ class MainActivity : AppCompatActivity() {
                 showLogin()
             } else {
                 showDashboard()
-                // Auto Erkennung automatisch starten wenn aktiviert - immer versuchen
                 if (settings.getAutoTripEnabled()) {
                     try {
-                        val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                        val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_START }
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
                     } catch (_: Exception) {}
                 }
@@ -109,7 +107,6 @@ class MainActivity : AppCompatActivity() {
             val bgColor = ColorHelper.parseColor(bgHex)
             val accentColor = ColorHelper.parseColor(accentHex)
 
-            // Cache für andere Activities
             getSharedPreferences("theme_cache", MODE_PRIVATE).edit().apply {
                 bgColor?.let { putInt("bg_color", it) }
                 accentColor?.let { putInt("accent_color", it) }
@@ -118,12 +115,8 @@ class MainActivity : AppCompatActivity() {
                 apply()
             }
 
-            // Anwenden auf Root
             bgColor?.let {
                 binding.root.setBackgroundColor(it)
-                findViewById<View>(R.id.content)?.let { content ->
-                    // ScrollView background wird über parent gesetzt, aber wir setzen auch content container
-                }
             }
         } catch (_: Exception) {}
     }
@@ -228,7 +221,7 @@ class MainActivity : AppCompatActivity() {
                     autoRunning -> "Auto wartet"
                     else -> "Bereit"
                 }
-                val storage = TripStorage(this)
+                val storage = TripStorage(this@MainActivity)
                 tvTrackerStats.text = "${storage.getTotalScore()} Punkte - ${storage.getLevel()} - ${String.format("%.1f km", storage.getTotalDistance()/1000)}"
             } catch (_: Exception) {}
         }
@@ -239,11 +232,11 @@ class MainActivity : AppCompatActivity() {
                 settings.saveAutoTripEnabled(isChecked)
                 getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", settings.getAutoTripThreshold()).apply()
                 if (isChecked) {
-                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_START }
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
                     Toast.makeText(this@MainActivity, "Auto Erkennung an - startet ab Schwelle", Toast.LENGTH_SHORT).show()
                 } else {
-                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_STOP }
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_STOP }
                     startService(intent)
                     Toast.makeText(this@MainActivity, "Auto Erkennung aus", Toast.LENGTH_SHORT).show()
                 }
@@ -295,14 +288,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnStartTrip.setOnClickListener {
-            val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_START }
+            val intent = Intent(this@MainActivity, TripService::class.java).also { it.action = TripService.ACTION_START }
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
             Toast.makeText(this@MainActivity, "Gestartet - nur GPS", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
         }
 
         btnStopTrip.setOnClickListener {
-            val intent = Intent(this, TripService::class.java).apply { action = TripService.ACTION_STOP }
+            val intent = Intent(this@MainActivity, TripService::class.java).also { it.action = TripService.ACTION_STOP }
             startService(intent)
             Toast.makeText(this@MainActivity, "Beendet", Toast.LENGTH_SHORT).show()
             updateTrackingButtons()
@@ -357,7 +350,7 @@ class MainActivity : AppCompatActivity() {
 
         fun loadTrips() {
             container.removeAllViews()
-            val storage = TripStorage(this)
+            val storage = TripStorage(this@MainActivity)
             val trips = storage.getTrips()
             val tripsReversed = trips.reversed()
 
@@ -370,7 +363,6 @@ class MainActivity : AppCompatActivity() {
             val maxG = trips.maxOfOrNull { it.maxG } ?: 0.0
 
             val allEvents = trips.flatMap { it.events }
-            // Left/Right from lateral sign
             val leftCurves = allEvents.count { it.type.contains("CORNER") && it.value < 0 }
             val rightCurves = allEvents.count { it.type.contains("CORNER") && it.value >= 0 }
             val brakes = allEvents.count { it.type.contains("BRAKE") }
@@ -382,7 +374,7 @@ class MainActivity : AppCompatActivity() {
 
             tvTotalDistance.text = String.format("%.1f km", totalKm)
             tvTotalDuration.text = if (totalDurMin < 60) "${totalDurMin}m" else "${totalDurMin/60}h ${totalDurMin%60}m"
-            tvStandzeit.text = "${(totalDurMin * 0.2).toInt()}m" // approx
+            tvStandzeit.text = "${(totalDurMin * 0.2).toInt()}m"
             tvTotalTrips.text = "${trips.size}"
             tvMaxSpeed.text = "${maxSpeed.toInt()} km/h"
 
@@ -459,7 +451,7 @@ class MainActivity : AppCompatActivity() {
                     tvScore.setTextColor(accent)
 
                     tile.setOnClickListener {
-                        val intent = Intent(this, TripDetailActivity::class.java).apply { putExtra("trip_id", trip.id) }
+                        val intent = Intent(this@MainActivity, TripDetailActivity::class.java).also { it.putExtra("trip_id", trip.id) }
                         startActivity(intent)
                     }
                     container.addView(tile)
@@ -469,7 +461,7 @@ class MainActivity : AppCompatActivity() {
 
         loadTrips()
         btnClear.setOnClickListener {
-            TripStorage(this).clearAll()
+            TripStorage(this@MainActivity).clearAll()
             loadTrips()
             Toast.makeText(this@MainActivity, "Gelöscht", Toast.LENGTH_SHORT).show()
         }
@@ -514,7 +506,6 @@ class MainActivity : AppCompatActivity() {
                 else -> view.findViewById<android.widget.RadioButton>(R.id.rbThresh15).isChecked = true
             }
 
-            // Preview
             val bg = ColorHelper.parseColor(etCustomBg.text.toString()) ?: Color.parseColor("#FFF8E7")
             val accent = ColorHelper.parseColor(etCustomAccent.text.toString()) ?: Color.parseColor("#8B7355")
             val drawable = GradientDrawable().apply {
@@ -573,13 +564,11 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 settings.saveCustomBgHex(bg)
                 settings.saveCustomAccentHex(accent)
-                // Auch alte Keys für Kompatibilität
                 if (bg.isNotEmpty()) settings.saveAppTheme(bg)
                 if (accent.isNotEmpty()) settings.saveWidgetAccent(accent)
                 applyCustomColors()
                 updatePreview()
                 Toast.makeText(this@MainActivity, "Farben angewendet", Toast.LENGTH_SHORT).show()
-                // Neu laden für sofortige Anzeige
                 showSettings()
             }
         }
@@ -603,11 +592,11 @@ class MainActivity : AppCompatActivity() {
                 settings.saveAutoTripEnabled(isChecked)
                 getSharedPreferences("settings_cache", MODE_PRIVATE).edit().putInt("auto_threshold", settings.getAutoTripThreshold()).apply()
                 if (isChecked) {
-                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_START }
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_START }
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
                     Toast.makeText(this@MainActivity, "Auto an", Toast.LENGTH_SHORT).show()
                 } else {
-                    val intent = Intent(this@MainActivity, AutoTripService::class.java).apply { action = AutoTripService.ACTION_STOP }
+                    val intent = Intent(this@MainActivity, AutoTripService::class.java).also { it.action = AutoTripService.ACTION_STOP }
                     startService(intent)
                     Toast.makeText(this@MainActivity, "Auto aus", Toast.LENGTH_SHORT).show()
                 }

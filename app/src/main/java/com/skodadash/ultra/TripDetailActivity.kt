@@ -36,7 +36,7 @@ class TripDetailActivity : AppCompatActivity() {
 
         val tripId = intent.getLongExtra("trip_id", -1)
         if (tripId == -1L) { finish(); return }
-        val trip = TripStorage(this).getTripById(tripId)
+        val trip = TripStorage(this@TripDetailActivity).getTripById(tripId)
         if (trip == null) { finish(); return }
         currentTrip = trip
 
@@ -59,7 +59,7 @@ ${trip.getDrivingStyle()}
 ${String.format("%.2f G", trip.maxG)} max
         """.trimIndent()
 
-        val engineType = try { kotlinx.coroutines.runBlocking { SettingsRepository(this).getEngineType() } } catch (_: Exception) { "electric" }
+        val engineType = try { kotlinx.coroutines.runBlocking { SettingsRepository(this@TripDetailActivity).getEngineType() } } catch (_: Exception) { "electric" }
         val cost = CostCalculator.calculate(trip, engineType)
         binding.tvCostDetail.text = "${String.format("%.2f €", cost.costEuro)} - ${cost.efficiency}\n${if (cost.fuelLiters>0) "${String.format("%.2f L", cost.fuelLiters)}" else "${String.format("%.1f kWh", cost.kwh)}"} - ${String.format("%.1f kg CO2", cost.co2Kg)}"
         binding.tvBehavior.text = StatsHelper.getDrivingBehavior(trip).entries.joinToString("\n") { "${it.key}: ${it.value}" }
@@ -79,7 +79,6 @@ ${String.format("%.2f G", trip.maxG)} max
             }
         }
 
-        // Satellite Map with osmdroid
         setupMap(trip)
 
         binding.btnToggleMap.setOnClickListener {
@@ -102,9 +101,9 @@ ${String.format("%.2f G", trip.maxG)} max
 
         binding.btnSaveNote.setOnClickListener {
             val updated = trip.copy(customName = binding.etCustomName.text.toString().trim(), notes = binding.etNotes.text.toString().trim())
-            TripStorage(this).updateTrip(updated)
+            TripStorage(this@TripDetailActivity).updateTrip(updated)
             currentTrip = updated
-            Toast.makeText(this, "Gespeichert", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@TripDetailActivity, "Gespeichert", Toast.LENGTH_SHORT).show()
             binding.tvDetailTitle.text = updated.customName.ifEmpty { StatsHelper.suggestTripName(updated) }
         }
 
@@ -123,13 +122,13 @@ ${String.format("%.2f G", trip.maxG)} max
         }
 
         binding.btnExportGpx.setOnClickListener {
-            val file = GpxExporter.exportTrip(this, trip)
-            if (file != null) GpxExporter.shareGpx(this, file) else Toast.makeText(this, "Fehler", Toast.LENGTH_SHORT).show()
+            val file = GpxExporter.exportTrip(this@TripDetailActivity, trip)
+            if (file != null) GpxExporter.shareGpx(this@TripDetailActivity, file) else Toast.makeText(this@TripDetailActivity, "Fehler", Toast.LENGTH_SHORT).show()
         }
 
         binding.btnDeleteTrip.setOnClickListener {
-            TripStorage(this).deleteTrip(trip.id)
-            Toast.makeText(this, "Gelöscht", Toast.LENGTH_SHORT).show()
+            TripStorage(this@TripDetailActivity).deleteTrip(trip.id)
+            Toast.makeText(this@TripDetailActivity, "Gelöscht", Toast.LENGTH_SHORT).show()
             finish()
         }
 
@@ -165,7 +164,6 @@ ${String.format("%.2f G", trip.maxG)} max
         }
         map.overlays.add(polyline)
 
-        // Start marker
         Marker(map).apply {
             position = geoPoints.first()
             setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
@@ -174,7 +172,6 @@ ${String.format("%.2f G", trip.maxG)} max
             map.overlays.add(this)
         }
 
-        // End marker
         if (geoPoints.size > 1) {
             Marker(map).apply {
                 position = geoPoints.last()
@@ -185,7 +182,6 @@ ${String.format("%.2f G", trip.maxG)} max
             }
         }
 
-        // Events
         trip.events.forEach { ev ->
             Marker(map).apply {
                 position = GeoPoint(ev.lat, ev.lon)
@@ -199,7 +195,7 @@ ${String.format("%.2f G", trip.maxG)} max
                 icon = getDrawable(android.R.drawable.presence_invisible)?.apply { setTint(Color.parseColor(color)) }
                 title = "${ev.type} ${String.format("%.1f", ev.value)}"
                 snippet = "${ev.speedKmh.toInt()} km/h"
-                setOnMarkerClickListener { marker, _ ->
+                setOnMarkerClickListener { _, _ ->
                     binding.tvSelectedEvent.text = "${ev.type} - ${String.format("%.1f", ev.value)} - ${ev.speedKmh.toInt()} km/h"
                     true
                 }
@@ -207,7 +203,6 @@ ${String.format("%.2f G", trip.maxG)} max
             }
         }
 
-        // Center map
         val minLat = trip.points.minOf { it.lat }
         val maxLat = trip.points.maxOf { it.lat }
         val minLon = trip.points.minOf { it.lon }
@@ -238,7 +233,6 @@ ${String.format("%.2f G", trip.maxG)} max
                 runOnUiThread {
                     binding.tvReplayInfo.text = "${i+1}/${trip.points.size} - ${pt.speedKmh.toInt()} km/h"
                     map.controller.animateTo(GeoPoint(pt.lat, pt.lon))
-                    // Add moving marker
                     map.overlays.removeIf { it is Marker && it.title == "REPLAY" }
                     Marker(map).apply {
                         position = GeoPoint(pt.lat, pt.lon)
